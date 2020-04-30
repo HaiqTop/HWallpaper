@@ -52,6 +52,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Wallpaper.xaml.cs">
+      <DependentUpon>Wallpaper.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -64,6 +67,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Wallpaper.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -79,6 +86,23 @@
     <Resource Include="Image\logo.png" />
     <Resource Include="Image\Settings.ico" />
     <Resource Include="Image\Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HWallpaper.Business\HWallpaper.Business.csproj">
+      <Project>{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}</Project>
+      <Name>HWallpaper.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HWallpaper.Common\HWallpaper.Common.csproj">
+      <Project>{01cc53a9-578d-4802-a55d-0b822ecef9f9}</Project>
+      <Name>HWallpaper.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HWallpaper.Model\HWallpaper.Model.csproj">
+      <Project>{44aa9382-7830-49b2-aad7-7e25cc71d42c}</Project>
+      <Name>HWallpaper.Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

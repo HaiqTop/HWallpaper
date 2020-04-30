@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HWallpaper", "HWallpaper\HWallpaper.csproj", "{BEA4C1AA-5B62-45D5-AA1D-2EB0FFBCFD76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HWallpaper.Model", "HWallpaper.Model\HWallpaper.Model.csproj", "{44AA9382-7830-49B2-AAD7-7E25CC71D42C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HWallpaper.Common", "HWallpaper.Common\HWallpaper.Common.csproj", "{01CC53A9-578D-4802-A55D-0B822ECEF9F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HWallpaper.Business", "HWallpaper.Business\HWallpaper.Business.csproj", "{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{BEA4C1AA-5B62-45D5-AA1D-2EB0FFBCFD76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEA4C1AA-5B62-45D5-AA1D-2EB0FFBCFD76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEA4C1AA-5B62-45D5-AA1D-2EB0FFBCFD76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44AA9382-7830-49B2-AAD7-7E25CC71D42C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44AA9382-7830-49B2-AAD7-7E25CC71D42C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44AA9382-7830-49B2-AAD7-7E25CC71D42C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44AA9382-7830-49B2-AAD7-7E25CC71D42C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01CC53A9-578D-4802-A55D-0B822ECEF9F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01CC53A9-578D-4802-A55D-0B822ECEF9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01CC53A9-578D-4802-A55D-0B822ECEF9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01CC53A9-578D-4802-A55D-0B822ECEF9F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
