@@ -4,19 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BEA4C1AA-5B62-45D5-AA1D-2EB0FFBCFD76}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>HWallpaper</RootNamespace>
-    <AssemblyName>HWallpaper</AssemblyName>
+    <ProjectGuid>{F7837872-15B3-4412-8E73-3F3088192902}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>Controls</RootNamespace>
+    <AssemblyName>Controls</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -26,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,11 +32,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HandyControl, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\HandyControl.2.4.0\lib\net40\HandyControl.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -48,60 +52,80 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="ImageList.xaml">
       <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Wallpaper.xaml.cs">
-      <DependentUpon>Wallpaper.xaml</DependentUpon>
-    </Compile>
-    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Button.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Wallpaper.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Themes\ScrollViewer.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WaitingProgress.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="controls\ButtonEx.cs" />
+    <Compile Include="ImageDecoder.cs" />
+    <Compile Include="ImageDown.cs" />
+    <Compile Include="ImageList.xaml.cs">
+      <DependentUpon>ImageList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ImageQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="controls\TabItemClose.cs" />
+    <Compile Include="WaitingProgress.xaml.cs">
+      <DependentUpon>WaitingProgress.xaml</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
+    <Resource Include="Images\rdo_yes.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Image\logo.ico" />
-    <Resource Include="Image\logo.png" />
-    <Resource Include="Image\Settings.ico" />
-    <Resource Include="Image\Settings.png" />
+    <Resource Include="Images\download.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Resource Include="Images\screen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\loading.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HWallpaper.Business\HWallpaper.Business.csproj">
-      <Project>{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}</Project>
+      <Project>{201f1eec-49b5-401f-bac9-35fd3e55d33a}</Project>
       <Name>HWallpaper.Business</Name>
     </ProjectReference>
     <ProjectReference Include="..\HWallpaper.Common\HWallpaper.Common.csproj">
       <Project>{01cc53a9-578d-4802-a55d-0b822ecef9f9}</Project>
       <Name>HWallpaper.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HWallpaper.Controls\HWallpaper.Controls.csproj">
-      <Project>{f7837872-15b3-4412-8e73-3f3088192902}</Project>
-      <Name>HWallpaper.Controls</Name>
     </ProjectReference>
     <ProjectReference Include="..\HWallpaper.Model\HWallpaper.Model.csproj">
       <Project>{44aa9382-7830-49b2-aad7-7e25cc71d42c}</Project>

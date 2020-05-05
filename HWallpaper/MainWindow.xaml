@@ -9,8 +9,9 @@
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowWin10}"
         ShowTitle="True"
+        ShowInTaskbar="False"
         Height="250" 
-        Width="400">
+        Width="400" Loaded="Window_Loaded">
     <!--<hc:Window.NonClientAreaContent>
         <StackPanel Height="29">
             <Menu HorizontalAlignment="Left">

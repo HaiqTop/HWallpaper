@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HWallpaper.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,8 @@ namespace HWallpaper.Model
         public string url_mobile { get; set; }
         public string url_thumb { get; set; }
 
+        public int Index { get; set; }
+
         private string urlLeft;
         private string urlRight;
         public string UrlLeft
@@ -55,9 +58,20 @@ namespace HWallpaper.Model
                 if (string.IsNullOrWhiteSpace(urlRight) && !string.IsNullOrWhiteSpace(url))
                 {
                     int leftIndex = this.url.IndexOf("qhimg.com/");
-                    int rightIndex = this.url.LastIndexOf("/t");
-                    this.urlLeft = this.url.Substring(0, leftIndex + 10);
-                    this.urlRight = this.url.Substring(rightIndex);
+                    int rightIndex = this.url.LastIndexOf("/d/");
+                    if (rightIndex == -1)
+                    { 
+                        rightIndex = this.url.LastIndexOf("/t");
+                    }
+                    if (rightIndex == -1)
+                    {
+                        urlRight = "";
+                    }
+                    else 
+                    {
+                        this.urlLeft = this.url.Substring(0, leftIndex + 10);
+                        this.urlRight = this.url.Substring(rightIndex);
+                    }
                 }
                 return urlRight;
             }
@@ -102,7 +116,15 @@ namespace HWallpaper.Model
         //}
         public string GetUrlBySize(int width, int height)
         {
-            return this.UrlLeft + "bdm/" + width.ToString() + "_" + height + "_85" + this.UrlRight;
+            if (string.IsNullOrEmpty(this.UrlRight))
+            {
+                LogHelper.WriteLog("未知Url：" + this.url,EnumLogLevel.Error);
+                return this.url;
+            }
+            else
+            { 
+                return this.UrlLeft + "bdm/" + width.ToString() + "_" + height + "_85" + this.UrlRight;
+            }
         }
         public bool Valid(int width, int height)
         {
@@ -125,6 +147,21 @@ namespace HWallpaper.Model
         {
             string outName = this.url.Split('.')[this.url.Split('.').Length - 1];
             return this.class_id + "_" + this.id + "." + outName;
+        }
+
+        public List<string> GetTagList()
+        {
+            List<string> tagList = new List<string>();
+            string[] tags = this.tag.Split(' ');
+            foreach (var item in tags)
+            {
+                string[] temp = item.Split('_');
+                if (temp.Length == 4)
+                {
+                    tagList.Add(temp[2]);
+                }
+            }
+            return tagList;
         }
     }
 }

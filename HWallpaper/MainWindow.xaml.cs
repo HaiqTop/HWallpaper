@@ -10,16 +10,17 @@ namespace HWallpaper
         public MainWindow()
         {
             InitializeComponent();
-            //notifyIcon = new HandyControl.Controls.NotifyIcon();
-            //notifyIcon.Icon = new BitmapImage(new Uri(@"D:\Git\HWallpaper\HWallpaper\Image\favicon.png", UriKind.Absolute));
-            //notifyIcon.Text = "H壁纸";
-            //notifyIcon.Visibility =  System.Windows.Visibility.Visible;
         }
 
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            wallpaper = new Wallpaper();
-            wallpaper.Show();
+            if (wallpaper == null || wallpaper.IsClosed)
+            {
+                wallpaper = new Wallpaper();
+                wallpaper.Show();
+            }
+            wallpaper.Activate();
+            wallpaper.WindowState = System.Windows.WindowState.Normal;
         }
 
         private void NotifyIconContextContent_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -35,6 +36,14 @@ namespace HWallpaper
                 wallpaper.Show();
             }
             wallpaper.Activate();
+            wallpaper.WindowState = System.Windows.WindowState.Normal;
+        }
+
+        private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            wallpaper = new Wallpaper();
+            wallpaper.Show();
+            this.Visibility = System.Windows.Visibility.Hidden;
         }
     }
 }

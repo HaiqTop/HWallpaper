@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using HWallpaper.Model;
 using HWallpaper.Common;
 using HWallpaper.Business;
+using HWallpaper.Controls;
 
 namespace HWallpaper
 {
@@ -48,10 +49,14 @@ namespace HWallpaper
                     int index = 1;
                     foreach (TypeList type in total.data)
                     {
-                        var item = new HandyControl.Controls.TabItem();
+                        //RadioButton item = new RadioButton();
+                        //var item = new HandyControl.Controls.TabItem();
+                        var item = new TabItem();
                         item.Name = "btn_type_" + index++;
                         item.TabIndex = ++tabIndex;
+                        item.Width = 80;
                         item.Header = type.name;
+                        //item.Content = type.name;
                         item.Tag = type.id;
                         tabControl.Items.Add(item);
                     }
@@ -69,7 +74,16 @@ namespace HWallpaper
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             HandyControl.Controls.TabControl tab = sender as HandyControl.Controls.TabControl;
-            System.Windows.Media.Imaging.BitmapImage a;
+            var item = e.AddedItems[0] as TabItem;
+            int type = Convert.ToInt32(item.Tag);
+            if (item.Content == null)
+            {
+                ImageList imageList = new ImageList();
+                imageList.Margin = new Thickness(0);
+                imageList.Height = item.Height;
+                item.Content = imageList;
+                imageList.LoadImage(type , 0);
+            }
         }
     }
 }

@@ -8,12 +8,11 @@ namespace HWallpaper.Common
     public class WebHelper
     {
         
-        /*
         /// <summary>
         /// 根据Url地址获取图片
         /// </summary>
         /// <param name="url">路径</param>
-        public static Image GetImage(string url)
+        public static System.Drawing.Image GetImage(string url)
         {
             WebRequest imgRequest = WebRequest.Create(url);
 
@@ -34,7 +33,6 @@ namespace HWallpaper.Common
             }
             return null;
         }
-        */
         public static string HttpGet(string url, string postDataStr = "")
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url + (postDataStr == "" ? "" : "?") + postDataStr);

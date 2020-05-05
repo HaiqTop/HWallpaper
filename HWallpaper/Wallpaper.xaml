@@ -5,13 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:HWallpaper"
-        mc:Ignorable="d"
+        xmlns:ll="clr-namespace:HWallpaper.Controls;assembly=Controls"
+           mc:Ignorable="d"
         Title="H壁纸" Height="450" Width="800">
     <StackPanel>
-        <hc:TabControl Name="tabControl" ShowOverflowButton="False" ShowScrollButton="True" Width="800" IsScrollable="False" SelectionChanged="tabControl_SelectionChanged">
-            <hc:TabItem Header="最新" IsSelected="True">
-                <hc:SimplePanel Background="{DynamicResource RegionBrush}"/>
-            </hc:TabItem>
-        </hc:TabControl>
+        <TabControl Name="tabControl" FlowDirection="LeftToRight" Margin="0" HorizontalContentAlignment="Left"  SelectionChanged="tabControl_SelectionChanged">
+            <TabItem Header="最新" Tag="0" Name="btn_type_0">
+            </TabItem>
+        </TabControl>
+        <!--<hc:ButtonGroup Name="tabControl" HorizontalAlignment="Left">
+            <RadioButton Content="最新" Tag="0" IsChecked="True"/>
+        </hc:ButtonGroup>-->
     </StackPanel>
 </hc:Window>
