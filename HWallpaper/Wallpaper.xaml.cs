@@ -27,6 +27,7 @@ namespace HWallpaper
         public Wallpaper()
         {
             InitializeComponent();
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
         public bool IsClosed { get; private set; }
         protected override void OnClosed(EventArgs e)
