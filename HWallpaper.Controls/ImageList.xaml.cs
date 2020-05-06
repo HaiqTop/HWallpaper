@@ -39,9 +39,12 @@ namespace HWallpaper.Controls
             CachePath = System.IO.Path.Combine(path, "Cache");
             DownPath = System.IO.Path.Combine(path, "DownLoad");
             this.SizeChanged += new System.Windows.SizeChangedEventHandler(Resize);
-            ImageDown.OnComplate += new ImageDown.ComplateDelegate(ImageQueue_OnComplate);
+            ImageDown.OnComplate += new ImageDown.ComplateDelegate(ImageDown_OnComplate);
+            ImageDown.OnError += ImageDown_OnError;
             InitBtn();
         }
+
+
         private void InitBtn()
         {
             btn_down.Icon = new BitmapImage(new Uri("/Controls;component/Images/download.png", UriKind.Relative));
@@ -138,7 +141,7 @@ namespace HWallpaper.Controls
                 //zoomImage.Source = img;
             }
         }
-        private void ImageQueue_OnComplate(Image i, string u, BitmapImage b)
+        private void ImageDown_OnComplate(Image i, string u, BitmapImage b)
         {
             //System.Windows.MessageBox.Show(u);
             i.Source = b;
@@ -168,6 +171,25 @@ namespace HWallpaper.Controls
                     }
                 }
             }
+        }
+        private void ImageDown_OnError(Image i, Exception e)
+        {
+            Label label = new Label();
+            label.Content = "加载失败";
+            Grid grid = i.Parent as Grid;
+            foreach (var item in grid.Children)
+            {
+                if (item is WaitingProgress)
+                {
+                    WaitingProgress wait = item as WaitingProgress;
+                    wait.Stop();
+                    grid.Children.Remove(wait);
+                    wait = null;
+                    break;
+                }
+            }
+            grid.Children.Add(label);
+            LogHelper.WriteLog(e.Message,EnumLogLevel.Error);
         }
         private void Resize(object sender, System.EventArgs e)
         {

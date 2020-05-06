@@ -12,37 +12,24 @@
         ShowInTaskbar="False"
         Height="250" 
         Width="400" Loaded="Window_Loaded">
-    <!--<hc:Window.NonClientAreaContent>
-        <StackPanel Height="29">
-            <Menu HorizontalAlignment="Left">
-                <MenuItem Header="Header1">
-                    <MenuItem Header="Header1"/>
-                    <MenuItem Header="Header2"/>
-                    <MenuItem Header="Header2"/>
-                </MenuItem>
-                <MenuItem Header="Header2">
-                    <MenuItem Header="Header1"/>
-                    <MenuItem Header="Header2"/>
-                    <MenuItem Header="Header2"/>
-                </MenuItem>
-                <MenuItem Header="Header3">
-                    <MenuItem Header="Header1"/>
-                    <MenuItem Header="Header2"/>
-                    <MenuItem Header="Header2"/>
-                </MenuItem>
-            </Menu>
-        </StackPanel>
-    </hc:Window.NonClientAreaContent>-->
     <hc:NotifyIcon x:Name="NotifyIconContextContent" 
                    Text="单击切换壁纸"
                    Visibility="Visible"
                    Click="NotifyIconContextContent_Click"
                    MouseDoubleClick="NotifyIconContextContent_MouseDoubleClick"
-                   Icon="D:\Git\HWallpaper\HWallpaper\Image\logo.ico">
+                   Icon="Image/logo.ico">
         <hc:NotifyIcon.ContextMenu>
-            <ContextMenu>
-                <MenuItem Click="MenuItem_Click" Header="打开壁纸"/>
-                <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用"/>
+            <ContextMenu Width="140">
+                <MenuItem Click="MenuItem_Click" Header="打开壁纸">
+                    <MenuItem.Icon>
+                        <Image Source="Image/logo.ico"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用">
+                    <MenuItem.Icon>
+                        <Image Source="Image/exit1.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </ContextMenu>
         </hc:NotifyIcon.ContextMenu>
     </hc:NotifyIcon>

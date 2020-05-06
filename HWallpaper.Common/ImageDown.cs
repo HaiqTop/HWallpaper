@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Controls;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Windows.Media.Imaging;
-using static HWallpaper.Controls.ImageQueue;
 
-namespace HWallpaper.Controls
+namespace HWallpaper.Common
 {
     public class ImageDown
     {
@@ -23,6 +19,8 @@ namespace HWallpaper.Controls
 
         public static event ComplateDelegate OnComplate;
         public delegate void ComplateDelegate(Image i, string u, BitmapImage b);
+        public static event ErrorDelegate OnError;
+        public delegate void ErrorDelegate(Image i, Exception ex);
 
         public static void DownloadImage(Image img, String url)
         {
@@ -67,13 +65,19 @@ namespace HWallpaper.Controls
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    downInfo.image.Dispatcher.BeginInvoke(new Action<ImageDownInfo, BitmapImage>((i, bmp) =>
+                    {
+                        if (ImageDown.OnError != null)
+                        {
+                            ImageDown.OnError(i.image, ex);
+                        }
+                    }), new Object[] { downInfo, image });
                 }
                 try
                 {
-                    
+
                     if (image != null)
                     {
                         if (image.CanFreeze) image.Freeze();
@@ -91,8 +95,7 @@ namespace HWallpaper.Controls
                     System.Windows.MessageBox.Show(e.Message);
                 }
             }
-            
+
         }
     }
-
 }

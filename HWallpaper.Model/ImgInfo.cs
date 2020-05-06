@@ -1,5 +1,4 @@
-﻿using HWallpaper.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,12 +39,23 @@ namespace HWallpaper.Model
         {
             get
             {
-                if (string.IsNullOrWhiteSpace(urlLeft) && !string.IsNullOrWhiteSpace(url))
+                if (string.IsNullOrWhiteSpace(urlRight) && !string.IsNullOrWhiteSpace(url))
                 {
                     int leftIndex = this.url.IndexOf("qhimg.com/");
-                    int rightIndex = this.url.LastIndexOf("/t");
-                    this.urlLeft = this.url.Substring(0, leftIndex + 10);
-                    this.urlRight = this.url.Substring(rightIndex);
+                    int rightIndex = this.url.LastIndexOf("/d/");
+                    if (rightIndex == -1)
+                    {
+                        rightIndex = this.url.LastIndexOf("/t");
+                    }
+                    if (rightIndex == -1)
+                    {
+                        urlRight = "";
+                    }
+                    else
+                    {
+                        this.urlLeft = this.url.Substring(0, leftIndex + 10);
+                        this.urlRight = this.url.Substring(rightIndex);
+                    }
                 }
                 return urlLeft;
             }
@@ -118,7 +128,7 @@ namespace HWallpaper.Model
         {
             if (string.IsNullOrEmpty(this.UrlRight))
             {
-                LogHelper.WriteLog("未知Url：" + this.url,EnumLogLevel.Error);
+                //LogHelper.WriteLog("未知Url：" + this.url,EnumLogLevel.Error);
                 return this.url;
             }
             else

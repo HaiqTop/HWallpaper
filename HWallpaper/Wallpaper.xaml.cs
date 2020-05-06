@@ -27,13 +27,16 @@ namespace HWallpaper
         public Wallpaper()
         {
             InitializeComponent();
-            InitPicTypeBtn();
         }
         public bool IsClosed { get; private set; }
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
             IsClosed = true;
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            InitPicTypeBtn();
         }
         /// <summary>
         /// 初始化壁纸分类按钮
@@ -42,6 +45,14 @@ namespace HWallpaper
         {
             try
             {
+                // 最新
+                TabItem item = new TabItem();
+                item.Name = "btn_type_0";
+                item.TabIndex = 99;
+                item.Header = "最新";
+                item.Tag = 0;
+                tabControl.Items.Add(item);
+
                 TypeTotal total = WebImage.GetTypeList();
                 if (total != null && total.data != null && total.data.Count > 0)
                 {
@@ -49,17 +60,15 @@ namespace HWallpaper
                     int index = 1;
                     foreach (TypeList type in total.data)
                     {
-                        //RadioButton item = new RadioButton();
-                        //var item = new HandyControl.Controls.TabItem();
-                        var item = new TabItem();
+                        item = new TabItem();
                         item.Name = "btn_type_" + index++;
                         item.TabIndex = ++tabIndex;
-                        item.Width = 80;
                         item.Header = type.name;
-                        //item.Content = type.name;
                         item.Tag = type.id;
+                        item.Visibility = Visibility.Collapsed;
                         tabControl.Items.Add(item);
                     }
+                    window_SizeChanged(null,null) ;
                 }
 
             }
@@ -70,19 +79,34 @@ namespace HWallpaper
             }
 
         }
-
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            HandyControl.Controls.TabControl tab = sender as HandyControl.Controls.TabControl;
             var item = e.AddedItems[0] as TabItem;
             int type = Convert.ToInt32(item.Tag);
             if (item.Content == null)
             {
                 ImageList imageList = new ImageList();
                 imageList.Margin = new Thickness(0);
-                imageList.Height = item.Height;
+                item.Margin = new Thickness(0);
                 item.Content = imageList;
                 imageList.LoadImage(type , 0);
+            }
+        }
+
+        private void window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double itemWidthTotal = 0;
+            foreach (TabItem item in tabControl.Items)
+            {
+                if (itemWidthTotal < this.Width - 10)
+                {
+                    itemWidthTotal += 70;
+                    item.Visibility = Visibility.Visible;
+                }
+                else
+                { 
+                    item.Visibility = Visibility.Collapsed;
+                }
             }
         }
     }

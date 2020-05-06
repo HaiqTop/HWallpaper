@@ -71,12 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="controls\ButtonEx.cs" />
-    <Compile Include="ImageDecoder.cs" />
-    <Compile Include="ImageDown.cs" />
     <Compile Include="ImageList.xaml.cs">
       <DependentUpon>ImageList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ImageQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

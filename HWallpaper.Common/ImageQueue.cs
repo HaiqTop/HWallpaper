@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Threading;
 using System.IO;
 
-namespace HWallpaper.Controls
+namespace HWallpaper.Common
 {
-    /// <summary>
-    /// 图片下载队列
-    /// </summary>
     public static class ImageQueue
     {
         #region 辅助类别
@@ -80,16 +75,16 @@ namespace HWallpaper.Controls
                         if (image != null)
                         {
                             if (image.CanFreeze) image.Freeze();
-                            t.image.Dispatcher.BeginInvoke(new Action<ImageQueueInfo, BitmapImage>((i, bmp) => 
+                            t.image.Dispatcher.BeginInvoke(new Action<ImageQueueInfo, BitmapImage>((i, bmp) =>
                             {
                                 if (ImageQueue.OnComplate != null)
                                 {
                                     ImageQueue.OnComplate(i.image, i.url, bmp);
                                 }
-                            }),new Object[] { t, image });
+                            }), new Object[] { t, image });
                         }
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         System.Windows.MessageBox.Show(e.Message);
                         continue;
