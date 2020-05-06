@@ -83,9 +83,9 @@ namespace HWallpaper
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var item = e.AddedItems[0] as TabItem;
-            int type = Convert.ToInt32(item.Tag);
             if (item.Content == null)
             {
+                int type = Convert.ToInt32(item.Tag);
                 ImageList imageList = new ImageList();
                 imageList.Margin = new Thickness(0);
                 item.Margin = new Thickness(0);
