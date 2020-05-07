@@ -110,5 +110,19 @@ namespace HWallpaper
                 }
             }
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            switch (menuItem.Header)
+            {
+                case "屏保":
+                    break;
+                case "设置":
+                    Setting setting = new Setting();
+                    setting.ShowDialog();
+                    break;
+            }
+        }
     }
 }

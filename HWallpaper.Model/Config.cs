@@ -57,8 +57,8 @@ namespace HWallpaper.Model
     }
     public enum WallTimeType
     {
-        Day,
-        Hour,
-        Minute
+        Day = 0,
+        Hour = 1,
+        Minute = 2
     }
 }

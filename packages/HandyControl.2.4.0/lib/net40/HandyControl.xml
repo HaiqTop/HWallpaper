@@ -341,7 +341,7 @@
                 存储所有的内容
             </summary>
         </member>
-        <member name="F:HandyControl.Controls.CoverFlow._itemShowList">
+        <member name="F:HandyControl.Controls.CoverFlow._itemShowDic">
             <summary>
                 当前在显示范围内的项
             </summary>
@@ -415,19 +415,11 @@
             </summary>
             <param name="pos"></param>
         </member>
-        <member name="M:HandyControl.Controls.CoverFlow.Move(System.Int32,System.Boolean)">
-            <summary>
-                移动项到指定的位置
-            </summary>
-            <param name="index"></param>
-            <param name="animated"></param>
-        </member>
-        <member name="M:HandyControl.Controls.CoverFlow.UpdateIndex(System.Int32,System.Int32)">
+        <member name="M:HandyControl.Controls.CoverFlow.UpdateIndex(System.Int32)">
             <summary>
                 更新项的位置
             </summary>
             <param name="newIndex"></param>
-            <param name="oldIndex"></param>
         </member>
         <member name="M:HandyControl.Controls.CoverFlow.UpdateShowRange">
             <summary>
@@ -450,7 +442,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:HandyControl.Controls.CoverFlowItem.Move(System.Int32,System.Boolean)">
+        <member name="M:HandyControl.Controls.CoverFlowItem.Move(System.Int32)">
             <summary>
                 移动
             </summary>
@@ -2338,62 +2330,62 @@
                 文本类型枚举
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.LeftTop">
+        <member name="F:HandyControl.Data.PlacementType.LeftTop">
             <summary>
             左上
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.Left">
+        <member name="F:HandyControl.Data.PlacementType.Left">
             <summary>
             左
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.LeftBottom">
+        <member name="F:HandyControl.Data.PlacementType.LeftBottom">
             <summary>
             左下
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.TopLeft">
+        <member name="F:HandyControl.Data.PlacementType.TopLeft">
             <summary>
             上左
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.Top">
+        <member name="F:HandyControl.Data.PlacementType.Top">
             <summary>
             上
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.TopRight">
+        <member name="F:HandyControl.Data.PlacementType.TopRight">
             <summary>
             上右
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.RightTop">
+        <member name="F:HandyControl.Data.PlacementType.RightTop">
             <summary>
             右上
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.Right">
+        <member name="F:HandyControl.Data.PlacementType.Right">
             <summary>
             右
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.RightBottom">
+        <member name="F:HandyControl.Data.PlacementType.RightBottom">
             <summary>
             右下
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.BottomLeft">
+        <member name="F:HandyControl.Data.PlacementType.BottomLeft">
             <summary>
             下左
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.Bottom">
+        <member name="F:HandyControl.Data.PlacementType.Bottom">
             <summary>
             下
             </summary>
         </member>
-        <member name="F:HandyControl.Data.TipPlacement.BottomRight">
+        <member name="F:HandyControl.Data.PlacementType.BottomRight">
             <summary>
             下右
             </summary>
@@ -2586,6 +2578,11 @@
         <member name="P:HandyControl.Interactivity.ControlCommands.CloseWindow">
             <summary>
                 关闭窗口
+            </summary>
+        </member>
+        <member name="P:HandyControl.Interactivity.ControlCommands.StartScreenshot">
+            <summary>
+                开始截图
             </summary>
         </member>
         <member name="T:HandyControl.Interactivity.MouseDragElementBehaviorEx">

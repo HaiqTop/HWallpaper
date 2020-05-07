@@ -25,6 +25,11 @@
                         <Image Source="Image/logo.ico"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Click="MenuItem_Click" Header="软件设置">
+                    <MenuItem.Icon>
+                        <Image Source="Image/Settings.ico"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用">
                     <MenuItem.Icon>
                         <Image Source="Image/exit1.png"/>
