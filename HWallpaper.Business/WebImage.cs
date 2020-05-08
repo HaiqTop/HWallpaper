@@ -20,7 +20,7 @@ namespace HWallpaper.Business
             {
                 if (local)
                 {
-                    model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(ConfigManage.Data.TypeJson);
+                    model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(ConfigManage.Base.TypeJson);
                 }
                 else
                 {
@@ -29,7 +29,7 @@ namespace HWallpaper.Business
                     // 如果正确获取到信息，则将字符串存储到本地（防止下次因为服务器接口问题导致无法正确获取数据）
                     if (model != null && model.data != null && model.data.Count > 0)
                     {
-                        ConfigManage.Data.TypeJson = jsonStr;
+                        ConfigManage.Base.TypeJson = jsonStr;
                     }
                     else
                     {
@@ -41,7 +41,7 @@ namespace HWallpaper.Business
             catch (Exception ex)
             {
                 // 假如获取信息失败
-                model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(ConfigManage.Data.TypeJson);
+                model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(ConfigManage.Base.TypeJson);
                 Common.LogHelper.WriteLog(ex.Message, Common.EnumLogLevel.Error);
             }
             return model;

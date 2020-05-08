@@ -31,5 +31,6 @@ namespace HWallpaper.Common
         /// 参数：偏移量（从0开始）、加载张数
         /// </summary>
         public const string Url_ListTopNew = "http://wallpaper.apc.360.cn/index.php?c=WallPaper&a=getAppsByOrder&order=create_time&start={0}&count={1}&from=360chrome";
+        public static string dataPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) + "\\DeskTopTools\\";
     }
 }

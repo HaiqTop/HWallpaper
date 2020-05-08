@@ -14,7 +14,7 @@ namespace HWallpaper.Common
         private static readonly Queue<Dictionary<string, string>> Que = new Queue<Dictionary<string, string>>();
         private static readonly Object Object = new Object();
         private static EnumLogLevel LogType { get; set; }
-        private static string logPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) + "\\DeskTopTools\\Logs\\";
+        private static string logPath = Const.dataPath + "Logs\\";
         static LogHelper()
         {
             ThreadPool.QueueUserWorkItem(s =>

@@ -6,65 +6,68 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:HWallpaper"
            mc:Ignorable="d"
-        Title="设置" Height="660" Width="600" Icon="Image/Settings.ico" Background="White">
-    <StackPanel>
-        <GroupBox Header="基本设置" Padding="10" Margin="5" hc:TitleElement.TitleAlignment="Left">
-            <Grid VerticalAlignment="Bottom">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <CheckBox Grid.Row="0" Grid.Column="0" Name="cbox_basic_AutoOn" Height="30" Content="开机启动" IsChecked="True" Margin="10,5,424,5"/>
-                <CheckBox Grid.Row="0" Grid.Column="0" Name="cbox_basic_Cache" Height="30" Content="缓存" IsChecked="True" Margin="120,5,338,5"/>
-                <CheckBox Grid.Row="0" Grid.Column="0" Name="cbox_basic_AutoClearCache" Height="30" Content="自动清理30天以前的缓存图片" IsChecked="True" Width="202" Margin="221,5,83,5"/>
-                <TextBox  Grid.Row="1" Grid.Column="0" Name="tbox_basic_DownPath" Height="30" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitleAlignment="Left" Margin="10,5,10,5" hc:InfoElement.Title="下载路径" Style="{StaticResource TextBoxExtend}" Text="C:\Users\movit\Pictures\ZoroWallpaper\Download"/>
-                <TextBox  Grid.Row="2" Grid.Column="0" Name="tbox_basic_CachePath" Height="30" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitleAlignment="Left" Margin="10,5,10,5" hc:InfoElement.Title="缓存路径" Style="{StaticResource TextBoxExtend}" Text="C:\Users\movit\Pictures\ZoroWallpaper\Cache"/>
-            </Grid>
-        </GroupBox>
-        <GroupBox Header="壁纸设置" Padding="10" Margin="5" hc:TitleElement.TitleAlignment="Left">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <CheckBox Grid.Row="0" Grid.Column="0" Name="cbox_wallpaper_AutoReplace" Height="30" Content="自动更换" IsChecked="False" Margin="10,5,444,5"/>
-                <hc:NumericUpDown Grid.Row="0" Grid.Column="0" Maximum="100" DecimalPlaces="0" hc:InfoElement.TitleWidth="70" hc:InfoElement.Placeholder="0" hc:InfoElement.TitleAlignment="Left" hc:InfoElement.Title="更换频率" Style="{StaticResource NumericUpDownPlus}" Margin="125,5,260,5"/>
-                <RadioButton Grid.Row="0" Grid.Column="0" Margin="285,5,192,5" Height="30" Content="天" IsChecked="True" IsEnabled="True" Width="50" Checked="RadioButton_Checked" Tag="0"/>
-                <RadioButton Grid.Row="0" Grid.Column="0" Margin="339,5,131,5" Height="30" Content="小时" IsChecked="False" IsEnabled="True" Width="60" Checked="RadioButton_Checked" Tag="1"/>
-                <RadioButton Grid.Row="0" Grid.Column="0" Margin="413,5,53,5" Height="30" Content="分钟" IsChecked="False" IsEnabled="True" Width="60" Checked="RadioButton_Checked" Tag="2"/>
-                <hc:Divider  Grid.Row="1" Grid.Column="0" Content="请选择壁纸切换图片类型" HorizontalContentAlignment="Left" Margin="2"/>
-                <hc:TagPanel Grid.Row="2" Grid.Column="0" Margin="10,5,10,5" Name="cbox_wallpaper_SelectedTypes" Orientation="Horizontal" VerticalAlignment="Center" ShowAddButton="False">
-                    <hc:Tag Selectable="True" ShowCloseButton="False" Content="最新" IsSelected="True" Tag="0" Margin="0"/>
-                </hc:TagPanel>
-            </Grid>
-        </GroupBox>
-        <GroupBox Padding="10" Margin="5" hc:TitleElement.TitleAlignment="Left">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <CheckBox Grid.Row="0" Grid.Column="0" Name="cbox_screen_AutoReplace" Height="30" Content="定时屏保" IsChecked="False" Margin="10,5,444,5"/>
-                <ComboBox Grid.Row="0" Grid.Column="0" Name ="cbox_screen_time" hc:InfoElement.TitleWidth="70" Height="30" hc:InfoElement.TitleAlignment="Left" hc:InfoElement.Title="开启时间" Style="{StaticResource ComboBoxExtend}" Margin="116,5,223,5" Text=""/>
-                <ComboBox Grid.Row="0" Grid.Column="0" Name ="cbox_screen_TimePicInterval"  hc:InfoElement.TitleWidth="70" Height="30" hc:InfoElement.TitleAlignment="Left" hc:InfoElement.Title="切换时间" Style="{StaticResource ComboBoxExtend}" Margin="329,5,10,5" Text="">
-                </ComboBox>
-                <hc:Divider  Grid.Row="1" Grid.Column="0" Content="请选择壁纸切换图片类型" HorizontalContentAlignment="Left" Margin="2"/>
-                <hc:TagPanel Grid.Row="2" Grid.Column="0" Margin="10,5,10,5" Name="cbox_screen_SelectedTypes" Orientation="Horizontal" VerticalAlignment="Center" ShowAddButton="False">
-                    <hc:Tag Selectable="True" ShowCloseButton="False" Content="最新" IsSelected="True" Tag="0" Margin="0"/>
-                </hc:TagPanel>
-            </Grid>
-        </GroupBox>
-    </StackPanel>
+        Title="设置" Height="500" Width="600" Icon="Image/Settings.ico" Background="White" Closing="window_Closing">
+    <ScrollViewer>
+        <StackPanel hc:ScrollViewer.IsInertiaEnabled="True" Margin="0,0,5,0">
+            <GroupBox Header="基本设置" Padding="10" Margin="5" hc:TitleElement.TitleAlignment="Left">
+                <Grid VerticalAlignment="Bottom">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"  Name="cbox_basic_AutoOn" Height="30" Content="开机启动" IsChecked="True" Margin="10,5,424,5"/>
+                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_basic_Cache" Height="30" Content="缓存" IsChecked="True" Margin="120,5,338,5"/>
+                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_basic_AutoClearCache" Height="30" Content="自动清理30天以前的缓存图片" IsChecked="True" Width="202" Margin="221,5,83,5"/>
+                    <TextBox  Grid.Row="1" Grid.Column="0" Name="tbox_basic_DownPath" Height="30" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitleAlignment="Left" Margin="10,5,10,5" hc:InfoElement.Title="下载路径" Style="{StaticResource TextBoxExtend}" IsReadOnly="True"/>
+                    <TextBox  Grid.Row="2" Grid.Column="0" Name="tbox_basic_CachePath" Height="30" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitleAlignment="Left" Margin="10,5,10,5" hc:InfoElement.Title="缓存路径" Style="{StaticResource TextBoxExtend}" IsReadOnly="True"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="壁纸设置" Padding="10" Margin="5" hc:TitleElement.TitleAlignment="Left">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_wallpaper_AutoReplace" Height="30" Content="自动更换" IsChecked="False" Margin="10,5,422,5" Width="89"/>
+                    <hc:NumericUpDown Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Maximum="100" Name="nbox_wallpaper_Interval" DecimalPlaces="0" hc:InfoElement.TitleWidth="70" hc:InfoElement.Placeholder="0" hc:InfoElement.TitleAlignment="Left" hc:InfoElement.Title="更换频率" Style="{StaticResource NumericUpDownPlus}" Margin="125,5,260,5"/>
+                    <RadioButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="282,5,185,5" Height="30" Content="天" IsChecked="True" IsEnabled="True" Width="54" Checked="RadioButton_Checked" Tag="0" Name="WallTimeType_Day"/>
+                    <RadioButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="341,5,120,5" Height="30" Content="小时" IsChecked="False" IsEnabled="True" Width="60" Checked="RadioButton_Checked" Tag="1" Name="WallTimeType_Hour"/>
+                    <RadioButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="414,5,47,5" Height="30" Content="分钟" IsChecked="False" IsEnabled="True" Width="60" Checked="RadioButton_Checked" Tag="2" Name="WallTimeType_Minute"/>
+                    <hc:Divider  Grid.Row="1" Grid.Column="0" Content="请选择壁纸切换图片类型" HorizontalContentAlignment="Left" Margin="2" LineStroke="Black"/>
+                    <hc:TagPanel Grid.Row="2" Grid.Column="0" Margin="10,5,10,5" Name="cbox_wallpaper_SelectedTypes" Orientation="Horizontal" VerticalAlignment="Center" ShowAddButton="False">
+                        <hc:Tag Selectable="True" ShowCloseButton="False" Content="最新" IsSelected="True" Tag="0" Margin="0"/>
+                    </hc:TagPanel>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="屏保设置" Padding="10" Margin="5" hc:TitleElement.TitleAlignment="Left">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_screen_AutoReplace" Height="30" Content="定时屏保" IsChecked="False" Margin="10,5,410,5"/>
+                    <hc:NumericUpDown Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Maximum="100" Name="nbox_screen_OpenInterval" DecimalPlaces="0" hc:InfoElement.TitleWidth="80" hc:InfoElement.Placeholder="0" hc:InfoElement.TitleAlignment="Left" hc:InfoElement.Title="屏保开启间隔" Style="{StaticResource NumericUpDownPlus}" Margin="116,5,0,5" Width="156"/>
+                    <TextBlock  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="277,6,197,6"  Text="分钟" Style="{StaticResource TextBlockDefaultPrimary}"/>
+                    <hc:NumericUpDown Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Maximum="100" Name="nbox_screen_ReplaceInterval" DecimalPlaces="0" hc:InfoElement.TitleWidth="80" hc:InfoElement.Placeholder="0" hc:InfoElement.TitleAlignment="Left" hc:InfoElement.Title="图片切换间隔" Style="{StaticResource NumericUpDownPlus}" Margin="329,5,0,5" Width="148"/>
+                    <TextBlock  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="482,12,0,12"  Text="秒" Style="{StaticResource TextBlockDefaultPrimary}" RenderTransformOrigin="1.75,0.697"/>
+                    <hc:Divider  Grid.Row="1" Grid.Column="0" Content="请选择壁纸切换图片类型" HorizontalContentAlignment="Left" Margin="2" LineStroke="Black"/>
+                    <hc:TagPanel Grid.Row="2" Grid.Column="0" Margin="10,5,10,5" Name="cbox_screen_SelectedTypes" Orientation="Horizontal" VerticalAlignment="Center" ShowAddButton="False">
+                        <hc:Tag Selectable="True" ShowCloseButton="False" Content="最新" IsSelected="True" Tag="0" Margin="0"/>
+                    </hc:TagPanel>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
+    </ScrollViewer>
 </hc:Window>
