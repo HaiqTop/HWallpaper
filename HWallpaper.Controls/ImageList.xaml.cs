@@ -130,9 +130,9 @@ namespace HWallpaper.Controls
                 ImageDown.DownloadImage(zoomImage, imgInfo.url);
                 zoomGrid.Tag = imgInfo.Index;
                 string[] tags = imgInfo.tag.Split(' ');
-                lb_picName.Content = "文件名称：" + imgInfo.GetFileName();
-                lb_picDate.Content = "上传时间：" + imgInfo.create_time;
-                lb_picTags.Content = "标签：" + string.Join(" ", imgInfo.GetTagList());
+                lb_picName.Text = "文件名称：" + imgInfo.GetFileName();
+                lb_picDate.Text = "上传时间：" + imgInfo.create_time;
+                lb_picTags.Text = "标签：" + string.Join(" ", imgInfo.GetTagList());
                 //BitmapImage img = new BitmapImage();
                 //img.BeginInit();
                 //img.UriSource = new Uri(imgInfo.url, UriKind.Absolute);

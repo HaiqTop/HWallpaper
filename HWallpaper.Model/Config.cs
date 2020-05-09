@@ -17,8 +17,7 @@ namespace HWallpaper.Model
     [Serializable]
     public class BaseConfig
     {
-        private string typeJson;
-        public string TypeJson { get { return typeJson; } set { typeJson = value; } }
+        public string TypeJson { get; set; }
         /// <summary>
         /// 开机启动
         /// </summary>
@@ -91,16 +90,14 @@ namespace HWallpaper.Model
         /// </summary>
         public string SelectedTypes { get { return selectedTypes; } set { selectedTypes = value; } }
 
-        private int timeInterval = 1;
         /// <summary>
         /// 壁纸替换时间间隔
         /// </summary>
-        public int TimeInterval { get { return timeInterval; } set { timeInterval = value; } }
-        private TimeType timeType = TimeType.Day;
+        public double TimeInterval { get; set; }
         /// <summary>
         /// 壁纸替换时间单位
         /// </summary>
-        public TimeType TimeType { get { return timeType; } set { timeType = value; } }
+        public TimeType TimeType { get; set; }
         /// <summary>
         /// 最后一次更新事件
         /// </summary>
@@ -109,7 +106,6 @@ namespace HWallpaper.Model
     [Serializable]
     public class ScreenConfig
     {
-        private bool open = false;
         /// <summary>
         /// 屏保是否打开
         /// </summary>
@@ -117,11 +113,11 @@ namespace HWallpaper.Model
         /// <summary>
         /// 开启屏保时间间隔（单位：分钟）
         /// </summary>
-        public int OpenInterval { get; set; }
+        public double OpenInterval { get; set; }
         /// <summary>
         /// 屏保壁纸切换时间间隔（单位：秒）
         /// </summary>
-        public int ReplaceInterval { get; set; }
+        public double ReplaceInterval { get; set; }
 
         private string selectedTypes = "0";
         /// <summary>

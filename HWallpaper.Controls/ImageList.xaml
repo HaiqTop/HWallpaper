@@ -6,24 +6,24 @@
              xmlns:local="clr-namespace:HWallpaper.Controls"
              xmlns:controls="clr-namespace:HWallpaper.Controls.controls" x:Class="HWallpaper.Controls.ImageList"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="700">
+             d:DesignHeight="327.333" d:DesignWidth="500">
     <UserControl.Resources>
         <!-- 重点：需要使用这个标签来包含多个内容 -->
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!-- 项目工程的相对路径 -->
-                <ResourceDictionary Source="pack://application:,,,/Controls;component/Themes/ScrollViewer.xaml"></ResourceDictionary>
-                <ResourceDictionary Source="pack://application:,,,/Controls;component/Themes/Button.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/HWallpaper.Controls;component/Themes/ScrollViewer.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/HWallpaper.Controls;component/Themes/Button.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Name="zoomGrid" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave" MouseWheel="ZoomGrid_MouseWheel"  Margin="0"
-          Background="Transparent" Height="300" VerticalAlignment="Top" Width="400">
+          Background="Transparent">
         <local:WaitingProgress x:Name="waiting" Height="{Binding Height, ElementName=this, Mode=OneWay}"/>
         <Image Name="zoomImage" Margin="2" MouseDown="Image_MouseDown"/>
-        <Label Name="lb_picName" Content="Label" HorizontalAlignment="Left" Margin="4,4,0,0" VerticalAlignment="Top" Width="200"/>
-        <Label Name="lb_picTags" Content="Label" HorizontalAlignment="Left" Margin="4,30,0,0" VerticalAlignment="Top" Width="200"/>
-        <Label Name="lb_picDate" Content="Label" HorizontalAlignment="Left" Margin="4,56,0,0" VerticalAlignment="Top" Width="200"/>
+        <TextBlock Name="lb_picName" Text="Label" HorizontalAlignment="Left" Margin="40,4,0,0" VerticalAlignment="Top" Width="200"/>
+        <TextBlock Name="lb_picTags" Text="Label" HorizontalAlignment="Left" Margin="40,30,0,0" VerticalAlignment="Top" Width="200"/>
+        <TextBlock Name="lb_picDate" Text="Label" HorizontalAlignment="Left" Margin="40,56,0,0" VerticalAlignment="Top" Width="200"/>
     </Grid>
     <!--<ScrollViewer x:Name="scr" Margin="0" VerticalScrollBarVisibility="Auto" ScrollChanged="ListView_ScrollChanged" >
         <WrapPanel Margin="2" Orientation="Horizontal" x:Name="panel" Width="{Binding Width, ElementName=scr, Mode=OneWay}"/>

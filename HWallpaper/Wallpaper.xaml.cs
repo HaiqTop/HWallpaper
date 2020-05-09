@@ -117,6 +117,8 @@ namespace HWallpaper
             switch (menuItem.Header)
             {
                 case "屏保":
+                    Screensaver screen = new Screensaver();
+                    screen.Show();
                     break;
                 case "设置":
                     Setting setting = new Setting();

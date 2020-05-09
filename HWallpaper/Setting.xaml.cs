@@ -34,6 +34,7 @@ namespace HWallpaper
         private void LoadData()
         {
             TypeTotal typeTotal = WebImage.GetTypeList(true);
+            typeTotal.data.Insert(0,new TypeList() { id="0",name="最新"});
             #region 基本
             cbox_basic_AutoOn.IsChecked = ConfigManage.Base.AutoOn;
             cbox_basic_Cache.IsChecked = ConfigManage.Base.Cache;
@@ -46,6 +47,7 @@ namespace HWallpaper
             cbox_wallpaper_AutoReplace.IsChecked = ConfigManage.Wallpaper.AutoReplace;
             nbox_wallpaper_Interval.Value = ConfigManage.Wallpaper.TimeInterval;
             // 壁纸类型
+            string[] typeList = ConfigManage.Wallpaper.SelectedTypes.Split(',');
             foreach (var type in typeTotal.data)
             {
                 Tag tag = new Tag();
@@ -54,8 +56,7 @@ namespace HWallpaper
                 tag.ShowCloseButton = false;
                 tag.Content = type.name;
                 tag.Tag = type.id;
-                tag.IsSelected = (!string.IsNullOrEmpty(ConfigManage.Wallpaper.SelectedTypes)
-                    && ConfigManage.Wallpaper.SelectedTypes.IndexOf(type.id) > -1);
+                tag.IsSelected = typeList.Contains(type.id);
                 cbox_wallpaper_SelectedTypes.Children.Add(tag);
             }
             // 初始化 RadioButton
@@ -78,6 +79,7 @@ namespace HWallpaper
             nbox_screen_OpenInterval.Value = ConfigManage.Screen.OpenInterval;
             nbox_screen_ReplaceInterval.Value = ConfigManage.Screen.ReplaceInterval;
             // 壁纸类型
+            typeList = ConfigManage.Screen.SelectedTypes.Split(',');
             foreach (var type in typeTotal.data)
             {
                 Tag tag = new Tag();
@@ -86,8 +88,7 @@ namespace HWallpaper
                 tag.ShowCloseButton = false;
                 tag.Content = type.name;
                 tag.Tag = type.id;
-                tag.IsSelected = (!string.IsNullOrEmpty(ConfigManage.Screen.SelectedTypes)
-                    && ConfigManage.Screen.SelectedTypes.IndexOf(type.id) > -1);
+                tag.IsSelected = typeList.Contains(type.id);
                 cbox_screen_SelectedTypes.Children.Add(tag);
             }
             #endregion
@@ -102,6 +103,46 @@ namespace HWallpaper
 
         private void window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            #region 基本
+            ConfigManage.Base.AutoOn = cbox_basic_AutoOn.IsChecked.Value;
+            ConfigManage.Base.Cache = cbox_basic_Cache.IsChecked.Value;
+            ConfigManage.Base.AutoClearCache = cbox_basic_AutoClearCache.IsChecked.Value;
+            ConfigManage.Base.DownPath = tbox_basic_DownPath.Text;
+            ConfigManage.Base.CachePath = tbox_basic_CachePath.Text;
+            #endregion 基本
+
+            #region 壁纸
+            ConfigManage.Wallpaper.AutoReplace = cbox_wallpaper_AutoReplace.IsChecked.Value;
+            ConfigManage.Wallpaper.TimeInterval = nbox_wallpaper_Interval.Value;
+            // 壁纸类型
+            List<string> typeList = new List<string>();
+            foreach (Tag tag in cbox_wallpaper_SelectedTypes.Children)
+            {
+                if (tag.IsSelected)
+                {
+                    typeList.Add(tag.Tag.ToString());
+                }
+            }
+            ConfigManage.Wallpaper.SelectedTypes = string.Join(",", typeList);
+            typeList.Clear();
+            #endregion
+
+            #region 屏保
+            ConfigManage.Screen.Open = cbox_screen_AutoReplace.IsChecked.Value;
+            ConfigManage.Screen.OpenInterval = nbox_screen_OpenInterval.Value;
+            ConfigManage.Screen.ReplaceInterval = nbox_screen_ReplaceInterval.Value;
+            // 壁纸类型
+            foreach (Tag tag in cbox_screen_SelectedTypes.Children)
+            {
+                if (tag.IsSelected)
+                {
+                    typeList.Add(tag.Tag.ToString());
+                }
+            }
+            ConfigManage.Screen.SelectedTypes = string.Join(",", typeList);
+            typeList.Clear();
+            #endregion
+
             ConfigManage.Save();
         }
     }

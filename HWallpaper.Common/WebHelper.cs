@@ -33,6 +33,28 @@ namespace HWallpaper.Common
             }
             return null;
         }
+        /// <summary>
+        /// 根据Url地址保存
+        /// </summary>
+        /// <param name="url">路径</param>
+        public static bool DownImage(string url,string fullName)
+        {
+            try
+            {
+                if (!System.IO.File.Exists(fullName))
+                {
+                    System.Drawing.Image img = GetImage(url);
+                    img.Save(fullName);
+                    img.Dispose();
+                    return true;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                LogHelper.WriteLog(ex.Message,EnumLogLevel.Error);
+            }
+            return false;
+        }
         public static string HttpGet(string url, string postDataStr = "")
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url + (postDataStr == "" ? "" : "?") + postDataStr);

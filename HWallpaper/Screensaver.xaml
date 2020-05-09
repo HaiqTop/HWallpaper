@@ -1,0 +1,17 @@
+﻿<Window x:Class="HWallpaper.Screensaver"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HWallpaper"
+        mc:Ignorable="d"
+        WindowStyle="None" Background="Transparent" AllowsTransparency="True"
+        Title="屏保" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowState="Maximized" ResizeMode="NoResize"
+        Closing="Window_Closing" KeyDown="Window_KeyDown">
+    <Grid Background="Black" Margin="0,0,0,0">
+        <Image Margin="0" Source="Image/6_2003183.jpg" Name="picBox"></Image>
+        <Image Margin="0" Name="picBoxTemp" Visibility="Hidden"></Image> 
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,66,0,0" TextWrapping="Wrap" FontSize="80" Foreground="White" Name="labelT" Text="16:51"/>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,188,0,0" TextWrapping="Wrap" FontSize="40" Foreground="White" Name="labelD" Text="02-12 周三"/>
+    </Grid>
+</Window>

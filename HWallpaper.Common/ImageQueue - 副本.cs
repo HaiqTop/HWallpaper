@@ -8,7 +8,7 @@ using System.IO;
 
 namespace HWallpaper.Common
 {
-    public class ImageQueue
+    public static class ImageQueue
     {
         #region 辅助类别
         private class ImageQueueInfo
@@ -18,28 +18,28 @@ namespace HWallpaper.Common
         }
         #endregion
         public delegate void ComplateDelegate(Image i, string u, BitmapImage b);
-        public event ComplateDelegate OnComplate;
-        private AutoResetEvent autoEvent;
-        private Queue<ImageQueueInfo> Stacks;
-        public ImageQueue()
+        public static event ComplateDelegate OnComplate;
+        private static AutoResetEvent autoEvent;
+        private static Queue<ImageQueueInfo> Stacks;
+        static ImageQueue()
         {
-            this.Stacks = new Queue<ImageQueueInfo>();
+            ImageQueue.Stacks = new Queue<ImageQueueInfo>();
             autoEvent = new AutoResetEvent(true);
-            Thread t = new Thread(new ThreadStart(this.DownloadImage));
+            Thread t = new Thread(new ThreadStart(ImageQueue.DownloadImage));
             t.Name = "下载图片";
             t.IsBackground = true;
             t.Start();
         }
-        private void DownloadImage()
+        private static void DownloadImage()
         {
             while (true)
             {
                 ImageQueueInfo t = null;
-                lock (this.Stacks)
+                lock (ImageQueue.Stacks)
                 {
-                    if (this.Stacks.Count > 0)
+                    if (ImageQueue.Stacks.Count > 0)
                     {
-                        t = this.Stacks.Dequeue();
+                        t = ImageQueue.Stacks.Dequeue();
                     }
                 }
                 if (t != null)
@@ -77,9 +77,9 @@ namespace HWallpaper.Common
                             if (image.CanFreeze) image.Freeze();
                             t.image.Dispatcher.BeginInvoke(new Action<ImageQueueInfo, BitmapImage>((i, bmp) =>
                             {
-                                if (this.OnComplate != null)
+                                if (ImageQueue.OnComplate != null)
                                 {
-                                    this.OnComplate(i.image, i.url, bmp);
+                                    ImageQueue.OnComplate(i.image, i.url, bmp);
                                 }
                             }), new Object[] { t, image });
                         }
@@ -90,17 +90,17 @@ namespace HWallpaper.Common
                         continue;
                     }
                 }
-                if (this.Stacks.Count > 0) continue;
+                if (ImageQueue.Stacks.Count > 0) continue;
                 autoEvent.WaitOne();
             }
         }
-        public void Queue(Image img, String url)
+        public static void Queue(Image img, String url)
         {
             if (String.IsNullOrEmpty(url)) return;
-            lock (this.Stacks)
+            lock (ImageQueue.Stacks)
             {
-                this.Stacks.Enqueue(new ImageQueueInfo { url = url, image = img });
-                this.autoEvent.Set();
+                ImageQueue.Stacks.Enqueue(new ImageQueueInfo { url = url, image = img });
+                ImageQueue.autoEvent.Set();
             }
         }
     }

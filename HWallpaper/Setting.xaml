@@ -38,12 +38,11 @@
                     </Grid.RowDefinitions>
                     <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_wallpaper_AutoReplace" Height="30" Content="自动更换" IsChecked="False" Margin="10,5,422,5" Width="89"/>
                     <hc:NumericUpDown Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Maximum="100" Name="nbox_wallpaper_Interval" DecimalPlaces="0" hc:InfoElement.TitleWidth="70" hc:InfoElement.Placeholder="0" hc:InfoElement.TitleAlignment="Left" hc:InfoElement.Title="更换频率" Style="{StaticResource NumericUpDownPlus}" Margin="125,5,260,5"/>
-                    <RadioButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="282,5,185,5" Height="30" Content="天" IsChecked="True" IsEnabled="True" Width="54" Checked="RadioButton_Checked" Tag="0" Name="WallTimeType_Day"/>
+                    <RadioButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="282,5,185,5" Height="30" Content="天" IsChecked="False" IsEnabled="True" Width="54" Checked="RadioButton_Checked" Tag="0" Name="WallTimeType_Day"/>
                     <RadioButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="341,5,120,5" Height="30" Content="小时" IsChecked="False" IsEnabled="True" Width="60" Checked="RadioButton_Checked" Tag="1" Name="WallTimeType_Hour"/>
                     <RadioButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="414,5,47,5" Height="30" Content="分钟" IsChecked="False" IsEnabled="True" Width="60" Checked="RadioButton_Checked" Tag="2" Name="WallTimeType_Minute"/>
                     <hc:Divider  Grid.Row="1" Grid.Column="0" Content="请选择壁纸切换图片类型" HorizontalContentAlignment="Left" Margin="2" LineStroke="Black"/>
                     <hc:TagPanel Grid.Row="2" Grid.Column="0" Margin="10,5,10,5" Name="cbox_wallpaper_SelectedTypes" Orientation="Horizontal" VerticalAlignment="Center" ShowAddButton="False">
-                        <hc:Tag Selectable="True" ShowCloseButton="False" Content="最新" IsSelected="True" Tag="0" Margin="0"/>
                     </hc:TagPanel>
                 </Grid>
             </GroupBox>
@@ -64,7 +63,6 @@
                     <TextBlock  Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="482,12,0,12"  Text="秒" Style="{StaticResource TextBlockDefaultPrimary}" RenderTransformOrigin="1.75,0.697"/>
                     <hc:Divider  Grid.Row="1" Grid.Column="0" Content="请选择壁纸切换图片类型" HorizontalContentAlignment="Left" Margin="2" LineStroke="Black"/>
                     <hc:TagPanel Grid.Row="2" Grid.Column="0" Margin="10,5,10,5" Name="cbox_screen_SelectedTypes" Orientation="Horizontal" VerticalAlignment="Center" ShowAddButton="False">
-                        <hc:Tag Selectable="True" ShowCloseButton="False" Content="最新" IsSelected="True" Tag="0" Margin="0"/>
                     </hc:TagPanel>
                 </Grid>
             </GroupBox>
