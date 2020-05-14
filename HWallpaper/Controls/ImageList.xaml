@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:HWallpaper.Controls"
-             xmlns:controls="clr-namespace:HWallpaper.Controls.controls" x:Class="HWallpaper.Controls.ImageList"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:controls="clr-namespace:HWallpaper.Controls" x:Class="HWallpaper.Controls.ImageList"
              mc:Ignorable="d" 
              d:DesignHeight="327.333" d:DesignWidth="500">
     <UserControl.Resources>
@@ -12,18 +13,19 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!-- 项目工程的相对路径 -->
-                <ResourceDictionary Source="pack://application:,,,/HWallpaper.Controls;component/Themes/ScrollViewer.xaml"></ResourceDictionary>
-                <ResourceDictionary Source="pack://application:,,,/HWallpaper.Controls;component/Themes/Button.xaml"></ResourceDictionary>
+                <!--<ResourceDictionary Source="pack://application:,,,/HWallpaper.Controls;component/Themes/Button.xaml"></ResourceDictionary>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Name="zoomGrid" MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave" MouseWheel="ZoomGrid_MouseWheel"  Margin="0"
           Background="Transparent">
-        <local:WaitingProgress x:Name="waiting" Height="{Binding Height, ElementName=this, Mode=OneWay}"/>
+        <hc:LoadingCircle Name="loading"/>
         <Image Name="zoomImage" Margin="2" MouseDown="Image_MouseDown"/>
-        <TextBlock Name="lb_picName" Text="Label" HorizontalAlignment="Left" Margin="40,4,0,0" VerticalAlignment="Top" Width="200"/>
-        <TextBlock Name="lb_picTags" Text="Label" HorizontalAlignment="Left" Margin="40,30,0,0" VerticalAlignment="Top" Width="200"/>
-        <TextBlock Name="lb_picDate" Text="Label" HorizontalAlignment="Left" Margin="40,56,0,0" VerticalAlignment="Top" Width="200"/>
+        <Button Background="Transparent" Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ButtonPrimary}" hc:IconElement.Geometry="{StaticResource DownloadGeometry}" Click="Btn_Click" Name="btn_down"/>
+        <Button Background="Transparent" Margin="0,52,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ButtonPrimary}" hc:IconElement.Geometry="{StaticResource FullScreenReturnGeometry}" Click="Btn_Click" Name="btn_screen"/>
+        <TextBlock Name="lb_picName" Text="Label" HorizontalAlignment="Left" Margin="40,14,0,0" VerticalAlignment="Top" Width="200"/>
+        <TextBlock Name="lb_picTags" Text="Label" HorizontalAlignment="Left" Margin="40,40,0,0" VerticalAlignment="Top" Width="200"/>
+        <TextBlock Name="lb_picDate" Text="Label" HorizontalAlignment="Left" Margin="40,66,0,0" VerticalAlignment="Top" Width="200"/>
     </Grid>
     <!--<ScrollViewer x:Name="scr" Margin="0" VerticalScrollBarVisibility="Auto" ScrollChanged="ListView_ScrollChanged" >
         <WrapPanel Margin="2" Orientation="Horizontal" x:Name="panel" Width="{Binding Width, ElementName=scr, Mode=OneWay}"/>

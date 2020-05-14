@@ -8,7 +8,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Timers;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using static HWallpaper.Common.WinApi;
 
@@ -21,6 +23,7 @@ namespace HWallpaper
     {
         private ImageHelper imgHelper;
         private ImageQueue imageQueue = new ImageQueue();
+        private Queue<BitmapImage> imageList= new Queue<BitmapImage>();
         /// <summary>
         /// 图片切换用的Timer
         /// </summary>
@@ -32,17 +35,10 @@ namespace HWallpaper
         public Screensaver()
         {
             InitializeComponent();
+            UpdateTime();
+            InitTimer();
+            imgHelper = new ImageHelper(new string[] { "0","6"},0);
             imageQueue.OnComplate += ImageQueue_OnComplate;
-        }
-
-        private void ImageQueue_OnComplate(System.Windows.Controls.Image i, string u, BitmapImage b)
-        {
-            picBoxTemp.Source = picBox.Source;
-            picBox.Visibility = Visibility.Hidden;
-            // 切换动画效果
-            AnimationType type = AnimationType.AW_HOR_POSITIVE;
-            type = GetRandomAnimationType();
-            AnimateWindow(picBox.GetHandle(), 1500, type | AnimationType.AW_ACTIVATE);
         }
 
         /// <summary>
@@ -67,24 +63,31 @@ namespace HWallpaper
 
         private void UpdateTime()
         {
-            labelD.Text = DateTime.Now.ToString("MM-dd") + " " + Common.Utils.GetWeetString();
-            labelT.Text = DateTime.Now.ToString("HH:mm");
+            labelD.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                labelD.Text = DateTime.Now.ToString("MM-dd") + " " + Common.Utils.GetWeetString();
+                labelT.Text = DateTime.Now.ToString("HH:mm");
+            }));
         }
         private void EffectPicture(object source, ElapsedEventArgs e)
         {
             ImgInfo info = imgHelper.GetNextImage();
             try
             {
-                string fullName = System.IO.Path.Combine(ConfigManage.Base.CachePath, info.GetFileName());
-                if (System.IO.File.Exists(fullName))
+                picBox.Dispatcher.BeginInvoke(new Action<Image, ImgInfo>((image, imgInfo) =>
                 {
-                    imageQueue.Queue(picBox, fullName);
-                    //picBox.Source = Common.Utils.ReadImageFile(fullName);
-                }
-                else
-                {
-                    imageQueue.Queue(picBox, info.url);
-                }
+                    string fullName = System.IO.Path.Combine(ConfigManage.Base.CachePath, imgInfo.GetFileName());
+                    if (System.IO.File.Exists(fullName))
+                    {
+                        imageQueue.Queue(image, fullName);
+                        //picBox.Source = Common.Utils.ReadImageFile(fullName);
+                    }
+                    else
+                    {
+                        imageQueue.Queue(image, info.url);
+                    }
+                }), new Object[] { picBox, info });
+                
             }
             catch (Exception ex)
             {
@@ -134,8 +137,8 @@ namespace HWallpaper
             finally
             {
                 this.Hide();
-                System.Threading.Thread.Sleep(1000);
-                this.Close();
+                //System.Threading.Thread.Sleep(1000);
+                //this.Close();
             }
         }
 
@@ -169,6 +172,28 @@ namespace HWallpaper
                 case Key.Escape:
                     this.Close();
                     break;
+            }
+        }
+
+        private void ImageQueue_OnComplate(System.Windows.Controls.Image i, string u, BitmapImage b)
+        {
+            Storyboard story = (base.Resources["closeDW1"] as Storyboard);
+            story.Begin();
+            imageList.Enqueue(b);
+
+            // 切换动画效果
+            //AnimationType type = AnimationType.AW_HOR_POSITIVE;
+            //type = GetRandomAnimationType();
+            //AnimateWindow(picBox.GetHandle(), 1500, type | AnimationType.AW_ACTIVATE);
+        }
+
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            if (imageList.Count > 0)
+            {
+                picBox.Source = imageList.Dequeue();
+                var story = (base.Resources["showDW1"] as Storyboard);
+                story.Begin();
             }
         }
     }

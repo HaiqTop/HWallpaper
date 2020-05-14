@@ -22,8 +22,6 @@ namespace HWallpaper
     /// </summary>
     public partial class Wallpaper
     {
-        private int curType = 0;
-        private string curTypeName = "最新";
         public Wallpaper()
         {
             InitializeComponent();
@@ -76,7 +74,7 @@ namespace HWallpaper
             catch (Exception ex)
             {
                 LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
-                MessageBox.Show(ex.Message, "错误");
+                HandyControl.Controls.Growl.Error(ex.Message);
             }
 
         }

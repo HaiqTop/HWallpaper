@@ -40,6 +40,7 @@
       <HintPath>..\packages\HandyControl.2.4.0\lib\net40\HandyControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -52,6 +53,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\ImageList.xaml.cs">
+      <DependentUpon>ImageList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\WaitingProgress.xaml.cs">
+      <DependentUpon>WaitingProgress.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screensaver.xaml.cs">
       <DependentUpon>Screensaver.xaml</DependentUpon>
     </Compile>
@@ -61,6 +68,14 @@
     <Compile Include="Wallpaper.xaml.cs">
       <DependentUpon>Wallpaper.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\ImageList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\WaitingProgress.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,14 +128,23 @@
       <Project>{01cc53a9-578d-4802-a55d-0b822ecef9f9}</Project>
       <Name>HWallpaper.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\HWallpaper.Controls\HWallpaper.Controls.csproj">
-      <Project>{f7837872-15b3-4412-8e73-3f3088192902}</Project>
-      <Name>HWallpaper.Controls</Name>
-    </ProjectReference>
     <ProjectReference Include="..\HWallpaper.Model\HWallpaper.Model.csproj">
       <Project>{44aa9382-7830-49b2-aad7-7e25cc71d42c}</Project>
       <Name>HWallpaper.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\6_2003183.jpg" />
+    <Resource Include="Image\download.png" />
+    <Resource Include="Image\exit.jpg" />
+    <Resource Include="Image\exit1.png" />
+    <Resource Include="Image\loading.gif" />
+    <Resource Include="Image\loading.png" />
+    <Resource Include="Image\loading1.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\rdo_yes.png" />
+    <Resource Include="Image\screen.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:HWallpaper"
-        xmlns:ll="clr-namespace:HWallpaper.Controls;assembly=Controls"
+           xmlns:ll="clr-namespace:HWallpaper.Controls"
            mc:Ignorable="d"
         Title="H壁纸" Height="647" Width="994" Loaded="Window_Loaded" Icon="Image/logo.ico" SizeChanged="window_SizeChanged">
     <hc:Window.NonClientAreaContent>
@@ -26,8 +26,11 @@
             </Menu>
         </StackPanel>
     </hc:Window.NonClientAreaContent>
-    <StackPanel x:Name="stackPanel" Margin="0">
-        <TabControl Name="tabControl" FlowDirection="LeftToRight" Margin="0" HorizontalContentAlignment="Left" SelectionChanged="tabControl_SelectionChanged" Height="{Binding ActualHeight, ElementName=stackPanel, Mode=OneWay}" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="#FFB9B5B5" Padding="1">
+    <Grid Margin="0">
+        <TabControl Name="tabControl" FlowDirection="LeftToRight" Margin="0" SelectionChanged="tabControl_SelectionChanged" Height="{Binding ActualHeight, ElementName=stackPanel, Mode=OneWay}" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="#FFB9B5B5" Padding="1">
         </TabControl>
-    </StackPanel>
+        <hc:ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsInertiaEnabled="True" IsPenetrating="True">
+            <StackPanel hc:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
+        </hc:ScrollViewer>
+    </Grid>
 </hc:Window>

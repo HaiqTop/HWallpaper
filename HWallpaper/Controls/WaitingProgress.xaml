@@ -10,7 +10,7 @@
             <DoubleAnimation Storyboard.TargetName="SpinnerRotate" Storyboard.TargetProperty="(RotateTransform.Angle)" From="0" To="359" Duration="0:0:02" RepeatBehavior="Forever" />
         </Storyboard>
     </UserControl.Resources>
-    <Image Name="image" Source="pack://application:,,,/Controls;component/Images/loading.png" RenderTransformOrigin="0.5,0.5" Stretch="None">
+    <Image Name="image" Source="pack://application:,,,/HWallpaper;component/Images/loading.png" RenderTransformOrigin="0.5,0.5" Stretch="None">
         <Image.RenderTransform>
             <RotateTransform x:Name="SpinnerRotate" Angle="0" />
         </Image.RenderTransform>

@@ -35,7 +35,7 @@ namespace HWallpaper
             string[] types = ConfigManage.Wallpaper.SelectedTypes?.Split(',');
             imgHelper = new ImageHelper(types, totalIndex);
         }
-
+        Screensaver screensaver;
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -53,6 +53,10 @@ namespace HWallpaper
                 case "软件设置":
                     Setting setting = new Setting();
                     setting.ShowDialog();
+                    break;
+                case "立即屏保":
+                    screensaver = new Screensaver();
+                    screensaver.Show();
                     break;
             }
         }

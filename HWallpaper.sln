@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HWallpaper.Common", "HWallp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HWallpaper.Business", "HWallpaper.Business\HWallpaper.Business.csproj", "{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HWallpaper.Controls", "HWallpaper.Controls\HWallpaper.Controls.csproj", "{F7837872-15B3-4412-8E73-3F3088192902}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7837872-15B3-4412-8E73-3F3088192902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7837872-15B3-4412-8E73-3F3088192902}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7837872-15B3-4412-8E73-3F3088192902}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7837872-15B3-4412-8E73-3F3088192902}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using HWallpaper.Business;
+﻿using HandyControl.Controls;
+using HWallpaper.Business;
 using HWallpaper.Common;
 using HWallpaper.Model;
 using System;
@@ -23,65 +24,43 @@ namespace HWallpaper.Controls
         private readonly int scrollWidth = 10;//定义滚动条宽度，需要根据实际滚动条宽度设置
         private string CachePath;
         private string DownPath;
-        private controls.ButtonEx btn_down = new controls.ButtonEx();
-        private controls.ButtonEx btn_screen = new controls.ButtonEx();
-        private ScrollViewer scr = new ScrollViewer();
+        private HandyControl.Controls.ScrollViewer scr = new HandyControl.Controls.ScrollViewer();
         private Grid scrGrid = new Grid();
         private WrapPanel panel = new WrapPanel();
         //private Grid zoomGrid = new Grid();
         //private Image zoomImage = new Image();
         //private WaitingProgress waiting = new WaitingProgress();
         Thickness margin = new Thickness(2);
+        private string _token = "GrowlDemoWithToken";
         public ImageList()
         {
             InitializeComponent();
-            string path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "ZoroWallpaper");
-            CachePath = System.IO.Path.Combine(path, "Cache");
-            DownPath = System.IO.Path.Combine(path, "DownLoad");
+            CachePath = ConfigManage.Base.CachePath;
+            DownPath = ConfigManage.Base.DownPath;
             this.SizeChanged += new System.Windows.SizeChangedEventHandler(Resize);
             ImageDown.OnComplate += new ImageDown.ComplateDelegate(ImageDown_OnComplate);
             ImageDown.OnError += ImageDown_OnError;
             InitBtn();
         }
-
+        public void SetToken(string token)
+        {
+            _token = token;
+        }
 
         private void InitBtn()
         {
-            btn_down.Icon = new BitmapImage(new Uri("/Controls;component/Images/download.png", UriKind.Relative));
-            btn_down.Content = "Download";
             btn_down.ToolTip = "下载到本地";
-            btn_down.VerticalAlignment = VerticalAlignment.Top;
-            btn_down.HorizontalAlignment = HorizontalAlignment.Right;
-            btn_down.Margin = new Thickness(0, 10, 10, 0);
-            btn_down.Height = 32;
-            btn_down.Width = 32;
-            btn_down.Click += Btn_Click;
-            btn_down.ButtonType = controls.ButtonType.Icon;
+            //btn_down.Margin = new Thickness(0, 10, 10, 0);
             btn_down.Visibility = Visibility.Hidden;
-
-            btn_screen.Icon = new BitmapImage(new Uri("/Controls;component/Images/screen.png", UriKind.Relative));
-            btn_screen.Content = "screen";
             btn_screen.ToolTip = "设置为壁纸";
-            btn_screen.VerticalAlignment = VerticalAlignment.Top;
-            btn_screen.HorizontalAlignment = HorizontalAlignment.Right;
-            btn_screen.Margin = new Thickness(0, 52, 10, 0);
-            btn_screen.Height = 32;
-            btn_screen.Width = 32;
-            btn_screen.Click += Btn_Click;
-            btn_screen.ButtonType = controls.ButtonType.Icon;
+            //btn_screen.Margin = new Thickness(0, 52, 10, 0);
             btn_screen.Visibility = Visibility.Hidden;
+            zoomGrid.Children.Remove(btn_down);
+            zoomGrid.Children.Remove(btn_screen);
 
-            //zoomGrid.Children.Add(waiting);
-            //zoomGrid.Children.Add(zoomImage);
             zoomGrid.Height = this.Height;
             zoomGrid.Width = this.Width;
             zoomImage.Tag = PageType.SPA;
-            //zoomImage.Margin = margin;
-            //zoomImage.MouseDown += Image_MouseDown;
-            //zoomGrid.MouseEnter += Grid_MouseEnter;
-            //zoomGrid.MouseLeave += Grid_MouseLeave;
-            //zoomGrid.MouseWheel += ZoomGrid_MouseWheel;
-            //zoomGrid.Background = Brushes.Transparent;
             scr.Width = this.Width;
             //scr.Height = this.Height;
             scr.Margin = new Thickness(0);
@@ -115,7 +94,7 @@ namespace HWallpaper.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                Growl.Info(ex.Message);
             }
         }
         /// <summary>
@@ -125,7 +104,8 @@ namespace HWallpaper.Controls
         {
             if (imgInfo != null)
             {
-                waiting.Show();
+                loading.Visibility = Visibility.Visible;
+                //waiting.Show();
                 zoomImage.Visibility = Visibility.Hidden;
                 ImageDown.DownloadImage(zoomImage, imgInfo.url);
                 zoomGrid.Tag = imgInfo.Index;
@@ -154,19 +134,17 @@ namespace HWallpaper.Controls
             if ((PageType)i.Tag == PageType.SPA)
             {
                 zoomImage.Visibility = Visibility.Visible;
-                waiting.Stop();
+                loading.Visibility = Visibility.Hidden;
             }
             else
             {
                 Grid grid = i.Parent as Grid;
                 foreach (var item in grid.Children)
                 {
-                    if (item is WaitingProgress)
+                    if (item is LoadingCircle)
                     {
-                        WaitingProgress wait = item as WaitingProgress;
-                        wait.Stop();
-                        grid.Children.Remove(wait);
-                        wait = null;
+                        LoadingCircle load = item as LoadingCircle;
+                        grid.Children.Remove(load);
                         break;
                     }
                 }
@@ -181,10 +159,8 @@ namespace HWallpaper.Controls
             {
                 if (item is WaitingProgress)
                 {
-                    WaitingProgress wait = item as WaitingProgress;
-                    wait.Stop();
-                    grid.Children.Remove(wait);
-                    wait = null;
+                    LoadingCircle load = item as LoadingCircle;
+                    grid.Children.Remove(load);
                     break;
                 }
             }
@@ -305,10 +281,8 @@ namespace HWallpaper.Controls
                     img.Margin = margin;
                     img.MouseDown += Image_MouseDown;
                     Grid grid = new Grid();
-                    WaitingProgress waiting = new WaitingProgress();
-                    grid.Children.Add(waiting);
+                    grid.Children.Add(new LoadingCircle());
                     grid.Children.Add(img);
-                    waiting.Show();
                     ImageDown.DownloadImage(img, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
                     grid.MouseEnter += Grid_MouseEnter;
                     grid.MouseLeave += Grid_MouseLeave;
@@ -390,9 +364,9 @@ namespace HWallpaper.Controls
             }
             //for (int i = 0; i < grid.Children.Count; i++)
             //{
-            //    if (grid.Children[i].GetType() == typeof(controls.ButtonEx))
+            //    if (grid.Children[i].GetType() == typeof(Button))
             //    {
-            //        controls.ButtonEx btn = grid.Children[i] as controls.ButtonEx;
+            //        Button btn = grid.Children[i] as Button;
             //        grid.Children.Remove(btn);
             //        //break;
             //    }
@@ -416,10 +390,10 @@ namespace HWallpaper.Controls
 
         private void Btn_Click(object sender, RoutedEventArgs e)
         {
-            controls.ButtonEx btn = sender as controls.ButtonEx;
+            Button btn = sender as Button;
             if (btn == null) return;
             ImgInfo imgInfo = this.GetimgInfo(btn.Tag);
-            if (btn.Content?.ToString() == "Download")
+            if (btn.Name == "btn_down")
             {
                 string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
                 if (!System.IO.File.Exists(imgFullName))
@@ -428,7 +402,7 @@ namespace HWallpaper.Controls
                     img.Save(imgFullName);
                     img.Dispose();
                 }
-                MessageBox.Show("下载成功。");
+                Growl.Success("下载成功。");
             }
             else
             {
@@ -440,7 +414,7 @@ namespace HWallpaper.Controls
                     img.Dispose();
                 }
                 WinApi.SetWallpaper(imgFullName);
-                MessageBox.Show("壁纸设置成功。");
+                Growl.Success("壁纸设置成功。");
             }
         }
         /// <summary>

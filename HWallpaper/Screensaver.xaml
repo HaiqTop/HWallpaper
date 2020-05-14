@@ -3,14 +3,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:HWallpaper"
         mc:Ignorable="d"
         WindowStyle="None" Background="Transparent" AllowsTransparency="True"
-        Title="屏保" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowState="Maximized" ResizeMode="NoResize"
+        Title="屏保" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowState="Normal"  ResizeMode="NoResize"
         Closing="Window_Closing" KeyDown="Window_KeyDown">
+    <Window.Resources>
+        <!--原始旋转出来样例-->
+        <Storyboard x:Key="showDW">
+            <!--故事板，即协同动画-->
+            <!--故事板目标元素，这里的窗体的Content对象Grid，如果是Canvas等其它的也可以，不过TargetName要一致-->
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="0.2" To="1" Duration="0:0:2.5"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[1].Angle" From="-90" To="0" Duration="0:0:2" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" From="0" To="1" Duration="0:0:2" AccelerationRatio="1"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" From="0" To="1" Duration="0:0:2" AccelerationRatio="1"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="0.98" BeginTime="0:0:2" Duration="0:0:0.05" DecelerationRatio="1"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="0.98" BeginTime="0:0:2" Duration="0:0:0.05" DecelerationRatio="1"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2" AccelerationRatio="1"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2" AccelerationRatio="1"></DoubleAnimation>
+        </Storyboard>
+        <!--原始的旋转回去样例-->
+        <Storyboard x:Key="closeDW">
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[1].Angle" To="360" Duration="0:0:1.5" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:3"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="0" Duration="0:0:1.5" AccelerationRatio="1"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="0" Duration="0:0:1.5" AccelerationRatio="1"></DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="showDW1" Name="showDW1">
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:1.5" ></DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="closeDW1" Name="closeDW1" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1.5" ></DoubleAnimation>
+        </Storyboard>
+    </Window.Resources>
     <Grid Background="Black" Margin="0,0,0,0">
         <Image Margin="0" Source="Image/6_2003183.jpg" Name="picBox"></Image>
-        <Image Margin="0" Name="picBoxTemp" Visibility="Hidden"></Image> 
+        <!--<Image Margin="0" Name="picBoxTemp" Visibility="Hidden"></Image>-->
+        <!--<hc:FlipClock Margin="20,0,0,30" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"/>-->
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,66,0,0" TextWrapping="Wrap" FontSize="80" Foreground="White" Name="labelT" Text="16:51"/>
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,188,0,0" TextWrapping="Wrap" FontSize="40" Foreground="White" Name="labelD" Text="02-12 周三"/>
     </Grid>
