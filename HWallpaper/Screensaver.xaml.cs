@@ -21,9 +21,19 @@ namespace HWallpaper
     /// </summary>
     public partial class Screensaver : System.Windows.Window
     {
+        public class ImageQ
+        {
+            public ImageQ(BitmapImage b,string name)
+            {
+                this.StoryName = name;
+                this.BitmapImage = b;
+            }
+            public BitmapImage BitmapImage { get;set ;}
+            public string StoryName { get;set ; }
+        }
         private ImageHelper imgHelper;
         private ImageQueue imageQueue = new ImageQueue();
-        private Queue<BitmapImage> imageList= new Queue<BitmapImage>();
+        private Queue<ImageQ> imageList= new Queue<ImageQ>();
         /// <summary>
         /// 图片切换用的Timer
         /// </summary>
@@ -48,8 +58,8 @@ namespace HWallpaper
         {
             timerP.Elapsed += new System.Timers.ElapsedEventHandler(EffectPicture);
             timerP.Interval = ConfigManage.Screen.ReplaceInterval * 1000;
-            timerP.Enabled = true;
-            timerP.Start();
+            //timerP.Enabled = true;
+            //timerP.Start();
             timerL.Elapsed += new System.Timers.ElapsedEventHandler(timerL_Elapsed);
             timerL.Interval = 10000;
             timerL.Enabled = true;
@@ -142,6 +152,10 @@ namespace HWallpaper
             }
         }
 
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            EffectPicture(null,null); ;
+        }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -174,12 +188,32 @@ namespace HWallpaper
                     break;
             }
         }
-
+        int index = 0;
         private void ImageQueue_OnComplate(System.Windows.Controls.Image i, string u, BitmapImage b)
         {
-            Storyboard story = (base.Resources["closeDW1"] as Storyboard);
+            string key = "closeDW";
+            switch (index)
+            {
+                case 0: key = "close_Left"; break;
+                case 1: key = "close_Right"; break;
+                case 2: key = "close_Bottom"; break;
+                case 3: key = "close_Top"; break;
+                case 4: key = "close_Opacity"; break;
+            }
+            index++;
+            if (index > 4) index = 0;
+            picBoxTemp.Source = picBox.Source;
+            //Storyboard story = (base.Resources[key] as Storyboard);
+            //story.Begin();
+            
+
+            picBox.Source = b;
+            string newName = key.Replace("close_", "show_");
+            newName = "story_Top";
+            var story = (base.Resources[newName] as Storyboard);
             story.Begin();
-            imageList.Enqueue(b);
+
+            //imageList.Enqueue(new ImageQ(b,key));
 
             // 切换动画效果
             //AnimationType type = AnimationType.AW_HOR_POSITIVE;
@@ -191,10 +225,13 @@ namespace HWallpaper
         {
             if (imageList.Count > 0)
             {
-                picBox.Source = imageList.Dequeue();
-                var story = (base.Resources["showDW1"] as Storyboard);
+                ImageQ imageQ = imageList.Dequeue();
+                picBox.Source = imageQ.BitmapImage;
+                string newName = imageQ.StoryName.Replace("close_", "show_");
+                var story = (base.Resources[newName] as Storyboard);
                 story.Begin();
             }
         }
+
     }
 }

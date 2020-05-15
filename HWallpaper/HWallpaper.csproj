@@ -146,5 +146,9 @@
     <Resource Include="Image\rdo_yes.png" />
     <Resource Include="Image\screen.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\14_2011180.jpg" />
+    <Resource Include="Image\30_1001722.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

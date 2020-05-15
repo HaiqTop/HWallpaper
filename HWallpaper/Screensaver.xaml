@@ -6,16 +6,17 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:HWallpaper"
         mc:Ignorable="d"
+        Name="windown"
         WindowStyle="None" Background="Transparent" AllowsTransparency="True"
         Title="屏保" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowState="Normal"  ResizeMode="NoResize"
-        Closing="Window_Closing" KeyDown="Window_KeyDown">
+        Closing="Window_Closing" KeyDown="Window_KeyDown" MouseDown="Window_MouseDown">
     <Window.Resources>
         <!--原始旋转出来样例-->
         <Storyboard x:Key="showDW">
             <!--故事板，即协同动画-->
             <!--故事板目标元素，这里的窗体的Content对象Grid，如果是Canvas等其它的也可以，不过TargetName要一致-->
             <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="0.2" To="1" Duration="0:0:2.5"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[1].Angle" From="-90" To="0" Duration="0:0:2" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].Angle" From="-90" To="0" Duration="0:0:2" ></DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" From="0" To="1" Duration="0:0:2" AccelerationRatio="1"></DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" From="0" To="1" Duration="0:0:2" AccelerationRatio="1"></DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="0.98" BeginTime="0:0:2" Duration="0:0:0.05" DecelerationRatio="1"></DoubleAnimation>
@@ -24,22 +25,83 @@
             <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2" AccelerationRatio="1"></DoubleAnimation>
         </Storyboard>
         <!--原始的旋转回去样例-->
-        <Storyboard x:Key="closeDW">
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[1].Angle" To="360" Duration="0:0:1.5" ></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:3"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="0" Duration="0:0:1.5" AccelerationRatio="1"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="0" Duration="0:0:1.5" AccelerationRatio="1"></DoubleAnimation>
+        <Storyboard x:Key="closeDW" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="(RotateTransform.Angle)" To="360" Duration="0:0:1.5" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:1"></DoubleAnimation>
+            <!--<DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="ScaleY" To="0" Duration="0:0:1.5" AccelerationRatio="1"></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="0" Duration="0:0:1.5" AccelerationRatio="1"></DoubleAnimation>-->
         </Storyboard>
-        <Storyboard x:Key="showDW1" Name="showDW1">
+        <Storyboard x:Key="close_Opacity" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="picBoxTemp" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1.5" ></DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="show_Opacity">
             <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:1.5" ></DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Key="closeDW1" Name="closeDW1" Completed="Storyboard_Completed">
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1.5" ></DoubleAnimation>
+        <Storyboard x:Key="close_Left" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="-1366" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="show_Left">
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="1366" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="close_Right" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="1366" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="show_Right">
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="-1366" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="close_Top" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="-768" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="show_Top">
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="-768" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="close_Bottom" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="768" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="show_Bottom">
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="768" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="story_Top" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="540" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="-540" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
         </Storyboard>
     </Window.Resources>
     <Grid Background="Black" Margin="0,0,0,0">
-        <Image Margin="0" Source="Image/6_2003183.jpg" Name="picBox"></Image>
-        <!--<Image Margin="0" Name="picBoxTemp" Visibility="Hidden"></Image>-->
+        <Image Margin="0" Source="Image/30_1001722.jpg" Name="picBoxTemp">
+            <Image.RenderTransform>
+                <!--<RotateTransform x:Name="SpinnerRotate" Angle="0" />-->
+                <TranslateTransform x:Name="translateClose"></TranslateTransform>
+            </Image.RenderTransform>
+        </Image>
+        <Image Margin="0" Source="Image/14_2011180.jpg" Name="picBox">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform x:Name="SpinnerRotate" Angle="0" />
+                    <TranslateTransform x:Name="translate"></TranslateTransform>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
         <!--<hc:FlipClock Margin="20,0,0,30" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"/>-->
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,66,0,0" TextWrapping="Wrap" FontSize="80" Foreground="White" Name="labelT" Text="16:51"/>
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,188,0,0" TextWrapping="Wrap" FontSize="40" Foreground="White" Name="labelD" Text="02-12 周三"/>
