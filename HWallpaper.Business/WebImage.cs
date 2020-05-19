@@ -3,6 +3,7 @@ using HWallpaper.Model;
 using HWallpaper.Common;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media.Imaging;
 
 namespace HWallpaper.Business
 {
@@ -94,6 +95,21 @@ namespace HWallpaper.Business
             }
             ImageListTotal listTotal = JsonHelper.DeserializeJsonToObject<ImageListTotal>(jsonStr);
             return listTotal;
+        }
+
+        /// <summary>
+        /// 保存图片到本地
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="imgFullName"></param>
+        public static void SaveImage(BitmapSource bitmap,string imgFullName)
+        {
+            PngBitmapEncoder PBE = new PngBitmapEncoder();
+            PBE.Frames.Add(BitmapFrame.Create(bitmap));
+            using (System.IO.Stream stream = System.IO.File.Create(imgFullName))
+            {
+                PBE.Save(stream);
+            }
         }
     }
 }

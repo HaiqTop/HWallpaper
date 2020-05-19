@@ -11,26 +11,6 @@
         Title="屏保" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowState="Normal"  ResizeMode="NoResize"
         Closing="Window_Closing" KeyDown="Window_KeyDown" MouseDown="Window_MouseDown">
     <Window.Resources>
-        <!--原始旋转出来样例-->
-        <Storyboard x:Key="showDW">
-            <!--故事板，即协同动画-->
-            <!--故事板目标元素，这里的窗体的Content对象Grid，如果是Canvas等其它的也可以，不过TargetName要一致-->
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="0.2" To="1" Duration="0:0:2.5"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].Angle" From="-90" To="0" Duration="0:0:2" ></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" From="0" To="1" Duration="0:0:2" AccelerationRatio="1"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" From="0" To="1" Duration="0:0:2" AccelerationRatio="1"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="0.98" BeginTime="0:0:2" Duration="0:0:0.05" DecelerationRatio="1"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="0.98" BeginTime="0:0:2" Duration="0:0:0.05" DecelerationRatio="1"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2" AccelerationRatio="1"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2" AccelerationRatio="1"></DoubleAnimation>
-        </Storyboard>
-        <!--原始的旋转回去样例-->
-        <Storyboard x:Key="closeDW" Completed="Storyboard_Completed">
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="(RotateTransform.Angle)" To="360" Duration="0:0:1.5" ></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:1"></DoubleAnimation>
-            <!--<DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="ScaleY" To="0" Duration="0:0:1.5" AccelerationRatio="1"></DoubleAnimation>
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="0" Duration="0:0:1.5" AccelerationRatio="1"></DoubleAnimation>-->
-        </Storyboard>
         <Storyboard x:Key="close_Opacity" Completed="Storyboard_Completed">
             <DoubleAnimation Storyboard.TargetName="picBoxTemp" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1.5" ></DoubleAnimation>
         </Storyboard>

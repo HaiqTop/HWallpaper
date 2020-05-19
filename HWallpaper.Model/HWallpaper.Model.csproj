@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="ImageTypeItem.cs" />
     <Compile Include="TypeTotal.cs" />
     <Compile Include="ImageListTotal.cs" />
     <Compile Include="ImgInfo.cs" />

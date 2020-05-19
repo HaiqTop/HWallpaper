@@ -102,6 +102,28 @@ namespace HWallpaper.Model
         /// 最后一次更新事件
         /// </summary>
         public DateTime ReplaceLastTime { get; set; }
+
+        private Dictionary<int, int> typeIndexs;
+        /// <summary>
+        /// 选择的类型替换的进度位置
+        /// </summary>
+        public Dictionary<int, int> TypeIndexs
+        {
+            get
+            {
+                if (typeIndexs == null)
+                {
+                    typeIndexs = new Dictionary<int, int>();
+                    string[] types = this.SelectedTypes.Split(',');
+                    foreach (var type in types)
+                    {
+                        typeIndexs.Add(Convert.ToInt32(type), 0);
+                    }
+                }
+                return typeIndexs;
+            }
+            set { typeIndexs = value; }
+        }
     }
     [Serializable]
     public class ScreenConfig
@@ -124,6 +146,28 @@ namespace HWallpaper.Model
         /// 屏保壁纸类型
         /// </summary>
         public string SelectedTypes { get { return selectedTypes; } set { selectedTypes = value; } }
+
+        private Dictionary<int, int> typeIndexs;
+        /// <summary>
+        /// 选择的类型替换的进度位置
+        /// </summary>
+        public Dictionary<int, int> TypeIndexs 
+        { 
+            get 
+            {
+                if (typeIndexs == null)
+                {
+                    typeIndexs = new Dictionary<int, int>();
+                    string[] types = this.SelectedTypes.Split(',');
+                    foreach (var type in types)
+                    {
+                        typeIndexs.Add(Convert.ToInt32(type), 0);
+                    }
+                }
+                return typeIndexs; 
+            } 
+            set { typeIndexs = value; } 
+        }
     }
     
     public enum TimeType

@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Threading;
 using System.IO;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace HWallpaper.Common
 {
     public class ImageQueue
     {
-        #region 辅助类别
-        private class ImageQueueInfo
+        class ImageQueueInfo
         {
             public Image image { get; set; }
-            public String url { get; set; }
+            public string Url { get; set; }
+            public string Name { get; set; }
         }
-        #endregion
-        public delegate void ComplateDelegate(Image i, string u, BitmapImage b);
+        public delegate void ComplateDelegate(BitmapImage b);
         public event ComplateDelegate OnComplate;
         private AutoResetEvent autoEvent;
         private Queue<ImageQueueInfo> Stacks;
+
+        public string CachePath;
         public ImageQueue()
         {
             this.Stacks = new Queue<ImageQueueInfo>();
@@ -44,44 +45,65 @@ namespace HWallpaper.Common
                 }
                 if (t != null)
                 {
-                    Uri uri = new Uri(t.url);
-                    BitmapImage image = null;
+                    Uri uri = new Uri(t.Url);
+                    BitmapImage bImage = null;
                     try
                     {
-                        if ("http".Equals(uri.Scheme, StringComparison.CurrentCultureIgnoreCase))
+                        bool local = false;
+                        string fileFullName = string.Empty;
+                        if (!string.IsNullOrEmpty(this.CachePath))
+                        {
+                            fileFullName = Path.Combine(this.CachePath, t.Name);
+                            local = File.Exists(fileFullName);
+                        }
+
+                        if (!local && "http".Equals(uri.Scheme, StringComparison.CurrentCultureIgnoreCase))
                         {
                             //如果是HTTP下载文件
                             WebClient wc = new WebClient();
                             using (var ms = new MemoryStream(wc.DownloadData(uri)))
                             {
-                                image = new BitmapImage();
-                                image.BeginInit();
-                                image.CacheOption = BitmapCacheOption.OnLoad;
-                                image.StreamSource = ms;
-                                image.EndInit();
-                            }
-                        }
-                        else if ("file".Equals(uri.Scheme, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            using (var fs = new FileStream(t.url, FileMode.Open))
-                            {
-                                image = new BitmapImage();
-                                image.BeginInit();
-                                image.CacheOption = BitmapCacheOption.OnLoad;
-                                image.StreamSource = fs;
-                                image.EndInit();
-                            }
-                        }
-                        if (image != null)
-                        {
-                            if (image.CanFreeze) image.Freeze();
-                            t.image.Dispatcher.BeginInvoke(new Action<ImageQueueInfo, BitmapImage>((i, bmp) =>
-                            {
-                                if (this.OnComplate != null)
+                                // 是否设置了缓存路径，有就先保存到缓存目录
+                                if (!string.IsNullOrEmpty(this.CachePath))
                                 {
-                                    this.OnComplate(i.image, i.url, bmp);
+                                    System.Drawing.Image image = System.Drawing.Image.FromStream(ms);
+                                    if (image != null)
+                                    {
+                                        image.Save(fileFullName);
+                                        local = true;
+                                    }
                                 }
-                            }), new Object[] { t, image });
+                                // 是否有完成后的委托，有就获取BitmapImage
+                                else if (this.OnComplate != null)
+                                {
+                                    bImage = new BitmapImage();
+                                    bImage.BeginInit();
+                                    bImage.CacheOption = BitmapCacheOption.OnLoad;
+                                    bImage.StreamSource = ms;
+                                    bImage.EndInit();
+                                }
+                            }
+                        }
+                        // 从本地获取
+                        if (local && this.OnComplate != null)
+                        {
+                            using (var fs = new FileStream(fileFullName, FileMode.Open))
+                            {
+                                bImage = new BitmapImage();
+                                bImage.BeginInit();
+                                bImage.CacheOption = BitmapCacheOption.OnLoad;
+                                bImage.StreamSource = fs;
+                                bImage.EndInit();
+                            }
+                        }
+                        if (bImage != null && this.OnComplate != null && t.image != null)
+                        {
+                            if (bImage.CanFreeze) bImage.Freeze();
+                            t.image.Dispatcher.BeginInvoke(new Action<BitmapImage>((bmp) =>
+                            {
+                                this.OnComplate(bmp);
+                                
+                            }), new Object[] { bImage });
                         }
                     }
                     catch (Exception e)
@@ -94,14 +116,24 @@ namespace HWallpaper.Common
                 autoEvent.WaitOne();
             }
         }
-        public void Queue(Image img, String url)
+        public void Queue(string url,string name)
         {
             if (String.IsNullOrEmpty(url)) return;
             lock (this.Stacks)
             {
-                this.Stacks.Enqueue(new ImageQueueInfo { url = url, image = img });
+                this.Stacks.Enqueue(new ImageQueueInfo() { Url = url,Name = name});
                 this.autoEvent.Set();
             }
         }
+        public void Queue(string url, Image image,string name)
+        {
+            if (String.IsNullOrEmpty(url)) return;
+            lock (this.Stacks)
+            {
+                this.Stacks.Enqueue(new ImageQueueInfo() { Url = url, image = image ,Name=name});
+                this.autoEvent.Set();
+            }
+        }
+
     }
 }

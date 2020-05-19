@@ -31,9 +31,15 @@ namespace HWallpaper
             Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             InitTimers_Screen();
             InitTimers_Wallpaper();
-            int totalIndex = 0;
-            string[] types = ConfigManage.Wallpaper.SelectedTypes?.Split(',');
-            imgHelper = new ImageHelper(types, totalIndex);
+
+            if (ConfigManage.Base.Cache)
+            {
+                imgHelper = new ImageHelper(ConfigManage.Wallpaper.TypeIndexs, ConfigManage.Base.CachePath);
+            }
+            else
+            {
+                imgHelper = new ImageHelper(ConfigManage.Wallpaper.TypeIndexs);
+            }
         }
         Screensaver screensaver;
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -63,7 +69,7 @@ namespace HWallpaper
 
         private void NotifyIconContextContent_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-
+            NextWallpaper();
         }
 
         private void NotifyIconContextContent_MouseDoubleClick(object sender, System.Windows.RoutedEventArgs e)
@@ -125,8 +131,6 @@ namespace HWallpaper
                 // 更换壁纸
                 NextWallpaper();
                 timerW.Interval = (nextTime - lastTime).TotalMilliseconds;
-                ConfigManage.Wallpaper.ReplaceLastTime = DateTime.Now;
-                ConfigManage.Save();
             }
             else if (totalSeconds > -500)
             {
@@ -197,10 +201,13 @@ namespace HWallpaper
             LogHelper.WriteLog("更换壁纸", EnumLogLevel.Info);
             ImgInfo imgInfo = imgHelper.GetNextImage();
             string imgFullName = System.IO.Path.Combine(ConfigManage.Base.CachePath, imgInfo.GetFileName());
-            WebHelper.DownImage(imgInfo.url,imgFullName);
+            if (!File.Exists(imgFullName))
+            { 
+                WebHelper.DownImage(imgInfo.url,imgFullName);
+            }
             Common.WinApi.SetWallpaper(imgFullName);
-            //ConfigManage.Wallpaper.StartIndex = imgHelper.TotalIndex;
-            //ConfigManage.Save();
+            ConfigManage.Wallpaper.ReplaceLastTime = DateTime.Now;
+            ConfigManage.Save();
             timerW.Start();
         }
         /// <summary>

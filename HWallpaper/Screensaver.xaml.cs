@@ -47,8 +47,20 @@ namespace HWallpaper
             InitializeComponent();
             UpdateTime();
             InitTimer();
-            imgHelper = new ImageHelper(new string[] { "0","6"},0);
+            if (ConfigManage.Base.Cache)
+            {
+                imgHelper = new ImageHelper(ConfigManage.Screen.TypeIndexs, ConfigManage.Base.CachePath);
+            }
+            else
+            { 
+                imgHelper = new ImageHelper(ConfigManage.Screen.TypeIndexs);
+            }
             imageQueue.OnComplate += ImageQueue_OnComplate;
+            if (ConfigManage.Base.Cache) 
+            { 
+                imageQueue.CachePath = ConfigManage.Base.CachePath;
+            }
+            EffectPicture(null,null);
         }
 
         /// <summary>
@@ -58,8 +70,8 @@ namespace HWallpaper
         {
             timerP.Elapsed += new System.Timers.ElapsedEventHandler(EffectPicture);
             timerP.Interval = ConfigManage.Screen.ReplaceInterval * 1000;
-            //timerP.Enabled = true;
-            //timerP.Start();
+            timerP.Enabled = true;
+            timerP.Start();
             timerL.Elapsed += new System.Timers.ElapsedEventHandler(timerL_Elapsed);
             timerL.Interval = 10000;
             timerL.Enabled = true;
@@ -86,16 +98,7 @@ namespace HWallpaper
             {
                 picBox.Dispatcher.BeginInvoke(new Action<Image, ImgInfo>((image, imgInfo) =>
                 {
-                    string fullName = System.IO.Path.Combine(ConfigManage.Base.CachePath, imgInfo.GetFileName());
-                    if (System.IO.File.Exists(fullName))
-                    {
-                        imageQueue.Queue(image, fullName);
-                        //picBox.Source = Common.Utils.ReadImageFile(fullName);
-                    }
-                    else
-                    {
-                        imageQueue.Queue(image, info.url);
-                    }
+                    imageQueue.Queue(info.url, picBox,info.GetFileName());
                 }), new Object[] { picBox, info });
                 
             }
@@ -140,6 +143,7 @@ namespace HWallpaper
             timerL.Dispose();
             try
             {
+                ConfigManage.Save();
                 //Properties.Settings.Default.screen_StartIndex = imgHelper.TotalIndex;
                 //Properties.Settings.Default.Save();
             }
@@ -154,7 +158,7 @@ namespace HWallpaper
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            EffectPicture(null,null); ;
+            EffectPicture(null,null);
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
@@ -168,13 +172,7 @@ namespace HWallpaper
                         if (!System.IO.Directory.Exists(path))
                             System.IO.Directory.CreateDirectory(path);
                         string imgFullName = System.IO.Path.Combine(path, picBox.Tag.ToString());
-                        BitmapSource bitmap = (BitmapSource)picBox.Source;
-                        PngBitmapEncoder PBE = new PngBitmapEncoder();
-                        PBE.Frames.Add(BitmapFrame.Create(bitmap));
-                        using (Stream stream = File.Create(imgFullName))
-                        {
-                            PBE.Save(stream);
-                        }
+                        WebImage.SaveImage((BitmapSource)picBox.Source, imgFullName);
                         Growl.Success("已保存到本地文件夹");
                     }
                     catch (Exception ex)
@@ -189,7 +187,7 @@ namespace HWallpaper
             }
         }
         int index = 0;
-        private void ImageQueue_OnComplate(System.Windows.Controls.Image i, string u, BitmapImage b)
+        private void ImageQueue_OnComplate(BitmapImage b)
         {
             string key = "closeDW";
             switch (index)
@@ -208,6 +206,7 @@ namespace HWallpaper
             
 
             picBox.Source = b;
+
             string newName = key.Replace("close_", "show_");
             newName = "story_Top";
             var story = (base.Resources[newName] as Storyboard);

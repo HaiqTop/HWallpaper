@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Const.cs" />
     <Compile Include="ImageDown.cs" />
+    <Compile Include="ImageCache.cs" />
     <Compile Include="ImageQueue.cs" />
     <Compile Include="JsonHelper.cs" />
     <Compile Include="LogHelper.cs" />

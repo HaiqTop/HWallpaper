@@ -15,37 +15,22 @@ namespace HWallpaper.Business
         public static BaseConfig Base;
         public static ScreenConfig Screen;
         public static WallpaperConfig Wallpaper;
+        
         static ConfigManage()
         {
-            LoadData();
             if (Data == null)
             {
-                Data = new Config();
-                Data.Base = new BaseConfig();
-                Data.Screen = new ScreenConfig();
-                Data.Wallpaper = new WallpaperConfig();
-
-                #region 初始化路径
-                string bPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), "ZoroWallpaper");
-                Data.Base.CachePath = Path.Combine(bPath, "Cache");
-                Data.Base.DownPath = Path.Combine(bPath, "Download");
-
-                if (!Directory.Exists(Data.Base.CachePath))
-                    Directory.CreateDirectory(Data.Base.CachePath);
-                if (!Directory.Exists(Data.Base.DownPath))
-                    Directory.CreateDirectory(Data.Base.DownPath);
-                #endregion 初始化路径
-
-                #region 初始化其他信息
-                Data.Base.TypeJson = Const.DefaultTypeJson;
-                Data.Screen.OpenInterval = 10;
-                Data.Screen.ReplaceInterval = 20;
-                Data.Screen.SelectedTypes = "0";
-                Data.Wallpaper.TimeInterval = 1;
-                Data.Wallpaper.TimeType = TimeType.Day;
-                Data.Wallpaper.SelectedTypes = "0";
-                #endregion 
+                if (!LoadData())
+                { 
+                    InitData();
+                }
             }
+
+            if (!Directory.Exists(Data.Base.CachePath))
+                Directory.CreateDirectory(Data.Base.CachePath);
+            if (!Directory.Exists(Data.Base.DownPath))
+                Directory.CreateDirectory(Data.Base.DownPath);
+
             if (string.IsNullOrEmpty(Data.Base.TypeJson))
             {
                 Data.Base.TypeJson = Const.DefaultTypeJson;
@@ -54,7 +39,31 @@ namespace HWallpaper.Business
             Screen = Data.Screen;
             Wallpaper = Data.Wallpaper;
         }
-        private static void LoadData()
+        private static void InitData()
+        {
+            Data = new Config();
+            Data.Base = new BaseConfig();
+            Data.Screen = new ScreenConfig();
+            Data.Wallpaper = new WallpaperConfig();
+
+            #region 初始化路径
+            string bPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), Const.HWallpaper);
+            Data.Base.CachePath = Path.Combine(bPath, "Cache");
+            Data.Base.DownPath = Path.Combine(bPath, "Download");
+
+            #endregion 初始化路径
+
+            #region 初始化其他信息
+            Data.Base.TypeJson = Const.DefaultTypeJson;
+            Data.Screen.OpenInterval = 10;
+            Data.Screen.ReplaceInterval = 20;
+            Data.Screen.SelectedTypes = "0";
+            Data.Wallpaper.TimeInterval = 1;
+            Data.Wallpaper.TimeType = TimeType.Day;
+            Data.Wallpaper.SelectedTypes = "0";
+            #endregion
+        }
+        private static bool LoadData()
         {
             try
             {
@@ -65,6 +74,7 @@ namespace HWallpaper.Business
                         byte[] bytes = new byte[fileWrite.Length];
                         fileWrite.Read(bytes, 0, bytes.Length);
                         ConfigManage.Data = SerializableHelper.DeserializeObject<Config>(bytes);
+                        return true;
                     }
                 }
             }
@@ -72,6 +82,7 @@ namespace HWallpaper.Business
             {
                 LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
             }
+            return false;
         }
         /// <summary>
         /// 保存配置
