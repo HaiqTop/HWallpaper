@@ -124,6 +124,25 @@ namespace HWallpaper
                 }
             }
             ConfigManage.Wallpaper.SelectedTypes = string.Join(",", typeList);
+            // 清除壁纸无效进度信息
+            for (int i = 0; i < ConfigManage.Wallpaper.TypeIndexs.Count; i++)
+            {
+                var item = ConfigManage.Wallpaper.TypeIndexs.ElementAt(i);
+                if (!typeList.Contains(item.Key.ToString()))
+                {
+                    ConfigManage.Wallpaper.TypeIndexs.Remove(item.Key);
+                    i--;
+                }
+            }
+            // 添加缺失的进度信息
+            for (int i = 0; i < typeList.Count; i++)
+            {
+                int key = Convert.ToInt32(typeList[i]);
+                if (!ConfigManage.Wallpaper.TypeIndexs.ContainsKey(key))
+                {
+                    ConfigManage.Wallpaper.TypeIndexs.Add(key,0);
+                }
+            }
             typeList.Clear();
             #endregion
 
@@ -140,10 +159,38 @@ namespace HWallpaper
                 }
             }
             ConfigManage.Screen.SelectedTypes = string.Join(",", typeList);
+            // 清除壁纸无效进度信息
+            for (int i = 0; i < ConfigManage.Screen.TypeIndexs.Count; i++)
+            {
+                var item = ConfigManage.Screen.TypeIndexs.ElementAt(i);
+                if (!typeList.Contains(item.Key.ToString()))
+                {
+                    ConfigManage.Screen.TypeIndexs.Remove(item.Key);
+                    i--;
+                }
+            }
+            // 添加缺失的进度信息
+            for (int i = 0; i < typeList.Count; i++)
+            {
+                int key = Convert.ToInt32(typeList[i]);
+                if (!ConfigManage.Screen.TypeIndexs.ContainsKey(key))
+                {
+                    ConfigManage.Screen.TypeIndexs.Add(key, 0);
+                }
+            }
             typeList.Clear();
             #endregion
 
             ConfigManage.Save();
+        }
+
+
+        private void cbox_basic_AutoOn_Click(object sender, RoutedEventArgs e)
+        {
+            if (cbox_basic_AutoOn.IsChecked != null)
+            { 
+                Regedit.AutoStart((bool)cbox_basic_AutoOn.IsChecked);
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace HWallpaper
     public partial class MainWindow
     {
         private ImageHelper imgHelper ;
+        Screensaver screensaver;
         Wallpaper wallpaper;
         //HandyControl.Controls.NotifyIcon notifyIcon;
         /// <summary>
@@ -27,11 +28,6 @@ namespace HWallpaper
         {
             InitializeComponent();
             CleanCache();
-            // 注册监听当前登录的用户变化（登录、注销和解锁屏）事件
-            Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-            InitTimers_Screen();
-            InitTimers_Wallpaper();
-
             if (ConfigManage.Base.Cache)
             {
                 imgHelper = new ImageHelper(ConfigManage.Wallpaper.TypeIndexs, ConfigManage.Base.CachePath);
@@ -40,8 +36,12 @@ namespace HWallpaper
             {
                 imgHelper = new ImageHelper(ConfigManage.Wallpaper.TypeIndexs);
             }
+            // 注册监听当前登录的用户变化（登录、注销和解锁屏）事件
+            Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+            InitTimers_Screen();
+            InitTimers_Wallpaper();
+
         }
-        Screensaver screensaver;
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -165,11 +165,15 @@ namespace HWallpaper
         }
         private void ShowScreen()
         {
-            timerS.Stop();
-            Screensaver form = new Screensaver();
-            form.ShowDialog();
-            timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
-            timerS.Start();
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                timerS.Stop();
+                screensaver = new Screensaver();
+                screensaver.ShowDialog();
+                timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
+                timerS.Start();
+            }));
+            
         }
         private void CleanCache()
         {

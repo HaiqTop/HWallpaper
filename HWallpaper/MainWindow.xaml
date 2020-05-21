@@ -25,7 +25,7 @@
                         <Image Source="Image/logo.ico"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Click="MenuItem_Click" Header="立即屏保">
+                <MenuItem Click="MenuItem_Click" Header="立即屏保" Visibility="Collapsed">
                     <MenuItem.Icon>
                         <Image Source="Image/logo.ico"/>
                     </MenuItem.Icon>

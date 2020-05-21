@@ -70,6 +70,7 @@ namespace HWallpaper.Business
             if (typeIndex >= this.typeImageList[type].Total)
             {
                 this.TypeIndexs[type] = 0;
+                typeIndex = 0;
             }
             // 判断是否超过当前获取到的记录
             if (typeIndex < this.typeImageList[type].StartIndex)
