@@ -69,13 +69,13 @@
         </Storyboard>
     </Window.Resources>
     <Grid Background="Black" Margin="0,0,0,0">
-        <Image Margin="0" Source="Image/30_1001722.jpg" Name="picBoxTemp">
+        <Image Margin="0" Stretch="Fill" Name="picBoxTemp">
             <Image.RenderTransform>
                 <!--<RotateTransform x:Name="SpinnerRotate" Angle="0" />-->
                 <TranslateTransform x:Name="translateClose"></TranslateTransform>
             </Image.RenderTransform>
         </Image>
-        <Image Margin="0" Source="Image/14_2011180.jpg" Name="picBox">
+        <Image Margin="0" Stretch="UniformToFill"  Name="picBox">
             <Image.RenderTransform>
                 <TransformGroup>
                     <RotateTransform x:Name="SpinnerRotate" Angle="0" />
@@ -86,5 +86,8 @@
         <!--<hc:FlipClock Margin="20,0,0,30" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"/>-->
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,66,0,0" TextWrapping="Wrap" FontSize="80" Foreground="White" Name="labelT" Text="16:51"/>
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,188,0,0" TextWrapping="Wrap" FontSize="40" Foreground="White" Name="labelD" Text="02-12 周三"/>
+        <hc:ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Right" IsInertiaEnabled="True" IsPenetrating="True">
+            <StackPanel hc:Growl.GrowlParent="True" VerticalAlignment="Top" Margin="0,10,10,10"/>
+        </hc:ScrollViewer>
     </Grid>
 </Window>

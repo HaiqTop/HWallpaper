@@ -50,7 +50,7 @@ namespace HWallpaper
                 case "打开壁纸":
                     if (wallpaper == null || wallpaper.IsClosed)
                     {
-                        wallpaper = new Wallpaper();
+                        wallpaper = new Wallpaper(this);
                         wallpaper.Show();
                     }
                     wallpaper.Activate();
@@ -58,6 +58,7 @@ namespace HWallpaper
                     break;
                 case "软件设置":
                     Setting setting = new Setting();
+                    setting.ChangeConfigEvent += Setting_ChangeConfigEvent;
                     setting.ShowDialog();
                     break;
                 case "立即屏保":
@@ -65,6 +66,12 @@ namespace HWallpaper
                     screensaver.Show();
                     break;
             }
+        }
+
+        private void Setting_ChangeConfigEvent()
+        {
+            this.InitTimers_Screen();
+            this.InitTimers_Wallpaper();
         }
 
         private void NotifyIconContextContent_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -76,7 +83,7 @@ namespace HWallpaper
         {
             if (wallpaper == null || wallpaper.IsClosed)
             { 
-                wallpaper = new Wallpaper();
+                wallpaper = new Wallpaper(this);
                 wallpaper.Show();
             }
             wallpaper.Activate();
@@ -92,9 +99,11 @@ namespace HWallpaper
 
         public void InitTimers_Screen()
         {
+            timerS.Stop();
             if (ConfigManage.Screen.Open)
             {
                 timerS_interval = (long)ConfigManage.Screen.OpenInterval * 60 * 1000;
+                timerS.Elapsed -= new System.Timers.ElapsedEventHandler(timerS_Elapsed);
                 timerS.Elapsed += new System.Timers.ElapsedEventHandler(timerS_Elapsed);
                 timerS.Interval = timerS_interval;
                 timerS.Start();
@@ -102,6 +111,7 @@ namespace HWallpaper
         }
         public void InitTimers_Wallpaper()
         {
+            timerW.Stop();
             if (!ConfigManage.Wallpaper.AutoReplace)
             {
                 return;
@@ -140,6 +150,7 @@ namespace HWallpaper
             {
                 timerW.Interval = -totalSeconds;
             }
+            timerW.Elapsed -= new System.Timers.ElapsedEventHandler(timerW_Elapsed);
             timerW.Elapsed += new System.Timers.ElapsedEventHandler(timerW_Elapsed);
             timerW.Start();
         }

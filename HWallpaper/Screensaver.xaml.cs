@@ -158,7 +158,8 @@ namespace HWallpaper
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            EffectPicture(null,null);
+            this.Close();
+            //EffectPicture(null,null);
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
@@ -189,35 +190,42 @@ namespace HWallpaper
         int index = 0;
         private void ImageQueue_OnComplate(BitmapImage b)
         {
-            string key = "closeDW";
-            switch (index)
+            if (picBox.Source != null)
             {
-                case 0: key = "close_Left"; break;
-                case 1: key = "close_Right"; break;
-                case 2: key = "close_Bottom"; break;
-                case 3: key = "close_Top"; break;
-                case 4: key = "close_Opacity"; break;
+                string key = "closeDW";
+                switch (index)
+                {
+                    case 0: key = "close_Left"; break;
+                    case 1: key = "close_Right"; break;
+                    case 2: key = "close_Bottom"; break;
+                    case 3: key = "close_Top"; break;
+                    case 4: key = "close_Opacity"; break;
+                }
+                index++;
+                if (index > 4) index = 0;
+                picBoxTemp.Source = picBox.Source;
+                //Storyboard story = (base.Resources[key] as Storyboard);
+                //story.Begin();
+
+
+                picBox.Source = b;
+
+                string newName = key.Replace("close_", "show_");
+                newName = "story_Top";
+                var story = (base.Resources[newName] as Storyboard);
+                story.Begin();
+
+                //imageList.Enqueue(new ImageQ(b,key));
+
+                // 切换动画效果
+                //AnimationType type = AnimationType.AW_HOR_POSITIVE;
+                //type = GetRandomAnimationType();
+                //AnimateWindow(picBox.GetHandle(), 1500, type | AnimationType.AW_ACTIVATE);
             }
-            index++;
-            if (index > 4) index = 0;
-            picBoxTemp.Source = picBox.Source;
-            //Storyboard story = (base.Resources[key] as Storyboard);
-            //story.Begin();
-            
-
-            picBox.Source = b;
-
-            string newName = key.Replace("close_", "show_");
-            newName = "story_Top";
-            var story = (base.Resources[newName] as Storyboard);
-            story.Begin();
-
-            //imageList.Enqueue(new ImageQ(b,key));
-
-            // 切换动画效果
-            //AnimationType type = AnimationType.AW_HOR_POSITIVE;
-            //type = GetRandomAnimationType();
-            //AnimateWindow(picBox.GetHandle(), 1500, type | AnimationType.AW_ACTIVATE);
+            else
+            { 
+                picBox.Source = b;
+            }
         }
 
         private void Storyboard_Completed(object sender, EventArgs e)

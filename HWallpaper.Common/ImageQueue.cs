@@ -99,11 +99,12 @@ namespace HWallpaper.Common
                         if (bImage != null && this.OnComplate != null && t.image != null)
                         {
                             if (bImage.CanFreeze) bImage.Freeze();
-                            t.image.Dispatcher.BeginInvoke(new Action<BitmapImage>((bmp) =>
+                            t.image.Dispatcher.BeginInvoke(new Action<Image,BitmapImage,string>((image,bmp,name) =>
                             {
+                                image.Tag = name;
                                 this.OnComplate(bmp);
-                                
-                            }), new Object[] { bImage });
+
+                            }), new Object[] { t.image,bImage, t.Name });
                         }
                     }
                     catch (Exception e)

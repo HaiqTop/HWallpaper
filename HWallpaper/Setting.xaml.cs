@@ -180,7 +180,8 @@ namespace HWallpaper
             }
             typeList.Clear();
             #endregion
-
+            //引发事件
+            ChangeConfigEvent?.Invoke();
             ConfigManage.Save();
         }
 
@@ -192,5 +193,10 @@ namespace HWallpaper
                 Regedit.AutoStart((bool)cbox_basic_AutoOn.IsChecked);
             }
         }
+
+        //定义事件
+        public event ChangeConfigHandler ChangeConfigEvent;
     }
+    //定义委托
+    public delegate void ChangeConfigHandler();
 }

@@ -9,6 +9,7 @@ namespace HWallpaper.Business
     public class ImageHelper
     {
         private Random random = new Random();
+        private int orderNum = 0;
         private ImageCache cache;
         private string CachePath;
         /// <summary>
@@ -61,8 +62,13 @@ namespace HWallpaper.Business
         /// <returns></returns>
         public ImgInfo GetNextImage()
         {
+            if (orderNum >= this.TypeIndexs.Count)
+            {
+                orderNum = 0;
+            }
             // 获取类型
-            int type = this.TypeIndexs.ElementAt(random.Next(0, this.TypeIndexs.Count - 1)).Key;
+            int type = this.TypeIndexs.ElementAt(orderNum++).Key;
+            //int type = this.TypeIndexs.ElementAt(random.Next(0, this.TypeIndexs.Count - 1)).Key;
 
             this.TypeIndexs[type]++;
             int typeIndex = this.TypeIndexs[type];

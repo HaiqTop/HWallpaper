@@ -22,8 +22,10 @@ namespace HWallpaper
     /// </summary>
     public partial class Wallpaper
     {
-        public Wallpaper()
+        private MainWindow main;
+        public Wallpaper(MainWindow main)
         {
+            this.main = main;
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
         }
@@ -120,9 +122,16 @@ namespace HWallpaper
                     break;
                 case "设置":
                     Setting setting = new Setting();
+                    setting.ChangeConfigEvent += Setting_ChangeConfigEvent;
                     setting.ShowDialog();
                     break;
             }
+        }
+
+        private void Setting_ChangeConfigEvent()
+        {
+            main.InitTimers_Screen();
+            main.InitTimers_Wallpaper();
         }
     }
 }
