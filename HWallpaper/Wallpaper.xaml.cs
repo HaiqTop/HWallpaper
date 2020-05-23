@@ -132,6 +132,7 @@ namespace HWallpaper
         {
             main.InitTimers_Screen();
             main.InitTimers_Wallpaper();
+            main.InitTimers_Screen();
         }
     }
 }

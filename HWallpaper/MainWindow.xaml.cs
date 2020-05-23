@@ -28,16 +28,9 @@ namespace HWallpaper
         {
             InitializeComponent();
             CleanCache();
-            if (ConfigManage.Base.Cache)
-            {
-                imgHelper = new ImageHelper(ConfigManage.Wallpaper.TypeIndexs, ConfigManage.Base.CachePath);
-            }
-            else
-            {
-                imgHelper = new ImageHelper(ConfigManage.Wallpaper.TypeIndexs);
-            }
             // 注册监听当前登录的用户变化（登录、注销和解锁屏）事件
             Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+            InitImageHelper();
             InitTimers_Screen();
             InitTimers_Wallpaper();
 
@@ -72,6 +65,7 @@ namespace HWallpaper
         {
             this.InitTimers_Screen();
             this.InitTimers_Wallpaper();
+            this.InitImageHelper();
         }
 
         private void NotifyIconContextContent_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -154,7 +148,17 @@ namespace HWallpaper
             timerW.Elapsed += new System.Timers.ElapsedEventHandler(timerW_Elapsed);
             timerW.Start();
         }
-
+        public void InitImageHelper()
+        {
+            if (ConfigManage.Base.Cache)
+            {
+                imgHelper = new ImageHelper(ConfigManage.Wallpaper.TypeIndexs, ConfigManage.Base.CachePath);
+            }
+            else
+            {
+                imgHelper = new ImageHelper(ConfigManage.Wallpaper.TypeIndexs);
+            }
+        }
         private void timerS_Elapsed(object source, System.Timers.ElapsedEventArgs e)
         {
             if (timerS == null) return;
