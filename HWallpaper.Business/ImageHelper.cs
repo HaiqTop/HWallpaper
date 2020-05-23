@@ -49,10 +49,17 @@ namespace HWallpaper.Business
                 {
                     imgList = WebImage.GetImageList(typeIndex.Key, typeIndex.Value, this.Count);
                     typeImageList[typeIndex.Key].Images.AddRange(imgList.data);
-                    foreach (var item in imgList.data)
-                    {
-                        cache.Queue(item.url, System.IO.Path.Combine(this.CachePath, item.GetFileName()));
-                    }
+                    CacheIage(imgList.data);
+                }
+            }
+        }
+        private void CacheIage(List<ImgInfo> imgList)
+        {
+            if (!string.IsNullOrEmpty(this.CachePath))
+            {
+                foreach (var item in imgList)
+                {
+                    cache.Queue(item.url, System.IO.Path.Combine(this.CachePath, item.GetFileName()));
                 }
             }
         }
@@ -82,10 +89,7 @@ namespace HWallpaper.Business
             if (typeIndex < this.typeImageList[type].StartIndex)
             {
                 ImageListTotal imgList = WebImage.GetImageList(type, typeIndex, this.Count);
-                foreach (var item in imgList.data)
-                {
-                    cache.Queue(item.url, System.IO.Path.Combine(this.CachePath,item.GetFileName()));
-                }
+                CacheIage(imgList.data);
                 typeImageList[type].StartIndex = typeIndex;
                 typeImageList[type].Images = imgList.data;
 
@@ -94,10 +98,7 @@ namespace HWallpaper.Business
             if (typeIndex > this.typeImageList[type].EndIndex)
             {
                 ImageListTotal imgList = WebImage.GetImageList(type, typeIndex, this.Count);
-                foreach (var item in imgList.data)
-                {
-                    cache.Queue(item.url, System.IO.Path.Combine(this.CachePath,item.GetFileName()));
-                }
+                CacheIage(imgList.data);
                 typeImageList[type].Images.AddRange(imgList.data);
             }
             return typeImageList[type].Images[typeIndex - this.typeImageList[type].StartIndex];
