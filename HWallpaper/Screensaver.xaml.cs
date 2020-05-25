@@ -56,12 +56,14 @@ namespace HWallpaper
                 imgHelper = new ImageHelper(ConfigManage.Screen.TypeIndexs);
             }
             imageQueue.OnComplate += ImageQueue_OnComplate;
+            imageQueue.OnError += ImageQueue_OnError;
             if (ConfigManage.Base.Cache) 
             { 
                 imageQueue.CachePath = ConfigManage.Base.CachePath;
             }
             EffectPicture(null,null);
         }
+
 
         /// <summary>
         /// 初始化显示屏保后图片切换的定时器
@@ -107,28 +109,6 @@ namespace HWallpaper
                 Common.LogHelper.WriteLog(ex.Message, Common.EnumLogLevel.Error);
             }
         }
-        #region 切换壁纸的效果相关方法
-        private Random random = new Random();
-        private AnimationType[] animationTypes = null;
-        private AnimationType GetRandomAnimationType()
-        {
-            if (animationTypes == null)
-            {
-                animationTypes = Enum.GetValues(typeof(AnimationType)) as AnimationType[];
-            }
-            return animationTypes[random.Next(0, 4)];
-        }
-        private int iIndex = 0;
-        private AnimationType GetOrderAnimationType()
-        {
-            if (animationTypes == null)
-            {
-                animationTypes = Enum.GetValues(typeof(AnimationType)) as AnimationType[];
-            }
-            if (iIndex > 4) iIndex = 0;
-            return animationTypes[iIndex++];
-        }
-        #endregion 切换壁纸的效果相关方法
 
         private void picBox_Click(object sender, EventArgs e)
         {
@@ -225,9 +205,14 @@ namespace HWallpaper
             else
             { 
                 picBox.Source = b;
+                //this.Visibility = Visibility.Visible;
             }
         }
 
+        private void ImageQueue_OnError(Exception e)
+        {
+            Growl.Error(e.Message);
+        }
         private void Storyboard_Completed(object sender, EventArgs e)
         {
             if (imageList.Count > 0)

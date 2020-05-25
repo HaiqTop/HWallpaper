@@ -17,7 +17,9 @@ namespace HWallpaper.Common
             public string Name { get; set; }
         }
         public delegate void ComplateDelegate(BitmapImage b);
+        public delegate void ErrorDelegate(Exception e);
         public event ComplateDelegate OnComplate;
+        public event ErrorDelegate OnError;
         private AutoResetEvent autoEvent;
         private Queue<ImageQueueInfo> Stacks;
 
@@ -69,7 +71,11 @@ namespace HWallpaper.Common
                                     System.Drawing.Image image = System.Drawing.Image.FromStream(ms);
                                     if (image != null)
                                     {
-                                        image.Save(fileFullName);
+                                        if (!File.Exists(fileFullName))
+                                        { 
+                                            image.Save(fileFullName);
+                                        }
+                                        image.Dispose();
                                         local = true;
                                     }
                                 }
@@ -109,8 +115,15 @@ namespace HWallpaper.Common
                     }
                     catch (Exception e)
                     {
-                        System.Windows.MessageBox.Show(e.Message);
-                        continue;
+                        LogHelper.WriteLog(e.Message,EnumLogLevel.Error);
+                        if (this.OnError != null)
+                        {
+                            t.image.Dispatcher.BeginInvoke(new Action<Exception>((ex) =>
+                            {
+                                this.OnError(ex);
+
+                            }), new Object[] { e });
+                        }
                     }
                 }
                 if (this.Stacks.Count > 0) continue;
