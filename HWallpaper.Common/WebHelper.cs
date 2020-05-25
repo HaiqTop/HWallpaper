@@ -15,7 +15,7 @@ namespace HWallpaper.Common
         public static System.Drawing.Image GetImage(string url)
         {
             WebRequest imgRequest = WebRequest.Create(url);
-
+            imgRequest.Timeout = 5000;
             HttpWebResponse res;
             try
             {
@@ -44,6 +44,11 @@ namespace HWallpaper.Common
                 if (!System.IO.File.Exists(fullName))
                 {
                     System.Drawing.Image img = GetImage(url);
+                    if (img == null)
+                    {
+                        LogHelper.WriteLog("图片下载失败",EnumLogLevel.Warn);
+                        return false;
+                    } 
                     if (!File.Exists(fullName))// 需要多次判断的原因：防止在下载的过程中，其他地方已经下载好了
                     {
                         img.Save(fullName);

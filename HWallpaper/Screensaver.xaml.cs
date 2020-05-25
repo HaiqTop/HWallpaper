@@ -21,19 +21,23 @@ namespace HWallpaper
     /// </summary>
     public partial class Screensaver : System.Windows.Window
     {
-        public class ImageQ
+        public double NegativeHeight
         {
-            public ImageQ(BitmapImage b,string name)
+            get
             {
-                this.StoryName = name;
-                this.BitmapImage = b;
+                return (this.Height > 0 ? this.Height : this.ActualHeight) * -1;
             }
-            public BitmapImage BitmapImage { get;set ;}
-            public string StoryName { get;set ; }
+        }
+        public double NegativeWidth
+        {
+            get
+            {
+                return (this.Width > 0 ? this.Width : this.ActualWidth) * -1;
+            }
         }
         private ImageHelper imgHelper;
         private ImageQueue imageQueue = new ImageQueue();
-        private Queue<ImageQ> imageList= new Queue<ImageQ>();
+        private List<Storyboard> storys = new List<Storyboard>();
         /// <summary>
         /// 图片切换用的Timer
         /// </summary>
@@ -61,6 +65,7 @@ namespace HWallpaper
             { 
                 imageQueue.CachePath = ConfigManage.Base.CachePath;
             }
+            LoadStoryboard();
             EffectPicture(null,null);
         }
 
@@ -85,6 +90,16 @@ namespace HWallpaper
             UpdateTime();
         }
 
+        private void LoadStoryboard()
+        {
+            foreach (System.Collections.DictionaryEntry item in base.Resources)
+            {
+                if (item.Value is Storyboard)
+                {
+                    storys.Add(item.Value as Storyboard);
+                }
+            }
+        }
         private void UpdateTime()
         {
             labelD.Dispatcher.BeginInvoke(new Action(() =>
@@ -100,6 +115,7 @@ namespace HWallpaper
             {
                 picBox.Dispatcher.BeginInvoke(new Action<Image, ImgInfo>((image, imgInfo) =>
                 {
+                    timerP.Stop();
                     imageQueue.Queue(info.url, picBox,info.GetFileName());
                 }), new Object[] { picBox, info });
                 
@@ -117,23 +133,17 @@ namespace HWallpaper
         
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            timerP.Stop();
-            timerP.Dispose();
-            timerL.Stop();
-            timerL.Dispose();
             try
             {
+                this.Hide();
+                timerP.Stop();
+                timerP.Dispose();
+                timerP = null;
+                timerL.Stop();
+                timerL.Dispose();
                 ConfigManage.Save();
-                //Properties.Settings.Default.screen_StartIndex = imgHelper.TotalIndex;
-                //Properties.Settings.Default.Save();
             }
             catch { }
-            finally
-            {
-                this.Hide();
-                //System.Threading.Thread.Sleep(1000);
-                //this.Close();
-            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -172,39 +182,20 @@ namespace HWallpaper
         {
             if (picBox.Source != null)
             {
-                string key = "closeDW";
-                switch (index)
-                {
-                    case 0: key = "close_Left"; break;
-                    case 1: key = "close_Right"; break;
-                    case 2: key = "close_Bottom"; break;
-                    case 3: key = "close_Top"; break;
-                    case 4: key = "close_Opacity"; break;
-                }
-                index++;
-                if (index > 4) index = 0;
                 picBoxTemp.Source = picBox.Source;
-                //Storyboard story = (base.Resources[key] as Storyboard);
-                //story.Begin();
-
-
                 picBox.Source = b;
-
-                string newName = key.Replace("close_", "show_");
-                newName = "story_Top";
-                var story = (base.Resources[newName] as Storyboard);
-                story.Begin();
-
-                //imageList.Enqueue(new ImageQ(b,key));
-
-                // 切换动画效果
-                //AnimationType type = AnimationType.AW_HOR_POSITIVE;
-                //type = GetRandomAnimationType();
-                //AnimateWindow(picBox.GetHandle(), 1500, type | AnimationType.AW_ACTIVATE);
+                if (base.Resources.Contains("test"))
+                {
+                    (base.Resources["test"] as Storyboard).Begin();
+                    return;
+                }
+                storys[index++].Begin();
+                if (index >= storys.Count) index = 0;
             }
             else
             { 
                 picBox.Source = b;
+                timerP.Start();
                 //this.Visibility = Visibility.Visible;
             }
         }
@@ -213,16 +204,14 @@ namespace HWallpaper
         {
             Growl.Error(e.Message);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Storyboard_Completed(object sender, EventArgs e)
         {
-            if (imageList.Count > 0)
-            {
-                ImageQ imageQ = imageList.Dequeue();
-                picBox.Source = imageQ.BitmapImage;
-                string newName = imageQ.StoryName.Replace("close_", "show_");
-                var story = (base.Resources[newName] as Storyboard);
-                story.Begin();
-            }
+            timerP?.Start();
         }
 
     }

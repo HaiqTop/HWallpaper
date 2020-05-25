@@ -93,7 +93,11 @@ namespace HWallpaper.Common
                         // 从本地获取
                         if (local && this.OnComplate != null)
                         {
-                            using (var fs = new FileStream(fileFullName, FileMode.Open))
+                            while (WinApi.FileIsOccupy(fileFullName))
+                            {
+                                Thread.Sleep(500);
+                            }
+                            using (var fs = new FileStream(fileFullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                             {
                                 bImage = new BitmapImage();
                                 bImage.BeginInit();

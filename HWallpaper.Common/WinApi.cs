@@ -181,5 +181,34 @@ namespace HWallpaper.Common
             return isRunning;
         }
         #endregion
+
+        #region  判断文件是否被占用
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr _lopen(string lpPathName, int iReadWrite);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool CloseHandle(IntPtr hObject);
+
+        public const int OF_READWRITE = 2;
+        public const int OF_SHARE_DENY_NONE = 0x40;
+        public static readonly IntPtr HFILE_ERROR = new IntPtr(-1);
+        /// <summary>
+        /// 判断文件是否被占用
+        /// </summary>
+        /// <param name="fileName">文件全路径名称</param>
+        /// <returns></returns>
+        public static bool FileIsOccupy(string fileName)
+        {
+            IntPtr vHandle = _lopen(fileName, OF_READWRITE | OF_SHARE_DENY_NONE);
+            if (vHandle == HFILE_ERROR)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        #endregion 
     }
 }

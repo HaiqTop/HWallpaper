@@ -7,79 +7,289 @@
         xmlns:local="clr-namespace:HWallpaper"
         mc:Ignorable="d"
         Name="windown"
-        Topmost="True"
+        Topmost="False"
         WindowStyle="None" Background="Transparent" AllowsTransparency="True"
         Title="屏保" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowState="Maximized"  ResizeMode="NoResize"
         Closing="Window_Closing" KeyDown="Window_KeyDown" MouseDown="Window_MouseDown">
     <Window.Resources>
-        <Storyboard x:Key="close_Opacity" Completed="Storyboard_Completed">
-            <DoubleAnimation Storyboard.TargetName="picBoxTemp" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1.5" ></DoubleAnimation>
+        <!--渐隐渐显-->
+        <Storyboard x:Key="story_Opacity" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="picBoxTemp" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:0.5" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:00" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" BeginTime="0:0:0.5" Duration="0:0:0.8" ></DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Key="show_Opacity">
-            <DoubleAnimation Storyboard.TargetName="picBox" Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:1.5" ></DoubleAnimation>
+        <!--缩小放大-->
+        <Storyboard x:Key="story_Scale" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="0.0" To="1.0" BeginTime="0:0:0" Duration="0:0:0.8" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="0.0" To="1.0" BeginTime="0:0:0" Duration="0:0:0.8" ></DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Key="close_Left" Completed="Storyboard_Completed">
-            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
-                            From="0" To="-1366" BeginTime="00:00:00" Duration="00:00:0.8">
-            </DoubleAnimation>
+        <Storyboard x:Key="story_Scale1" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleX)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleY)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Key="show_Left">
-            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
-                            From="1366" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
-            </DoubleAnimation>
+        <Storyboard x:Key="story_Scale2" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.CenterX)" From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" Duration="0:0:0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="(ScaleTransform.CenterX)" From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" Duration="0:0:0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleX)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleY)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Key="close_Right" Completed="Storyboard_Completed">
-            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
-                            From="0" To="1366" BeginTime="00:00:00" Duration="00:00:0.8">
-            </DoubleAnimation>
+        <Storyboard x:Key="story_Scale3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.CenterY)" From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" Duration="0:0:0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="(ScaleTransform.CenterY)" From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" Duration="0:0:0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleX)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleY)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Key="show_Right">
-            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
-                            From="-1366" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
-            </DoubleAnimation>
+        <Storyboard x:Key="story_Scale4" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.CenterX)" From="0" To="0" Duration="0:0:0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="(ScaleTransform.CenterX)" From="0" To="0" Duration="0:0:0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleX)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleY)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Key="close_Top" Completed="Storyboard_Completed">
-            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
-                            From="0" To="-768" BeginTime="00:00:00" Duration="00:00:0.8">
-            </DoubleAnimation>
+        <Storyboard x:Key="story_Scale5" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.CenterY)" From="0" To="0" Duration="0:0:0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="(ScaleTransform.CenterY)" From="0" To="0" Duration="0:0:0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleX)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scaleClose" Storyboard.TargetProperty="(ScaleTransform.ScaleY)" From="1.0" To="0.0" Duration="0:0:0.3" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="1.0" To="0.0" Duration="0:0:0.0" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" From="0.0" To="1.0" BeginTime="0:0:0.3" Duration="0:0:0.8" ></DoubleAnimation>
         </Storyboard>
-        <Storyboard x:Key="show_Top">
-            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
-                            From="-768" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
-            </DoubleAnimation>
-        </Storyboard>
-        <Storyboard x:Key="close_Bottom" Completed="Storyboard_Completed">
-            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
-                            From="0" To="768" BeginTime="00:00:00" Duration="00:00:0.8">
-            </DoubleAnimation>
-        </Storyboard>
-        <Storyboard x:Key="show_Bottom">
-            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
-                            From="768" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
-            </DoubleAnimation>
-        </Storyboard>
-
+        <!--上下左右-翻页-->
         <Storyboard x:Key="story_Top" Completed="Storyboard_Completed">
             <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
-                            From="0" To="540" BeginTime="00:00:00" Duration="00:00:0.8">
+                            From="0" To="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.8">
             </DoubleAnimation>
             <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
-                            From="-540" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+                            From="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
             </DoubleAnimation>
         </Storyboard>
+        <Storyboard x:Key="story_Bottom" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Left" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Right" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <!--上下左右-覆盖翻页-->
+        <Storyboard x:Key="story_Top1" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Bottom1" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Left1" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Right1" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:00" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <!--上下左右-移出移入-->
+        <Storyboard x:Key="story_Top2" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:00">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:0.3" Duration="00:00:0.5">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Bottom2" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:00">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:0.3" Duration="00:00:0.5">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Left2" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:00">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:0.3" Duration="00:00:0.7">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Right2" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:00">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:0.3" Duration="00:00:0.7">
+            </DoubleAnimation>
+        </Storyboard>
+        <!--上下左右-移出移入(弹一下)-->
+        <Storyboard x:Key="story_Top3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:00">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" To="0" BeginTime="00:00:0.2" Duration="00:00:0.4">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="0" To="-80" BeginTime="00:00:0.6" Duration="00:00:0.5">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="-80" To="0" BeginTime="00:00:1.1" Duration="00:00:0.6">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Bottom3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:00">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" To="80" BeginTime="00:00:0.2" Duration="00:00:0.4">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="0" To="-80" BeginTime="00:00:0.6" Duration="00:00:0.5">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="Y"
+                            From="-80" To="0" BeginTime="00:00:1.1" Duration="00:00:0.6">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Left3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:00">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" To="80" BeginTime="00:00:0.2" Duration="00:00:0.4">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="0" To="-80" BeginTime="00:00:0.6" Duration="00:00:0.5">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="-80" To="0" BeginTime="00:00:1.1" Duration="00:00:0.6">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Right3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:00">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" To="80" BeginTime="00:00:0.2" Duration="00:00:0.4">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="0" To="-80" BeginTime="00:00:0.6" Duration="00:00:0.5">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="translate" Storyboard.TargetProperty="X"
+                            From="-80" To="0" BeginTime="00:00:1.1" Duration="00:00:0.6">
+            </DoubleAnimation>
+        </Storyboard>
+        <!--
+        <Storyboard x:Key="story_Top3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding ActualHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle"
+                            From="90" To="0" BeginTime="00:00:0.3" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Bottom3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="Y"
+                            From="0" To="{Binding NegativeHeight, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle"
+                            From="270" To="0" BeginTime="00:00:0.3" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Left3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding ActualWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="(RotateTransform.Angle)"
+                            From="90" To="0" BeginTime="00:00:0.3" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>
+        <Storyboard x:Key="story_Right3" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="translateClose" Storyboard.TargetProperty="X"
+                            From="0" To="{Binding NegativeWidth, ElementName=windown, Mode=OneWay}" BeginTime="00:00:00" Duration="00:00:0.3">
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="(RotateTransform.Angle)"
+                            From="270" To="0" BeginTime="00:00:0.3" Duration="00:00:0.8">
+            </DoubleAnimation>
+        </Storyboard>-->
     </Window.Resources>
     <Grid Background="Black" Margin="0,0,0,0">
-        <Image Margin="0" Stretch="Fill" Name="picBoxTemp">
-            <Image.RenderTransform>
-                <!--<RotateTransform x:Name="SpinnerRotate" Angle="0" />-->
-                <TranslateTransform x:Name="translateClose"></TranslateTransform>
-            </Image.RenderTransform>
-        </Image>
-        <Image Margin="0" Stretch="UniformToFill"  Name="picBox">
+        <Image Margin="0" Stretch="UniformToFill" Name="picBoxTemp">
             <Image.RenderTransform>
                 <TransformGroup>
-                    <RotateTransform x:Name="SpinnerRotate" Angle="0" />
+                    <RotateTransform x:Name="rotateClose" Angle="0" />
+                    <TranslateTransform x:Name="translateClose"></TranslateTransform>
+                    <ScaleTransform x:Name="scaleClose" CenterX="0" CenterY="0" ScaleX="1" ScaleY="1"></ScaleTransform>
+                    <!--<SkewTransform CenterX="0" CenterY="0" AngleX="45" AngleY="0"></SkewTransform>倾斜变换-->
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        <Image Margin="0" Stretch="UniformToFill"  Name="picBox" RenderTransformOrigin="0,0">
+            <Image.RenderTransform>
+                <TransformGroup>
                     <TranslateTransform x:Name="translate"></TranslateTransform>
+                    <ScaleTransform x:Name="scale" CenterX="0" CenterY="0" ScaleX="1" ScaleY="1"></ScaleTransform>
+                    <!--<SkewTransform CenterX="0" CenterY="0" AngleX="45" AngleY="0"></SkewTransform>倾斜变换--> 
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>

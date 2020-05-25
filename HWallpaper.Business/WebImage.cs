@@ -4,6 +4,7 @@ using HWallpaper.Common;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace HWallpaper.Business
 {
@@ -106,9 +107,12 @@ namespace HWallpaper.Business
         {
             PngBitmapEncoder PBE = new PngBitmapEncoder();
             PBE.Frames.Add(BitmapFrame.Create(bitmap));
-            using (System.IO.Stream stream = System.IO.File.Create(imgFullName))
+            if (!File.Exists(imgFullName))
             {
-                PBE.Save(stream);
+                using (System.IO.Stream stream = System.IO.File.Create(imgFullName))
+                {
+                    PBE.Save(stream);
+                }
             }
         }
     }

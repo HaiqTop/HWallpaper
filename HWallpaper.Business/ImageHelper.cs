@@ -28,10 +28,10 @@ namespace HWallpaper.Business
                 this.CachePath = cachePath;
                 cache = new ImageCache();
             }
-            LoadNextImageList();
+            LoadImageList();
         }
 
-        private void LoadNextImageList()
+        private void LoadImageList()
         {
             ImageListTotal imgList;
             ImageTypeItem typeItem;
