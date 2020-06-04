@@ -9,7 +9,7 @@
         Name="windown"
         Topmost="False"
         WindowStyle="None" Background="Transparent" AllowsTransparency="True"
-        Title="屏保" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowState="Maximized"  ResizeMode="NoResize"
+        Title="屏保" Height="540" Width="960" WindowStartupLocation="CenterScreen" WindowState="Normal"  ResizeMode="NoResize"
         Closing="Window_Closing" KeyDown="Window_KeyDown" MouseDown="Window_MouseDown">
     <Window.Resources>
         <!--渐隐渐显-->

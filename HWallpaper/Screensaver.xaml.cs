@@ -10,6 +10,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using static HWallpaper.Common.WinApi;
@@ -21,6 +22,7 @@ namespace HWallpaper
     /// </summary>
     public partial class Screensaver : System.Windows.Window
     {
+        private IntPtr unRegPowerNotify = IntPtr.Zero;
         public double NegativeHeight
         {
             get
@@ -68,7 +70,6 @@ namespace HWallpaper
             LoadStoryboard();
             EffectPicture(null,null);
         }
-
 
         /// <summary>
         /// 初始化显示屏保后图片切换的定时器
@@ -130,7 +131,7 @@ namespace HWallpaper
         {
             this.Close();
         }
-        
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             try

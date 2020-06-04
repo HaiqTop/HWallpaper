@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;  //调用WINDOWS API函数时要用到
 using Microsoft.Win32;  //写入注册表时要用到
+using System.Windows;
+using System.Drawing;
+using System.Messaging;
 
 namespace HWallpaper.Common
 {
@@ -123,43 +126,6 @@ namespace HWallpaper.Common
 
         [DllImport("user32")]
         public static extern bool AnimateWindow(IntPtr hwnd, int dwTime, AnimationType dwFlags);
-
-        ///// <summary>
-        ///// 利用win32 API 指定切换效果
-        ///// </summary>
-        ///// <param name="Handle">Control.Handle</param>
-        ///// <param name="type">0-7</param>
-        //public static void AnimateWindow(IntPtr Handle, int type)
-        //{
-        //    switch (type)
-        //    {
-        //        case 0://普通显示
-        //            AnimateWindow(Handle, 1000, AW_ACTIVATE);
-        //            break;
-        //        case 1://从左向右显示
-        //            AnimateWindow(Handle, 1000, AW_HOR_POSITIVE);
-        //            break;
-        //        case 2://从右向左显示
-        //            AnimateWindow(Handle, 1000, AW_HOR_NEGATIVE);
-        //            break;
-        //        case 3://从上到下显示
-        //            AnimateWindow(Handle, 1000, AW_VER_POSITIVE);
-        //            break;
-        //        case 4://从下到上显示
-        //            AnimateWindow(Handle, 1000, AW_VER_NEGATIVE);
-        //            break;
-        //        case 5://透明渐变显示
-        //            AnimateWindow(Handle, 1000, AW_BLEND);
-        //            break;
-        //        case 6://从中间向四周
-        //            AnimateWindow(Handle, 1000, AW_CENTER);
-        //            break;
-        //        case 7://左上角伸展
-        //            AnimateWindow(Handle, 1000, AW_SLIDE);
-        //            break;
-        //    }
-        //}
-
         #endregion
 
         #region 判断当前是否锁屏
@@ -209,6 +175,73 @@ namespace HWallpaper.Common
                 return false;
             }
         }
-        #endregion 
+        #endregion
+
+        #region 判断是否有全屏应用
+        //https://www.cnblogs.com/Red-ButterFly/p/7726528.html
+        [DllImport("SHELL32", CallingConvention = CallingConvention.StdCall)]
+        public static extern uint SHAppBarMessage(int dwMessage, ref APPBARDATA pData);
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        public static extern int RegisterWindowMessage(string msg);
+        /// <summary>
+        /// 取得Shell窗口句柄函数
+        /// </summary>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetShellWindow();
+        /// <summary>
+        /// 取得桌面窗口句柄函数
+        /// </summary>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetDesktopWindow();
+        /// <summary>
+        /// 取得前台窗口句柄函数
+        /// </summary>
+        /// <returns></returns>
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+        #endregion
     }
+    #region 判断是否有应用全屏应用
+    [StructLayout(LayoutKind.Sequential)]
+    public struct APPBARDATA
+    {
+        public int cbSize;
+        public IntPtr hWnd;
+        public int uCallbackMessage;
+        public int uEdge;
+        public Rect rc;
+        public IntPtr lParam;
+    }
+    public enum ABMsg : int
+    {
+        ABM_NEW = 0,
+        ABM_REMOVE,
+        ABM_QUERYPOS,
+        ABM_SETPOS,
+        ABM_GETSTATE,
+        ABM_GETTASKBARPOS,
+        ABM_ACTIVATE,
+        ABM_GETAUTOHIDEBAR,
+        ABM_SETAUTOHIDEBAR,
+        ABM_WINDOWPOSCHANGED,
+        ABM_SETSTATE
+    }
+    public enum ABNotify : int
+    {
+        ABN_STATECHANGE = 0,
+        ABN_POSCHANGED,
+        ABN_FULLSCREENAPP,
+        ABN_WINDOWARRANGE
+    }
+    public enum ABEdge : int
+    {
+        ABE_LEFT = 0,
+        ABE_TOP,
+        ABE_RIGHT,
+        ABE_BOTTOM
+    }
+    #endregion
+
 }

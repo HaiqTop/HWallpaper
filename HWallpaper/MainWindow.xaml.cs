@@ -14,6 +14,8 @@ namespace HWallpaper
         private ImageHelper imgHelper ;
         Screensaver screensaver;
         Wallpaper wallpaper;
+        F_WndProc f_WndProc = new F_WndProc();
+        MonitorEventType curMonitorStatus = MonitorEventType.PowerOn;
         //HandyControl.Controls.NotifyIcon notifyIcon;
         /// <summary>
         /// 屏保开启时间间隔（单位：毫秒）
@@ -23,6 +25,9 @@ namespace HWallpaper
         /// 屏保 - 监听用户最后一次操作的Timer
         /// </summary>
         private System.Timers.Timer timerS = new System.Timers.Timer();
+        /// <summary>
+        /// 壁纸 - 监听用户最后一次操作的Timer
+        /// </summary>
         private System.Timers.Timer timerW = new System.Timers.Timer();
         public MainWindow()
         {
@@ -33,8 +38,33 @@ namespace HWallpaper
             InitImageHelper();
             InitTimers_Screen();
             InitTimers_Wallpaper();
-
+            f_WndProc.Show();
+            f_WndProc.MonitorEvent += F_WndProc_MonitorEvent;
         }
+        private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.Visibility = Visibility.Hidden;
+        }
+
+        private void F_WndProc_MonitorEvent(MonitorEventType type)
+        {
+            curMonitorStatus = type;
+            switch (type)
+            {
+                case MonitorEventType.PowerOff:
+                    timerS.Stop();
+                    if (screensaver != null && screensaver.Visibility == Visibility.Visible)
+                    {
+                        screensaver.Close();
+                    }
+                    break;
+                case MonitorEventType.PowerOn:
+                    timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
+                    timerS.Start();
+                    break;
+            }
+        }
+
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -55,8 +85,15 @@ namespace HWallpaper
                     setting.ShowDialog();
                     break;
                 case "立即屏保":
+                    timerS.Stop();
                     screensaver = new Screensaver();
-                    screensaver.Show();
+                    screensaver.ShowDialog();
+                    // 只有当屏幕是开启的时候，才会在屏保关闭之后，继续开启屏保计时
+                    if (curMonitorStatus == MonitorEventType.PowerOn)
+                    {
+                        timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
+                        timerS.Start();
+                    }
                     break;
             }
         }
@@ -84,12 +121,6 @@ namespace HWallpaper
             wallpaper.WindowState = System.Windows.WindowState.Normal;
         }
 
-        private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            //wallpaper = new Wallpaper();
-            //wallpaper.Show();
-            this.Visibility = System.Windows.Visibility.Hidden;
-        }
 
         public void InitTimers_Screen()
         {

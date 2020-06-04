@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace HWallpaper.Common
         }
         public static string WriteLog(this string str, EnumLogLevel type = EnumLogLevel.Info)
         {
-            var logLevel = "";//ConfigurationManager.AppSettings["LogLevel"];
+            var logLevel = ConfigurationManager.AppSettings["LogLevel"];
             var level = string.IsNullOrWhiteSpace(logLevel) ? EnumLogLevel.Info.ToString() : logLevel;
 
             if ((int)type < (int)Enum.Parse(typeof(EnumLogLevel), level))
