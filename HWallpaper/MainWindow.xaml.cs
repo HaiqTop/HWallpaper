@@ -203,6 +203,14 @@ namespace HWallpaper
                 timerS.Start();
                 return;
             }
+            // 判断是否存在全屏应用
+            if (f_WndProc.RunningFullScreenApp)
+            {
+                timerS.Stop();
+                timerS.Interval = 15000d;
+                timerS.Start();
+                return;
+            }
             ShowScreen();
         }
         private void timerW_Elapsed(object source, System.Timers.ElapsedEventArgs e)

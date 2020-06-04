@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -28,8 +29,14 @@ namespace HWallpaper
         {
             InitializeComponent();
         }
-        private IntPtr unRegPowerNotify = IntPtr.Zero;
 
+        private void F_WndProc_Load(object sender, EventArgs e)
+        {
+            RegisterAppBar(false);//注册该事件；
+            this.Hide();
+        }
+        #region 屏幕开启关闭事件
+        private IntPtr unRegPowerNotify = IntPtr.Zero;
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
@@ -41,9 +48,42 @@ namespace HWallpaper
             unRegPowerNotify = NativeMethods.RegisterPowerSettingNotification(
                 this.Handle, powerGuid, NativeMethods.DEVICE_NOTIFY_WINDOW_HANDLE);
         }
+        #endregion 屏幕开启关闭事件
 
+
+        #region 判断是否有全屏应用
+        /// <summary>
+        /// 判断是否存在全屏应用
+        /// </summary>
+        public bool RunningFullScreenApp = false;
+        private IntPtr desktopHandle;
+        private IntPtr shellHandle;
+        int uCallBackMsg;
+
+        private void RegisterAppBar(bool registered)
+        {
+            APPBARDATA abd = new APPBARDATA();
+            abd.cbSize = Marshal.SizeOf(abd);
+            abd.hWnd = this.Handle;
+
+            desktopHandle = WinApi.GetDesktopWindow();
+            shellHandle = WinApi.GetShellWindow();
+            if (!registered)
+            {
+                //register
+                uCallBackMsg = WinApi.RegisterWindowMessage("APPBARMSG_CSDN_HELPER");
+                abd.uCallbackMessage = uCallBackMsg;
+                uint ret = WinApi.SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
+            }
+            else
+            {
+                WinApi.SHAppBarMessage((int)ABMsg.ABM_REMOVE, ref abd);
+            }
+        }
+        #endregion 判断是否有全屏应用
         protected override void WndProc(ref Message m)
         {
+            #region 屏幕打开和关闭事件
             switch (m.Msg)
             {
                 case NativeMethods.WM_POWERBROADCAST:
@@ -55,36 +95,48 @@ namespace HWallpaper
                         {
                             MonitorEventType type = (MonitorEventType)settings.Data;
                             this.MonitorEvent(type);
-                            //switch (settings.Data)
-                            //{
-                            //    case 0:
-                            //        this.MonitorEvent(MonitorEventType.PowerOn);
-                            //        LogHelper.WriteLog("Monitor Power Off");
-                            //        break;
-                            //    case 1:
-                            //        LogHelper.WriteLog("Monitor Power On");
-                            //        break;
-                            //    case 2:
-                            //        LogHelper.WriteLog("Monitor Dimmed");
-                            //        break;
-                            //}
                         }
                     }
                     m.Result = (IntPtr)1;
                     break;
             }
+            #endregion 屏幕打开和关闭事件
+            #region 判断是否有全屏应用
+            if (m.Msg == uCallBackMsg)
+            {
+                switch (m.WParam.ToInt32())
+                {
+                    case (int)ABNotify.ABN_FULLSCREENAPP:
+                        {
+                            IntPtr hWnd = WinApi.GetForegroundWindow();
+                            //判断当前全屏的应用是否是桌面
+                            if (hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle))
+                            {
+                                RunningFullScreenApp = false;
+                                break;
+                            }
+                            //判断是否全屏
+                            if ((int)m.LParam == 1)
+                                this.RunningFullScreenApp = true;
+                            else
+                                this.RunningFullScreenApp = false;
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+            #endregion 判断是否有全屏应用
             base.WndProc(ref m);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             NativeMethods.UnregisterPowerSettingNotification(unRegPowerNotify);
+            RegisterAppBar(true);//清除事件；
             base.OnFormClosing(e);
         }
 
-        private void F_WndProc_Load(object sender, EventArgs e)
-        {
-            this.Hide();
-        }
+
     }
 }

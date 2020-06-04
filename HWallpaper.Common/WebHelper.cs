@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -15,17 +16,22 @@ namespace HWallpaper.Common
         public static System.Drawing.Image GetImage(string url)
         {
             WebRequest imgRequest = WebRequest.Create(url);
-            imgRequest.Timeout = 5000;
             HttpWebResponse res;
             try
             {
+                imgRequest.Timeout = 5000;
                 res = (HttpWebResponse)imgRequest.GetResponse();
             }
             catch (WebException ex)
             {
+                LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
                 res = (HttpWebResponse)ex.Response;
             }
-
+            catch (Exception ex)
+            { 
+                LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
+                return null;
+            }
             if (res.StatusCode.ToString() == "OK")
             {
                 System.Drawing.Image downImage = System.Drawing.Image.FromStream(imgRequest.GetResponse().GetResponseStream());
@@ -43,6 +49,10 @@ namespace HWallpaper.Common
             {
                 if (!System.IO.File.Exists(fullName))
                 {
+                    if (string.IsNullOrEmpty(url))
+                    {
+                        throw new System.Exception("Url参数不可为空");
+                    }
                     System.Drawing.Image img = GetImage(url);
                     if (img == null)
                     {
