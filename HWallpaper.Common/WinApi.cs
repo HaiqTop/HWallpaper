@@ -177,6 +177,28 @@ namespace HWallpaper.Common
         }
         #endregion
 
+        #region 判断当前窗口是否全屏
+        /// <summary>
+        /// 获取当前窗口句柄:GetForegroundWindow()
+        /// </summary>
+        /// <returns></returns>
+        //[DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        //public static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetWindowRect(IntPtr hWnd, ref RECT lpRect);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;                             //最左坐标
+            public int Top;                             //最上坐标
+            public int Right;                           //最右坐标
+            public int Bottom;                        //最下坐标
+        }
+
+        #endregion
+
         #region 判断是否有全屏应用
         //https://www.cnblogs.com/Red-ButterFly/p/7726528.html
         [DllImport("SHELL32", CallingConvention = CallingConvention.StdCall)]

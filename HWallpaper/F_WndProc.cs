@@ -32,7 +32,7 @@ namespace HWallpaper
 
         private void F_WndProc_Load(object sender, EventArgs e)
         {
-            RegisterAppBar(false);//注册该事件；
+            //RegisterAppBar(false);//注册该事件；
             this.Hide();
         }
         #region 屏幕开启关闭事件

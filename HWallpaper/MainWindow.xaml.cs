@@ -3,6 +3,7 @@ using HWallpaper.Common;
 using HWallpaper.Model;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -29,10 +30,17 @@ namespace HWallpaper
         /// 壁纸 - 监听用户最后一次操作的Timer
         /// </summary>
         private System.Timers.Timer timerW = new System.Timers.Timer();
+        // 监控是否有全屏应用的代码
+        private IntPtr desktopHandle;
+        private IntPtr shellHandle;
         public MainWindow()
         {
             InitializeComponent();
             CleanCache();
+        }
+        private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.Visibility = Visibility.Hidden;
             // 注册监听当前登录的用户变化（登录、注销和解锁屏）事件
             Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             InitImageHelper();
@@ -40,12 +48,9 @@ namespace HWallpaper
             InitTimers_Wallpaper();
             f_WndProc.Show();
             f_WndProc.MonitorEvent += F_WndProc_MonitorEvent;
+            desktopHandle = WinApi.GetDesktopWindow();
+            shellHandle = WinApi.GetShellWindow();
         }
-        private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            this.Visibility = Visibility.Hidden;
-        }
-
         private void F_WndProc_MonitorEvent(MonitorEventType type)
         {
             curMonitorStatus = type;
@@ -88,12 +93,6 @@ namespace HWallpaper
                     timerS.Stop();
                     screensaver = new Screensaver();
                     screensaver.ShowDialog();
-                    // 只有当屏幕是开启的时候，才会在屏保关闭之后，继续开启屏保计时
-                    if (curMonitorStatus == MonitorEventType.PowerOn)
-                    {
-                        timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
-                        timerS.Start();
-                    }
                     break;
             }
         }
@@ -203,14 +202,6 @@ namespace HWallpaper
                 timerS.Start();
                 return;
             }
-            // 判断是否存在全屏应用
-            if (f_WndProc.RunningFullScreenApp)
-            {
-                timerS.Stop();
-                timerS.Interval = 15000d;
-                timerS.Start();
-                return;
-            }
             ShowScreen();
         }
         private void timerW_Elapsed(object source, System.Timers.ElapsedEventArgs e)
@@ -222,10 +213,23 @@ namespace HWallpaper
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 timerS.Stop();
+                System.Drawing.Rectangle? rect = GetShowScreenRect();
+                // 判断是否存在全屏应用
+                if (rect == null)
+                {
+                    timerS.Interval = 15000d;
+                    timerS.Start();
+                    return;
+                }
                 screensaver = new Screensaver();
+                screensaver.Left = (double)rect?.Left;
                 screensaver.ShowDialog();
-                timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
-                timerS.Start();
+                // 只有当屏幕是开启的时候，才会在屏保关闭之后，继续开启屏保计时
+                if (curMonitorStatus == MonitorEventType.PowerOn)
+                {
+                    timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
+                    timerS.Start();
+                }
             }));
             
         }
@@ -286,16 +290,20 @@ namespace HWallpaper
                 case Microsoft.Win32.SessionSwitchReason.SessionLogoff://注销
                     timerS.Stop();
                     //timerW.Stop();
-                    // 遍历所有子窗体，如果找到屏保窗体，则关闭
-                    foreach (Window window in Application.Current.Windows)
+                    if (screensaver != null && screensaver.Visibility == Visibility.Visible)
                     {
-                        if (window.Title == "Screensaver")
-                        {
-                            Screensaver frm = window as Screensaver;
-                            frm.Close();
-                            return;
-                        }
+                        screensaver.Close();
                     }
+                    // 遍历所有子窗体，如果找到屏保窗体，则关闭（作废原因：上面代码可以替代）
+                    //foreach (Window window in Application.Current.Windows)
+                    //{
+                    //    if (window.Title == "Screensaver")
+                    //    {
+                    //        Screensaver frm = window as Screensaver;
+                    //        frm.Close();
+                    //        return;
+                    //    }
+                    //}
                     break;
             }
         }
@@ -306,6 +314,68 @@ namespace HWallpaper
             Microsoft.Win32.SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
             // 保存配置
             //Properties.Settings.Default.Save();
+        }
+
+
+        /// <summary>
+        /// 判断前台窗口是否是全屏
+        /// </summary>
+        /// <returns></returns>
+        public bool TopWinIsFull()
+        {
+            IntPtr hWnd = WinApi.GetForegroundWindow();
+            //判断当前全屏的应用是否是桌面
+            if (hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle))
+            {
+                return false;
+            }
+            else
+            {
+                WinApi.RECT rect = new WinApi.RECT();
+                WinApi.GetWindowRect(hWnd, ref rect);
+                int width = rect.Right - rect.Left;                        //窗口的宽度
+                int height = rect.Bottom - rect.Top;                   //窗口的高度
+                System.Drawing.Rectangle ScreenArea = System.Windows.Forms.Screen.AllScreens[0].Bounds;
+                if (width == ScreenArea.Width && height == ScreenArea.Height
+                    && rect.Left == ScreenArea.Left && rect.Bottom == ScreenArea.Bottom)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        /// <summary>
+        /// 获取屏保界面可以显示的位置
+        /// </summary>
+        /// <returns></returns>
+        public System.Drawing.Rectangle? GetShowScreenRect()
+        {
+            System.Drawing.Rectangle? result = null;
+            IntPtr hWnd = WinApi.GetForegroundWindow();
+            //判断当前全屏的应用是否是桌面
+            if (hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle))
+            {
+                // 当前前置窗口是桌面或者shell，不存在全屏应用，所以返回主监视器的显示范围
+                result = System.Windows.Forms.Screen.PrimaryScreen.Bounds;
+            }
+            else
+            {
+                WinApi.RECT rect = new WinApi.RECT();
+                WinApi.GetWindowRect(hWnd, ref rect);
+                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                {
+                    if (rect.Left == screen.Bounds.Left && rect.Right == screen.Bounds.Right
+                        && rect.Top == screen.Bounds.Top && rect.Bottom > screen.Bounds.Bottom - 5)
+                    {
+                        continue;//前台窗口在当前监视器上，且是全屏模式，则继续判断下一个监视器
+                    }
+                    result = screen.Bounds;
+                }
+            }
+            return result;
         }
     }
 }
