@@ -51,6 +51,17 @@ namespace HWallpaper
         public Screensaver()
         {
             InitializeComponent();
+            this.WindowState = WindowState.Maximized;
+        }
+        public Screensaver(double left)
+        {
+            InitializeComponent();
+            this.WindowStartupLocation = WindowStartupLocation.Manual;
+            this.Left = left;
+        }
+        private void windown_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Maximized;
             UpdateTime();
             InitTimer();
             if (ConfigManage.Base.Cache)
@@ -58,19 +69,18 @@ namespace HWallpaper
                 imgHelper = new ImageHelper(ConfigManage.Screen.TypeIndexs, ConfigManage.Base.CachePath);
             }
             else
-            { 
+            {
                 imgHelper = new ImageHelper(ConfigManage.Screen.TypeIndexs);
             }
             imageQueue.OnComplate += ImageQueue_OnComplate;
             imageQueue.OnError += ImageQueue_OnError;
-            if (ConfigManage.Base.Cache) 
-            { 
+            if (ConfigManage.Base.Cache)
+            {
                 imageQueue.CachePath = ConfigManage.Base.CachePath;
             }
             LoadStoryboard();
-            EffectPicture(null,null);
+            EffectPicture(null, null);
         }
-
         /// <summary>
         /// 初始化显示屏保后图片切换的定时器
         /// </summary>

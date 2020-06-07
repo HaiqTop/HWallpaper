@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HWallpaper.Model
 {
     public class ImgInfo
     {
+        public int Id { get { return Convert.ToInt32(this.id); } }
         public string id { get; set; }
         public int class_id { get; set; }
         public string create_time { get; set; }

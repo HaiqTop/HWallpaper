@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace HWallpaper
+namespace HWallpaper.Common
 {
     /// <summary>
     /// 用于监听显示器关闭开启事件

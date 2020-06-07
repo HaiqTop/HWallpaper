@@ -9,8 +9,8 @@
         Name="windown"
         Topmost="False"
         WindowStyle="None" Background="Transparent" AllowsTransparency="True"
-        Title="屏保" Height="540" Width="960" WindowState="Maximized"  ResizeMode="NoResize"
-        Closing="Window_Closing" KeyDown="Window_KeyDown" MouseDown="Window_MouseDown">
+        Title="屏保" Height="540" Width="960" ResizeMode="NoResize"
+        Closing="Window_Closing" KeyDown="Window_KeyDown" MouseDown="Window_MouseDown" Loaded="windown_Loaded">
     <Window.Resources>
         <!--渐隐渐显-->
         <Storyboard x:Key="story_Opacity" Completed="Storyboard_Completed">

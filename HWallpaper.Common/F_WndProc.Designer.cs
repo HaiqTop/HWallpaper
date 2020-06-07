@@ -1,4 +1,4 @@
-﻿namespace HWallpaper
+﻿namespace HWallpaper.Common
 {
     partial class F_WndProc
     {

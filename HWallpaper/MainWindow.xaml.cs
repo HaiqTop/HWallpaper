@@ -36,6 +36,7 @@ namespace HWallpaper
         public MainWindow()
         {
             InitializeComponent();
+            InitDB();
             CleanCache();
         }
         private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
@@ -90,9 +91,11 @@ namespace HWallpaper
                     setting.ShowDialog();
                     break;
                 case "立即屏保":
-                    timerS.Stop();
-                    screensaver = new Screensaver();
-                    screensaver.ShowDialog();
+                    //timerS.Stop();
+                    //screensaver = new Screensaver();
+                    //screensaver.ShowDialog();
+                    ImgInfo imgInfo = imgHelper.GetNextImage();
+                    UserDataManage.AddRecord(1,imgInfo);
                     break;
             }
         }
@@ -221,18 +224,24 @@ namespace HWallpaper
                     timerS.Start();
                     return;
                 }
-                screensaver = new Screensaver();
-                screensaver.Left = (double)rect?.Left;
-                screensaver.ShowDialog();
-                // 只有当屏幕是开启的时候，才会在屏保关闭之后，继续开启屏保计时
-                if (curMonitorStatus == MonitorEventType.PowerOn)
-                {
-                    timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
-                    timerS.Start();
-                }
+                this.Left = (double)rect?.Left;
+                screensaver = new Screensaver((double)rect?.Left);
+                screensaver.Closed += Screensaver_Closed;
+                screensaver.Show();
             }));
             
         }
+
+        private void Screensaver_Closed(object sender, EventArgs e)
+        {
+            // 只有当屏幕是开启的时候，才会在屏保关闭之后，继续开启屏保计时
+            if (curMonitorStatus == MonitorEventType.PowerOn)
+            {
+                timerS.Interval = 15000d;// 默认15秒检测一次是否达到屏保设定时间
+                timerS.Start();
+            }
+        }
+
         private void CleanCache()
         {
             if (ConfigManage.Base.AutoClearCache)
@@ -254,6 +263,15 @@ namespace HWallpaper
                 }
             }
         }
+
+        private void InitDB()
+        {
+            if (!File.Exists(Const.dbFile))
+            {
+                File.Copy(Const.dbEmptyFile, Const.dbFile);
+            }
+        }
+
         /// <summary>
         /// 下一张壁纸
         /// </summary>
@@ -367,12 +385,12 @@ namespace HWallpaper
                 WinApi.GetWindowRect(hWnd, ref rect);
                 foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                 {
-                    if (rect.Left == screen.Bounds.Left && rect.Right == screen.Bounds.Right
-                        && rect.Top == screen.Bounds.Top && rect.Bottom > screen.Bounds.Bottom - 5)
+                    if (rect.Left != screen.Bounds.Left || rect.Right != screen.Bounds.Right//前台窗口在当前监视器上，且是全屏模式，则继续判断下一个监视器
+                        || rect.Top != screen.Bounds.Top || rect.Bottom < screen.Bounds.Bottom - 5)
                     {
-                        continue;//前台窗口在当前监视器上，且是全屏模式，则继续判断下一个监视器
+                        result = screen.Bounds;
+                        break;
                     }
-                    result = screen.Bounds;
                 }
             }
             return result;
