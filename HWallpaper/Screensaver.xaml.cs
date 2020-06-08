@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using static HWallpaper.Common.WinApi;
@@ -37,6 +38,9 @@ namespace HWallpaper
                 return (this.Width > 0 ? this.Width : this.ActualWidth) * -1;
             }
         }
+
+        private string CachePath;
+        private string DownPath;
         private ImageHelper imgHelper;
         private ImageQueue imageQueue = new ImageQueue();
         private List<Storyboard> storys = new List<Storyboard>();
@@ -52,6 +56,8 @@ namespace HWallpaper
         {
             InitializeComponent();
             this.WindowState = WindowState.Maximized;
+            CachePath = ConfigManage.Base.CachePath;
+            DownPath = ConfigManage.Base.DownPath;
         }
         public Screensaver(double left)
         {
@@ -127,7 +133,7 @@ namespace HWallpaper
                 picBox.Dispatcher.BeginInvoke(new Action<Image, ImgInfo>((image, imgInfo) =>
                 {
                     timerP.Stop();
-                    imageQueue.Queue(info.url, picBox,info.GetFileName());
+                    imageQueue.Queue(picBox,info);
                 }), new Object[] { picBox, info });
                 
             }
@@ -190,7 +196,7 @@ namespace HWallpaper
             }
         }
         int index = 0;
-        private void ImageQueue_OnComplate(BitmapImage b)
+        private void ImageQueue_OnComplate(BitmapImage b,ImgInfo imgInfo)
         {
             if (picBox.Source != null)
             {
@@ -208,10 +214,66 @@ namespace HWallpaper
             { 
                 picBox.Source = b;
                 timerP.Start();
+                btnPanel.Tag = imgInfo;
                 //this.Visibility = Visibility.Visible;
             }
         }
-
+        private void Btn_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            if (btn == null) return;
+            ImgInfo imgInfo = (btn.Parent as StackPanel).Tag as ImgInfo;
+            switch (btn.Name)
+            {
+                case "btn_down":
+                    {
+                        string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
+                        if (!System.IO.File.Exists(imgFullName))
+                        {
+                            System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
+                            img.Save(imgFullName);
+                            img.Dispose();
+                        }
+                        UserDataManage.SetLove(LoveType.Love, imgInfo);
+                        Growl.Success("下载成功。");
+                    }
+                    break;
+                case "btn_wallpaper":
+                    {
+                        string imgFullName = System.IO.Path.Combine(this.CachePath, imgInfo.GetFileName());
+                        if (!System.IO.File.Exists(imgFullName))
+                        {
+                            System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
+                            img.Save(imgFullName);
+                            img.Dispose();
+                        }
+                        WinApi.SetWallpaper(imgFullName);
+                        UserDataManage.AddRecord(RecordType.ManualWallpaper, imgInfo);
+                        Growl.Success("壁纸设置成功。");
+                    }
+                    break;
+                case "btn_love":
+                    {
+                        if (btn.Foreground != Brushes.Red)
+                        {
+                            UserDataManage.SetLove(LoveType.Love, imgInfo);
+                            btn.Foreground = Brushes.Red;
+                            btn_dislike.Foreground = Brushes.White;
+                        }
+                    }
+                    break;
+                case "btn_dislike":
+                    {
+                        if (btn.Foreground != Brushes.Red)
+                        {
+                            UserDataManage.SetLove(LoveType.Dislike, imgInfo);
+                            btn.Foreground = Brushes.Red;
+                            btn_love.Foreground = Brushes.White;
+                        }
+                    }
+                    break;
+            }
+        }
         private void ImageQueue_OnError(Exception e)
         {
             Growl.Error(e.Message);
@@ -226,5 +288,9 @@ namespace HWallpaper
             timerP?.Start();
         }
 
+        private void score_Selected(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

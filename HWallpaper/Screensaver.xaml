@@ -293,6 +293,43 @@
                 </TransformGroup>
             </Image.RenderTransform>
         </Image>
+        <StackPanel Margin="0,40,20,0" HorizontalAlignment="Right" VerticalAlignment="Top" Name="btnPanel">
+            <Button Background="Transparent" Margin="0 5" Style="{StaticResource ButtonPrimary}" hc:IconElement.Geometry="{StaticResource DownGeometry}" Click="Btn_Click" Name="btn_down">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="-4" BlurRadius="5" Color="LightGray"/>
+                </Button.Effect>
+            </Button>
+            <Button Background="Transparent" Margin="0 5" Style="{StaticResource ButtonPrimary}" hc:IconElement.Geometry="{StaticResource ImageGeometry}" Click="Btn_Click" Name="btn_wallpaper">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="-4" BlurRadius="5" Color="LightGray"/>
+                </Button.Effect>
+            </Button>
+            <Button Background="Transparent" Margin="0 5" Style="{StaticResource ButtonPrimary}" hc:IconElement.Geometry="{StaticResource LoveGeometry}" Click="Btn_Click" Name="btn_love"
+                hc:FloatingBlock.Duration="0:0:1" hc:FloatingBlock.VerticalOffset="-20" hc:FloatingBlock.HorizontalOffset="-10" hc:FloatingBlock.ToX="-50" hc:FloatingBlock.ToY="-80">
+                <hc:FloatingBlock.ContentTemplate>
+                    <DataTemplate>
+                        <Path Data="{StaticResource LoveGeometry}" Fill="{DynamicResource DangerBrush}" Width="18" Height="18"/>
+                    </DataTemplate>
+                </hc:FloatingBlock.ContentTemplate>
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="-4" BlurRadius="5" Color="LightGray"/>
+                </Button.Effect>
+            </Button>
+            <Button Background="Transparent" Margin="0 5" Style="{StaticResource ButtonPrimary}" hc:IconElement.Geometry="{StaticResource DislikeGeometry}" Click="Btn_Click" Name="btn_dislike"
+                hc:FloatingBlock.Duration="0:0:1" hc:FloatingBlock.VerticalOffset="20" hc:FloatingBlock.HorizontalOffset="-10" hc:FloatingBlock.ToX="-50" hc:FloatingBlock.ToY="80">
+                <hc:FloatingBlock.ContentTemplate>
+                    <DataTemplate>
+                        <Path Data="{StaticResource DislikeGeometry}" Fill="{DynamicResource DangerBrush}" Width="18" Height="18"/>
+                    </DataTemplate>
+                </hc:FloatingBlock.ContentTemplate>
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="-4" BlurRadius="5" Color="LightGray"/>
+                </Button.Effect>
+            </Button>
+        </StackPanel>
+
+        <hc:Rate Value="0" AllowHalf="True" ShowText="True" Margin="0 0 0 20" HorizontalAlignment="Center"  VerticalAlignment="Bottom"  Foreground="{DynamicResource DangerBrush}" Icon="{StaticResource LoveGeometry}" Name="score" hc:SelectableItem.Selected="score_Selected"/>
+
         <!--<hc:FlipClock Margin="20,0,0,30" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"/>-->
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,66,0,0" TextWrapping="Wrap" FontSize="80" Foreground="White" Name="labelT" Text="16:51"/>
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,188,0,0" TextWrapping="Wrap" FontSize="40" Foreground="White" Name="labelD" Text="02-12 周三"/>

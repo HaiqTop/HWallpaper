@@ -5,6 +5,7 @@ using System.Threading;
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using HWallpaper.Model;
 
 namespace HWallpaper.Common
 {
@@ -13,10 +14,11 @@ namespace HWallpaper.Common
         class ImageQueueInfo
         {
             public Image image { get; set; }
+            public ImgInfo ImgInfo { get; set; }
             public string Url { get; set; }
             public string Name { get; set; }
         }
-        public delegate void ComplateDelegate(BitmapImage b);
+        public delegate void ComplateDelegate(BitmapImage b, ImgInfo imgInfo);
         public delegate void ErrorDelegate(Exception e);
         public event ComplateDelegate OnComplate;
         public event ErrorDelegate OnError;
@@ -109,12 +111,12 @@ namespace HWallpaper.Common
                         if (bImage != null && this.OnComplate != null && t.image != null)
                         {
                             if (bImage.CanFreeze) bImage.Freeze();
-                            t.image.Dispatcher.BeginInvoke(new Action<Image,BitmapImage,string>((image,bmp,name) =>
+                            t.image.Dispatcher.BeginInvoke(new Action<Image,BitmapImage,string,ImgInfo>((image,bmp,name,imgInfo) =>
                             {
                                 image.Tag = name;
-                                this.OnComplate(bmp);
+                                this.OnComplate(bmp, imgInfo);
 
-                            }), new Object[] { t.image,bImage, t.Name });
+                            }), new Object[] { t.image,bImage, t.Name ,t.ImgInfo});
                         }
                     }
                     catch (Exception e)
@@ -148,10 +150,18 @@ namespace HWallpaper.Common
             if (String.IsNullOrEmpty(url)) return;
             lock (this.Stacks)
             {
-                this.Stacks.Enqueue(new ImageQueueInfo() { Url = url, image = image ,Name=name});
+                this.Stacks.Enqueue(new ImageQueueInfo() { Url = url, image = image ,Name = name});
                 this.autoEvent.Set();
             }
         }
-
+        public void Queue(Image image, ImgInfo imgInfo)
+        {
+            if (imgInfo == null) return;
+            lock (this.Stacks)
+            {
+                this.Stacks.Enqueue(new ImageQueueInfo() { ImgInfo = imgInfo, image = image,Url = imgInfo.url, Name = imgInfo.GetFileName()});
+                this.autoEvent.Set();
+            }
+        }
     }
 }

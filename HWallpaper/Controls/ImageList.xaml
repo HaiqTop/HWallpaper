@@ -14,7 +14,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <!-- 项目工程的相对路径 -->
                 <!--<ResourceDictionary Source="pack://application:,,,/HWallpaper.Controls;component/Themes/Button.xaml"></ResourceDictionary>-->
-                <ResourceDictionary Source="../Resources/Geometries.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>

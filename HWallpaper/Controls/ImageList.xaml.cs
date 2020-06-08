@@ -51,25 +51,15 @@ namespace HWallpaper.Controls
         {
             btn_down.ToolTip = "下载到本地";
             //btn_down.Margin = new Thickness(0, 10, 10, 0);
-            //btn_down.Visibility = Visibility.Hidden;
             btn_wallpaper.ToolTip = "设置为壁纸";
-            //btn_wallpaper.Margin = new Thickness(0, 52, 10, 0);
-            //btn_wallpaper.Visibility = Visibility.Hidden;
             btn_love.ToolTip = "喜欢该壁纸";
-            //btn_love.Visibility = Visibility.Hidden;
             btn_dislike.ToolTip = "不喜欢该壁纸";
-            //btn_dislike.Visibility = Visibility.Hidden;
-            //zoomGrid.Children.Remove(btn_down);
-            //zoomGrid.Children.Remove(btn_wallpaper);
-            //zoomGrid.Children.Remove(btn_love);
-            //zoomGrid.Children.Remove(btn_dislike);
             btnPanel.Visibility = Visibility.Hidden;
             zoomGrid.Children.Remove(btnPanel);
             zoomGrid.Height = this.Height;
             zoomGrid.Width = this.Width;
             zoomImage.Tag = PageType.SPA;
             scr.Width = this.Width;
-            //scr.Height = this.Height;
             scr.Margin = new Thickness(0);
             scr.ScrollChanged += ListView_ScrollChanged;
             scr.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -148,9 +138,8 @@ namespace HWallpaper.Controls
                 Grid grid = i.Parent as Grid;
                 foreach (var item in grid.Children)
                 {
-                    if (item is LoadingCircle)
+                    if (item is LoadingCircle load)
                     {
-                        LoadingCircle load = item as LoadingCircle;
                         grid.Children.Remove(load);
                         break;
                     }
@@ -233,22 +222,6 @@ namespace HWallpaper.Controls
             {
                 this.ScreenSize.Width = size.Width;
                 this.ScreenSize.Height = size.Height;
-            }
-        }
-        /// <summary>
-        /// 输入路径参数
-        /// </summary>
-        /// <param name="cache"></param>
-        /// <param name="download"></param>
-        public void SetPath(string cache,string download)
-        {
-            if (string.IsNullOrEmpty(cache) && System.IO.Directory.Exists(cache))
-            {
-                this.CachePath = cache;
-            }
-            if (string.IsNullOrEmpty(download) && System.IO.Directory.Exists(download))
-            {
-                this.DownPath = download;
             }
         }
         public int LoadImage(int picType = 0, int index = 0)
@@ -380,6 +353,7 @@ namespace HWallpaper.Controls
             {
                 btn_love.Foreground = Brushes.White;
                 btn_dislike.Foreground = Brushes.White;
+                btn_down.Foreground = Brushes.White;
 
                 btnPanel.Visibility = Visibility.Visible;
                 btnPanel.Tag = grid.Tag;
@@ -398,6 +372,10 @@ namespace HWallpaper.Controls
                         btn_dislike.Foreground = Brushes.Red;
                     }
                     score.Value = picture.Score;
+                }
+                if (System.IO.File.Exists(System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName())))
+                {
+                    btn_down.Foreground = Brushes.Red;
                 }
             }
         }

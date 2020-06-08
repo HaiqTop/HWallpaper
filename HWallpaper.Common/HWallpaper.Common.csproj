@@ -84,5 +84,11 @@
       <DependentUpon>F_WndProc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HWallpaper.Model\HWallpaper.Model.csproj">
+      <Project>{44AA9382-7830-49B2-AAD7-7E25CC71D42C}</Project>
+      <Name>HWallpaper.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
