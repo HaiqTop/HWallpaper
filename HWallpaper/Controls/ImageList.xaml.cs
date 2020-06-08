@@ -51,13 +51,20 @@ namespace HWallpaper.Controls
         {
             btn_down.ToolTip = "下载到本地";
             //btn_down.Margin = new Thickness(0, 10, 10, 0);
-            btn_down.Visibility = Visibility.Hidden;
-            btn_screen.ToolTip = "设置为壁纸";
-            //btn_screen.Margin = new Thickness(0, 52, 10, 0);
-            btn_screen.Visibility = Visibility.Hidden;
-            zoomGrid.Children.Remove(btn_down);
-            zoomGrid.Children.Remove(btn_screen);
-
+            //btn_down.Visibility = Visibility.Hidden;
+            btn_wallpaper.ToolTip = "设置为壁纸";
+            //btn_wallpaper.Margin = new Thickness(0, 52, 10, 0);
+            //btn_wallpaper.Visibility = Visibility.Hidden;
+            btn_love.ToolTip = "喜欢该壁纸";
+            //btn_love.Visibility = Visibility.Hidden;
+            btn_dislike.ToolTip = "不喜欢该壁纸";
+            //btn_dislike.Visibility = Visibility.Hidden;
+            //zoomGrid.Children.Remove(btn_down);
+            //zoomGrid.Children.Remove(btn_wallpaper);
+            //zoomGrid.Children.Remove(btn_love);
+            //zoomGrid.Children.Remove(btn_dislike);
+            btnPanel.Visibility = Visibility.Hidden;
+            zoomGrid.Children.Remove(btnPanel);
             zoomGrid.Height = this.Height;
             zoomGrid.Width = this.Width;
             zoomImage.Tag = PageType.SPA;
@@ -348,19 +355,11 @@ namespace HWallpaper.Controls
         {
             Grid grid = sender as Grid;
             if (grid == null) return;
-
-            btn_down.Visibility = Visibility.Hidden;
-            btn_screen.Visibility = Visibility.Hidden;
-
-            if (btn_down.Parent != null)
+            btnPanel.Visibility = Visibility.Hidden;
+            if (btnPanel.Parent != null)
             {
-                Grid tGrid = btn_down.Parent as Grid;
-                tGrid.Children.Remove(btn_down);
-            }
-            if (btn_screen.Parent != null)
-            {
-                Grid tGrid = btn_screen.Parent as Grid;
-                tGrid.Children.Remove(btn_screen);
+                Grid tGrid = btnPanel.Parent as Grid;
+                tGrid.Children.Remove(btnPanel);
             }
             //for (int i = 0; i < grid.Children.Count; i++)
             //{
@@ -379,12 +378,27 @@ namespace HWallpaper.Controls
             if (grid == null) return;
             if (grid.IsMouseOver)
             {
-                btn_down.Visibility = Visibility.Visible;
-                btn_down.Tag = grid.Tag;
-                btn_screen.Visibility = Visibility.Visible;
-                btn_screen.Tag = grid.Tag;
-                grid.Children.Add(btn_down);
-                grid.Children.Add(btn_screen);
+                btn_love.Foreground = Brushes.White;
+                btn_dislike.Foreground = Brushes.White;
+
+                btnPanel.Visibility = Visibility.Visible;
+                btnPanel.Tag = grid.Tag;
+                grid.Children.Add(btnPanel);
+
+                ImgInfo imgInfo = this.GetimgInfo(btnPanel.Tag);
+                Picture picture = UserDataManage.GetPicture(imgInfo.Id);
+                if (picture != null)
+                {
+                    if (picture.Love == 1)
+                    {
+                        btn_love.Foreground = Brushes.Red;
+                    }
+                    else if (picture.Love == -1)
+                    {
+                        btn_dislike.Foreground = Brushes.Red;
+                    }
+                    score.Value = picture.Score;
+                }
             }
         }
 
@@ -392,29 +406,56 @@ namespace HWallpaper.Controls
         {
             Button btn = sender as Button;
             if (btn == null) return;
-            ImgInfo imgInfo = this.GetimgInfo(btn.Tag);
-            if (btn.Name == "btn_down")
+            ImgInfo imgInfo = this.GetimgInfo((btn.Parent as StackPanel).Tag);
+            switch (btn.Name)
             {
-                string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
-                if (!System.IO.File.Exists(imgFullName))
-                {
-                    System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
-                    img.Save(imgFullName);
-                    img.Dispose();
-                }
-                Growl.Success("下载成功。");
-            }
-            else
-            {
-                string imgFullName = System.IO.Path.Combine(this.CachePath, imgInfo.GetFileName());
-                if (!System.IO.File.Exists(imgFullName))
-                {
-                    System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
-                    img.Save(imgFullName);
-                    img.Dispose();
-                }
-                WinApi.SetWallpaper(imgFullName);
-                Growl.Success("壁纸设置成功。");
+                case "btn_down":
+                    {
+                        string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
+                        if (!System.IO.File.Exists(imgFullName))
+                        {
+                            System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
+                            img.Save(imgFullName);
+                            img.Dispose();
+                        }
+                        UserDataManage.SetLove(LoveType.Love, imgInfo);
+                        Growl.Success("下载成功。");
+                    }
+                    break;
+                case "btn_wallpaper":
+                    {
+                        string imgFullName = System.IO.Path.Combine(this.CachePath, imgInfo.GetFileName());
+                        if (!System.IO.File.Exists(imgFullName))
+                        {
+                            System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
+                            img.Save(imgFullName);
+                            img.Dispose();
+                        }
+                        WinApi.SetWallpaper(imgFullName);
+                        UserDataManage.AddRecord(RecordType.ManualWallpaper, imgInfo);
+                        Growl.Success("壁纸设置成功。");
+                    }
+                    break;
+                case "btn_love":
+                    {
+                        if (btn.Foreground != Brushes.Red)
+                        {
+                            UserDataManage.SetLove(LoveType.Love, imgInfo);
+                            btn.Foreground = Brushes.Red;
+                            btn_dislike.Foreground = Brushes.White;
+                        }
+                    }
+                    break;
+                case "btn_dislike":
+                    {
+                        if (btn.Foreground != Brushes.Red)
+                        {
+                            UserDataManage.SetLove(LoveType.Dislike, imgInfo);
+                            btn.Foreground = Brushes.Red;
+                            btn_love.Foreground = Brushes.White;
+                        }
+                    }
+                    break;
             }
         }
         /// <summary>

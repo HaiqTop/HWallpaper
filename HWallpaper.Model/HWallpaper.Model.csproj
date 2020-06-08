@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="DbModels\Enums.cs" />
     <Compile Include="DbModels\TagRecord.cs" />
     <Compile Include="DbModels\Record.cs" />
     <Compile Include="DbModels\Picture.cs" />

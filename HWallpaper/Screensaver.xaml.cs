@@ -175,6 +175,7 @@ namespace HWallpaper
                             System.IO.Directory.CreateDirectory(path);
                         string imgFullName = System.IO.Path.Combine(path, picBox.Tag.ToString());
                         WebImage.SaveImage((BitmapSource)picBox.Source, imgFullName);
+                        //UserDataManage.SetLove(LoveType.Love, imgInfo);
                         Growl.Success("已保存到本地文件夹");
                     }
                     catch (Exception ex)

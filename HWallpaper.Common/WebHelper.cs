@@ -32,7 +32,7 @@ namespace HWallpaper.Common
                 LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
                 return null;
             }
-            if (res.StatusCode.ToString() == "OK")
+            if (res != null && res.StatusCode.ToString() == "OK")
             {
                 System.Drawing.Image downImage = System.Drawing.Image.FromStream(imgRequest.GetResponse().GetResponseStream());
                 return downImage;

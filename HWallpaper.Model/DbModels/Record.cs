@@ -13,7 +13,7 @@ namespace HWallpaper.Model
         /// <summary>
         /// 记录主键
         /// </summary>
-        //[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]//指定主键和自增列，当然数据库中也要设置主键和自增列才会有效
+        [SqlSugar.SugarColumn(IsPrimaryKey = true, IsIdentity = true)]//指定主键和自增列，当然数据库中也要设置主键和自增列才会有效
         public int Id { get; set; }
         /// <summary>
         /// 使用类型（1：自动壁纸，2：手动壁纸，2：自动屏保）

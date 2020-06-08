@@ -13,19 +13,19 @@ namespace HWallpaper.Model
         /// <summary>
         /// 记录主键
         /// </summary>
-        //[SugarColumn(IsPrimaryKey = true, IsIdentity = true)]//指定主键和自增列，当然数据库中也要设置主键和自增列才会有效
+        [SqlSugar.SugarColumn(IsPrimaryKey = true, IsIdentity = true)]//指定主键和自增列，当然数据库中也要设置主键和自增列才会有效
         public int Id { get; set; }
         /// <summary>
         /// 壁纸标签名称
         /// </summary>
-        public int TagName { get; set; }
+        public string TagName { get; set; }
         /// <summary>
-        /// 使用时间
+        /// 收藏总数
         /// </summary>
-        public DateTime Time { get; set; }
+        public int RecordCount { get; set; }
         /// <summary>
-        /// 壁纸主键
+        /// 评分总数
         /// </summary>
-        public int PictureId { get; set; }
+        public int ScoreSum { get; set; }
     }
 }

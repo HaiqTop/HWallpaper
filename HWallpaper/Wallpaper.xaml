@@ -12,6 +12,11 @@
         <StackPanel Height="29">
             <Menu HorizontalAlignment="Right">
                 <MenuItem Header="功能">
+                    <MenuItem Header="显示全部" Width="140" Click="MenuItem_Click" IsChecked="True" IsCheckable="True">
+                        <MenuItem.Icon>
+                            <Image Source="Image/Settings.ico"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem Header="屏保" Width="140" Click="MenuItem_Click">
                         <MenuItem.Icon>
                             <Image Source="Image/exit1.png"/>

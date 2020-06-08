@@ -91,11 +91,9 @@ namespace HWallpaper
                     setting.ShowDialog();
                     break;
                 case "立即屏保":
-                    //timerS.Stop();
-                    //screensaver = new Screensaver();
-                    //screensaver.ShowDialog();
-                    ImgInfo imgInfo = imgHelper.GetNextImage();
-                    UserDataManage.AddRecord(1,imgInfo);
+                    timerS.Stop();
+                    screensaver = new Screensaver();
+                    screensaver.ShowDialog();
                     break;
             }
         }
@@ -286,6 +284,7 @@ namespace HWallpaper
                 WebHelper.DownImage(imgInfo.url,imgFullName);
             }
             Common.WinApi.SetWallpaper(imgFullName);
+            UserDataManage.AddRecord(RecordType.AutoWallpaper,imgInfo);
             ConfigManage.Wallpaper.ReplaceLastTime = DateTime.Now;
             ConfigManage.Save();
             timerW.Start();
