@@ -215,7 +215,7 @@ namespace HWallpaper.Business
                         }
                         else
                         {
-                            tagRecord.RecordCount += score;
+                            tagRecord.ScoreSum += score;
                             db.Updateable(tagRecord).UpdateColumns(o => new { o.RecordCount }).ExecuteCommand();
                         }
                     }

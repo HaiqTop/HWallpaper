@@ -327,8 +327,12 @@
                 </Button.Effect>
             </Button>
         </StackPanel>
-
-        <hc:Rate Value="0" AllowHalf="True" ShowText="True" Margin="0 0 0 20" HorizontalAlignment="Center"  VerticalAlignment="Bottom"  Foreground="{DynamicResource DangerBrush}" Icon="{StaticResource LoveGeometry}" Name="score" hc:SelectableItem.Selected="score_Selected"/>
+        <StackPanel Margin="0 0 0 20" HorizontalAlignment="Center"  VerticalAlignment="Bottom" Name="scorePanel">
+            <StackPanel.Effect>
+                <DropShadowEffect ShadowDepth="-4" BlurRadius="5" Color="LightGray"/>
+            </StackPanel.Effect>
+            <!--<hc:Rate Value="0" AllowHalf="False" AllowClear="True" ShowText="False" Margin="10" Foreground="{DynamicResource DangerBrush}" Icon="{StaticResource LoveGeometry}" Name="score" ValueChanged="score_ValueChanged" />-->
+        </StackPanel>
 
         <!--<hc:FlipClock Margin="20,0,0,30" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"/>-->
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,66,0,0" TextWrapping="Wrap" FontSize="80" Foreground="White" Name="labelT" Text="16:51"/>

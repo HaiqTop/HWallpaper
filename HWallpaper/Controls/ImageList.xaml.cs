@@ -27,11 +27,7 @@ namespace HWallpaper.Controls
         private HandyControl.Controls.ScrollViewer scr = new HandyControl.Controls.ScrollViewer();
         private Grid scrGrid = new Grid();
         private WrapPanel panel = new WrapPanel();
-        //private Grid zoomGrid = new Grid();
-        //private Image zoomImage = new Image();
-        //private WaitingProgress waiting = new WaitingProgress();
         Thickness margin = new Thickness(2);
-        private string _token = "GrowlDemoWithToken";
         public ImageList()
         {
             InitializeComponent();
@@ -42,9 +38,74 @@ namespace HWallpaper.Controls
             ImageDown.OnError += ImageDown_OnError;
             InitBtn();
         }
-        public void SetToken(string token)
+
+        /// <summary>
+        /// 输入屏幕大小参数（默认1920x1080）
+        /// </summary>
+        /// <param name="size"></param>
+        public void SetScreenSize(Size size)
         {
-            _token = token;
+            if (size != null)
+            {
+                this.ScreenSize.Width = size.Width;
+                this.ScreenSize.Height = size.Height;
+            }
+        }
+        public int LoadImage(int picType = 0, int index = 0)
+        {
+            this.picType = picType;
+            this.picIndex = index;
+            curImageListTotal = null;
+            scr.ScrollToTop();
+            panel.Children.Clear();
+            NextImages();
+            zoomImage.Source = null;
+            // 如果当前是单页显示模式，则需要加载新的壁纸类型的第一张壁纸
+            if (this.Content is Grid pGrid && pGrid.Name == "zoomGrid")
+            {
+                if (curImageListTotal != null && curImageListTotal.data.Count > 0)
+                {
+                    this.ShowBigPic(curImageListTotal.data[0]);
+                }
+            }
+            return curImageListTotal == null ? 0 : curImageListTotal.total;
+        }
+        /// <summary>
+        /// 下一组图片
+        /// </summary>
+        public void NextImages()
+        {
+            if (curImageListTotal == null || this.picIndex < curImageListTotal.total)
+            {
+                var total = WebImage.GetImageList(this.picType, this.picIndex, 24);
+                var list = total.data;
+                foreach (var picInfo in list)
+                {
+                    Image img = new Image();
+                    img.Tag = PageType.MPA;
+                    img.Height = imgSize.Height;
+                    img.Width = imgSize.Width;
+                    img.Margin = margin;
+                    img.MouseDown += Image_MouseDown;
+                    Grid grid = new Grid();
+                    grid.Children.Add(new LoadingCircle());
+                    grid.Children.Add(img);
+                    ImageDown.DownloadImage(img, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
+                    grid.MouseEnter += Grid_MouseEnter;
+                    grid.MouseLeave += Grid_MouseLeave;
+                    panel.Children.Add(grid);
+                    grid.Tag = this.picIndex;
+                    picInfo.Index = this.picIndex++;
+                }
+                if (curImageListTotal == null)
+                {
+                    curImageListTotal = total;
+                }
+                else
+                {
+                    curImageListTotal.data.AddRange(list);
+                }
+            }
         }
 
         private void InitBtn()
@@ -102,7 +163,6 @@ namespace HWallpaper.Controls
             if (imgInfo != null)
             {
                 loading.Visibility = Visibility.Visible;
-                //waiting.Show();
                 zoomImage.Visibility = Visibility.Hidden;
                 ImageDown.DownloadImage(zoomImage, imgInfo.url);
                 zoomGrid.Tag = imgInfo.Index;
@@ -132,6 +192,19 @@ namespace HWallpaper.Controls
             {
                 zoomImage.Visibility = Visibility.Visible;
                 loading.Visibility = Visibility.Hidden;
+                // 判断按钮组的Panel的父容器是否为空，为空则将其添加到大图Grid中
+                if (btnPanel.Parent == null)
+                {
+                    zoomGrid.Children.Add(btnPanel);
+                }
+                // 判断按钮组的Panel的父容器是不是大图浏览的Grid，如果不是则替换为大图
+                else if (btnPanel.Parent is Grid pGrid && pGrid.Name != "zoomGrid")
+                {
+                    pGrid.Children.Remove(btnPanel);
+                    zoomGrid.Children.Add(btnPanel);
+                }
+                ImgInfo imgInfo = this.GetimgInfo(zoomGrid.Tag);
+                InitBtnState(imgInfo);
             }
             else
             {
@@ -212,74 +285,6 @@ namespace HWallpaper.Controls
                 }
             }
         }
-        /// <summary>
-        /// 输入屏幕大小参数（默认1920x1080）
-        /// </summary>
-        /// <param name="size"></param>
-        public void SetScreenSize(Size size)
-        {
-            if (size != null)
-            {
-                this.ScreenSize.Width = size.Width;
-                this.ScreenSize.Height = size.Height;
-            }
-        }
-        public int LoadImage(int picType = 0, int index = 0)
-        {
-            this.picType = picType;
-            this.picIndex = index;
-            curImageListTotal = null;
-            scr.ScrollToTop();
-            panel.Children.Clear();
-            NextImages();
-            zoomImage.Source = null;
-            // 如果当前是单页显示模式，则需要加载新的壁纸类型的第一张壁纸
-            if (this.Content is Grid)
-            {
-                if (curImageListTotal != null && curImageListTotal.data.Count > 0)
-                {
-                    this.ShowBigPic(curImageListTotal.data[0]);
-                }
-            }
-            return curImageListTotal == null ? 0 : curImageListTotal.total;
-        }
-        /// <summary>
-        /// 下一组图片
-        /// </summary>
-        public void NextImages()
-        {
-            if (curImageListTotal == null || this.picIndex < curImageListTotal.total)
-            {
-                var total = WebImage.GetImageList(this.picType, this.picIndex, 24);
-                var list = total.data;
-                foreach (var picInfo in list)
-                {
-                    Image img = new Image();
-                    img.Tag = PageType.MPA;
-                    img.Height = imgSize.Height;
-                    img.Width = imgSize.Width;
-                    img.Margin = margin;
-                    img.MouseDown += Image_MouseDown;
-                    Grid grid = new Grid();
-                    grid.Children.Add(new LoadingCircle());
-                    grid.Children.Add(img);
-                    ImageDown.DownloadImage(img, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
-                    grid.MouseEnter += Grid_MouseEnter;
-                    grid.MouseLeave += Grid_MouseLeave;
-                    panel.Children.Add(grid);
-                    grid.Tag = this.picIndex;
-                    picInfo.Index = this.picIndex++;
-                }
-                if (curImageListTotal == null)
-                {
-                    curImageListTotal = total;
-                }
-                else
-                {
-                    curImageListTotal.data.AddRange(list);
-                }
-            }
-        }
         private double scrVerticalOffset = -1;
         private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -300,15 +305,15 @@ namespace HWallpaper.Controls
                 }
                 else if ((PageType)img.Tag == PageType.MPA)
                 {
+                    // 进入大图模式
                     zoomGrid.Tag = grid.Tag;
                     ImgInfo imgInfo = this.GetimgInfo(grid.Tag);
-                    zoomImage.Source = new BitmapImage(new Uri(imgInfo.url, UriKind.Absolute));
+                    //zoomImage.Source = new BitmapImage(new Uri(imgInfo.url, UriKind.Absolute));
                     this.Content = zoomGrid;
+                    this.ShowBigPic(imgInfo);
                 }
-                
-            }
-            
 
+            }
         }
 
         private void ListView_ScrollChanged(object sender, RoutedEventArgs e)
@@ -328,21 +333,23 @@ namespace HWallpaper.Controls
         {
             Grid grid = sender as Grid;
             if (grid == null) return;
-            btnPanel.Visibility = Visibility.Hidden;
-            if (btnPanel.Parent != null)
+            if (grid.Name != "zoomGrid")// 多页（小图）浏览模式
             {
-                Grid tGrid = btnPanel.Parent as Grid;
-                tGrid.Children.Remove(btnPanel);
+                btnPanel.Visibility = Visibility.Hidden;
+                if (btnPanel.Parent is Grid pGrid && pGrid.Name != "zoomGrid")
+                {
+                    pGrid.Children.Remove(btnPanel);
+                }
+                //for (int i = 0; i < grid.Children.Count; i++)
+                //{
+                //    if (grid.Children[i].GetType() == typeof(Button))
+                //    {
+                //        Button btn = grid.Children[i] as Button;
+                //        grid.Children.Remove(btn);
+                //        //break;
+                //    }
+                //}
             }
-            //for (int i = 0; i < grid.Children.Count; i++)
-            //{
-            //    if (grid.Children[i].GetType() == typeof(Button))
-            //    {
-            //        Button btn = grid.Children[i] as Button;
-            //        grid.Children.Remove(btn);
-            //        //break;
-            //    }
-            //}
         }
 
         private void Grid_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -351,32 +358,47 @@ namespace HWallpaper.Controls
             if (grid == null) return;
             if (grid.IsMouseOver)
             {
-                btn_love.Foreground = Brushes.White;
-                btn_dislike.Foreground = Brushes.White;
-                btn_down.Foreground = Brushes.White;
-
-                btnPanel.Visibility = Visibility.Visible;
-                btnPanel.Tag = grid.Tag;
-                grid.Children.Add(btnPanel);
-
-                ImgInfo imgInfo = this.GetimgInfo(btnPanel.Tag);
-                Picture picture = UserDataManage.GetPicture(imgInfo.Id);
-                if (picture != null)
+                if (grid.Name != "zoomGrid")// 多页（小图）浏览模式
                 {
-                    if (picture.Love == 1)
+                    btnPanel.Tag = grid.Tag;
+                    if (btnPanel.Parent is Grid pGrid)
                     {
-                        btn_love.Foreground = Brushes.Red;
+                        pGrid.Children.Remove(btnPanel);
                     }
-                    else if (picture.Love == -1)
-                    {
-                        btn_dislike.Foreground = Brushes.Red;
-                    }
-                    score.Value = picture.Score;
+                    grid.Children.Add(btnPanel);
+                    ImgInfo imgInfo = this.GetimgInfo(btnPanel.Tag);
+                    InitBtnState(imgInfo);
                 }
-                if (System.IO.File.Exists(System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName())))
+            }
+        }
+
+        private void InitBtnState(ImgInfo imgInfo)
+        {
+            if (imgInfo == null)
+            {
+                return;
+            }    
+            btn_love.Foreground = Brushes.White;
+            btn_dislike.Foreground = Brushes.White;
+            btn_down.Foreground = Brushes.White;
+
+            btnPanel.Visibility = Visibility.Visible;
+
+            Picture picture = UserDataManage.GetPicture(imgInfo.Id);
+            if (picture != null)
+            {
+                if (picture.Love == 1)
                 {
-                    btn_down.Foreground = Brushes.Red;
+                    btn_love.Foreground = Brushes.Red;
                 }
+                else if (picture.Love == -1)
+                {
+                    btn_dislike.Foreground = Brushes.Red;
+                }
+            }
+            if (System.IO.File.Exists(System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName())))
+            {
+                btn_down.Foreground = Brushes.Red;
             }
         }
 
@@ -389,34 +411,42 @@ namespace HWallpaper.Controls
             {
                 case "btn_down":
                     {
-                        string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
-                        if (!System.IO.File.Exists(imgFullName))
+                        if (btn.Foreground == Brushes.White)
                         {
-                            System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
-                            img.Save(imgFullName);
-                            img.Dispose();
+                            string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
+                            if (!System.IO.File.Exists(imgFullName))
+                            {
+                                System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
+                                img.Save(imgFullName);
+                                img.Dispose();
+                            }
+                            btn.Foreground = Brushes.Red;
+                            Growl.Success("下载成功。");
+                            UserDataManage.SetLove(LoveType.Love, imgInfo);
                         }
-                        UserDataManage.SetLove(LoveType.Love, imgInfo);
-                        Growl.Success("下载成功。");
                     }
                     break;
                 case "btn_wallpaper":
                     {
-                        string imgFullName = System.IO.Path.Combine(this.CachePath, imgInfo.GetFileName());
-                        if (!System.IO.File.Exists(imgFullName))
+                        if (btn.Foreground == Brushes.White)
                         {
-                            System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
-                            img.Save(imgFullName);
-                            img.Dispose();
+                            string imgFullName = System.IO.Path.Combine(this.CachePath, imgInfo.GetFileName());
+                            if (!System.IO.File.Exists(imgFullName))
+                            {
+                                System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
+                                img.Save(imgFullName);
+                                img.Dispose();
+                            }
+                            WinApi.SetWallpaper(imgFullName);
+                            btn.Foreground = Brushes.Red;
+                            Growl.Success("壁纸设置成功。");
+                            UserDataManage.AddRecord(RecordType.ManualWallpaper, imgInfo);
                         }
-                        WinApi.SetWallpaper(imgFullName);
-                        UserDataManage.AddRecord(RecordType.ManualWallpaper, imgInfo);
-                        Growl.Success("壁纸设置成功。");
                     }
                     break;
                 case "btn_love":
                     {
-                        if (btn.Foreground != Brushes.Red)
+                        if (btn.Foreground == Brushes.White)
                         {
                             UserDataManage.SetLove(LoveType.Love, imgInfo);
                             btn.Foreground = Brushes.Red;
@@ -426,7 +456,7 @@ namespace HWallpaper.Controls
                     break;
                 case "btn_dislike":
                     {
-                        if (btn.Foreground != Brushes.Red)
+                        if (btn.Foreground == Brushes.White)
                         {
                             UserDataManage.SetLove(LoveType.Dislike, imgInfo);
                             btn.Foreground = Brushes.Red;
@@ -478,5 +508,6 @@ namespace HWallpaper.Controls
             /// </summary>
             SPA
         }
+
     }
 }

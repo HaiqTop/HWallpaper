@@ -142,12 +142,6 @@ namespace HWallpaper
                 Common.LogHelper.WriteLog(ex.Message, Common.EnumLogLevel.Error);
             }
         }
-
-        private void picBox_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             try
@@ -165,7 +159,13 @@ namespace HWallpaper
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.Close();
+            // 判断点击鼠标点击是否是在给壁纸打分（根据鼠标点击的坐标范围）
+            Point point = e.GetPosition(scorePanel);
+            if (point.X < 0 || point.Y < 0
+                || point.X - scorePanel.ActualWidth > 0 || point.Y - scorePanel.ActualHeight > 0)
+            {
+                this.Close();
+            }
             //EffectPicture(null,null);
         }
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -215,7 +215,31 @@ namespace HWallpaper
                 picBox.Source = b;
                 timerP.Start();
                 btnPanel.Tag = imgInfo;
+                InitBtnState(imgInfo);
                 //this.Visibility = Visibility.Visible;
+            }
+        }
+        private void InitBtnState(ImgInfo imgInfo)
+        {
+            btn_love.Foreground = Brushes.White;
+            btn_dislike.Foreground = Brushes.White;
+            btn_down.Foreground = Brushes.White;
+
+            Picture picture = UserDataManage.GetPicture(imgInfo.Id);
+            if (picture != null)
+            {
+                if (picture.Love == 1)
+                {
+                    btn_love.Foreground = Brushes.Red;
+                }
+                else if (picture.Love == -1)
+                {
+                    btn_dislike.Foreground = Brushes.Red;
+                }
+            }
+            if (System.IO.File.Exists(System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName())))
+            {
+                btn_down.Foreground = Brushes.Red;
             }
         }
         private void Btn_Click(object sender, RoutedEventArgs e)
@@ -227,34 +251,42 @@ namespace HWallpaper
             {
                 case "btn_down":
                     {
-                        string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
-                        if (!System.IO.File.Exists(imgFullName))
+                        if (btn.Foreground == Brushes.White)
                         {
-                            System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
-                            img.Save(imgFullName);
-                            img.Dispose();
+                            string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
+                            if (!System.IO.File.Exists(imgFullName))
+                            {
+                                System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
+                                img.Save(imgFullName);
+                                img.Dispose();
+                            }
+                            btn.Foreground = Brushes.Red;
+                            Growl.Success("下载成功。");
+                            UserDataManage.SetLove(LoveType.Love, imgInfo);
                         }
-                        UserDataManage.SetLove(LoveType.Love, imgInfo);
-                        Growl.Success("下载成功。");
                     }
                     break;
                 case "btn_wallpaper":
                     {
-                        string imgFullName = System.IO.Path.Combine(this.CachePath, imgInfo.GetFileName());
-                        if (!System.IO.File.Exists(imgFullName))
+                        if (btn.Foreground == Brushes.White)
                         {
-                            System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
-                            img.Save(imgFullName);
-                            img.Dispose();
+                            string imgFullName = System.IO.Path.Combine(this.CachePath, imgInfo.GetFileName());
+                            if (!System.IO.File.Exists(imgFullName))
+                            {
+                                System.Drawing.Image img = WebHelper.GetImage(imgInfo.url);
+                                img.Save(imgFullName);
+                                img.Dispose();
+                            }
+                            WinApi.SetWallpaper(imgFullName);
+                            btn.Foreground = Brushes.Red;
+                            Growl.Success("壁纸设置成功。");
+                            UserDataManage.AddRecord(RecordType.ManualWallpaper, imgInfo);
                         }
-                        WinApi.SetWallpaper(imgFullName);
-                        UserDataManage.AddRecord(RecordType.ManualWallpaper, imgInfo);
-                        Growl.Success("壁纸设置成功。");
                     }
                     break;
                 case "btn_love":
                     {
-                        if (btn.Foreground != Brushes.Red)
+                        if (btn.Foreground == Brushes.White)
                         {
                             UserDataManage.SetLove(LoveType.Love, imgInfo);
                             btn.Foreground = Brushes.Red;
@@ -264,7 +296,7 @@ namespace HWallpaper
                     break;
                 case "btn_dislike":
                     {
-                        if (btn.Foreground != Brushes.Red)
+                        if (btn.Foreground == Brushes.White)
                         {
                             UserDataManage.SetLove(LoveType.Dislike, imgInfo);
                             btn.Foreground = Brushes.Red;
@@ -288,9 +320,5 @@ namespace HWallpaper
             timerP?.Start();
         }
 
-        private void score_Selected(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
