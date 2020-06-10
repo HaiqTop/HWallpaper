@@ -160,7 +160,16 @@ namespace HWallpaper.Business
                         // 网络获取
                         WebClient wc = new WebClient();
                         string url = string.IsNullOrEmpty(info.Url) ? info.ImgInfo.url : info.Url;
-                        using (var stream = new MemoryStream(wc.DownloadData(url)))
+                        byte[] bt;
+                        try
+                        {
+                            bt = wc.DownloadData(url);
+                        }
+                        catch
+                        {
+                            bt = wc.DownloadData(info.ImgInfo.url);
+                        }
+                        using (var stream = new MemoryStream(bt))
                         {
                             if (stream != null)
                             {

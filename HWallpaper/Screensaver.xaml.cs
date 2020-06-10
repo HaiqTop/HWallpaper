@@ -56,8 +56,6 @@ namespace HWallpaper
         {
             InitializeComponent();
             this.WindowState = WindowState.Maximized;
-            CachePath = ConfigManage.Base.CachePath;
-            DownPath = ConfigManage.Base.DownPath;
         }
         public Screensaver(double left)
         {
@@ -68,6 +66,8 @@ namespace HWallpaper
         private void windown_Loaded(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Maximized;
+            CachePath = ConfigManage.Base.CachePath;
+            DownPath = ConfigManage.Base.DownPath;
             UpdateTime();
             InitTimer();
             if (ConfigManage.Base.Cache)
@@ -215,9 +215,9 @@ namespace HWallpaper
                 picBox.Source = b;
                 timerP.Start();
                 btnPanel.Tag = imgInfo;
-                InitBtnState(imgInfo);
                 //this.Visibility = Visibility.Visible;
             }
+            InitBtnState(imgInfo);
         }
         private void InitBtnState(ImgInfo imgInfo)
         {
@@ -262,7 +262,13 @@ namespace HWallpaper
                             }
                             btn.Foreground = Brushes.Red;
                             Growl.Success("下载成功。");
-                            UserDataManage.SetLove(LoveType.Love, imgInfo);
+
+                            if (btn.Foreground == Brushes.White)
+                            {
+                                UserDataManage.SetLove(LoveType.Love, imgInfo);
+                                btn.Foreground = Brushes.Red;
+                                btn_dislike.Foreground = Brushes.White;
+                            }
                         }
                     }
                     break;

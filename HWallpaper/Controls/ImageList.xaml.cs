@@ -366,13 +366,12 @@ namespace HWallpaper.Controls
             {
                 if (grid.Name != "zoomGrid")// 多页（小图）浏览模式
                 {
-                    btnPanel.Tag = grid.Tag;
                     if (btnPanel.Parent is Grid pGrid)
                     {
                         pGrid.Children.Remove(btnPanel);
                     }
                     grid.Children.Add(btnPanel);
-                    ImgInfo imgInfo = this.GetimgInfo(btnPanel.Tag);
+                    ImgInfo imgInfo = this.GetimgInfo(grid.Tag);
                     InitBtnState(imgInfo);
                 }
             }
@@ -383,8 +382,10 @@ namespace HWallpaper.Controls
             if (imgInfo == null)
             {
                 return;
-            }    
+            }
+            btnPanel.Tag = imgInfo;
             btn_love.Foreground = Brushes.White;
+            btn_wallpaper.Foreground = Brushes.White;
             btn_dislike.Foreground = Brushes.White;
             btn_down.Foreground = Brushes.White;
 
@@ -412,7 +413,15 @@ namespace HWallpaper.Controls
         {
             Button btn = sender as Button;
             if (btn == null) return;
-            ImgInfo imgInfo = this.GetimgInfo((btn.Parent as StackPanel).Tag);
+            ImgInfo imgInfo;
+            if ((btn.Parent as StackPanel).Tag is ImgInfo info)
+            {
+                imgInfo = info;
+            }
+            else
+            {
+                imgInfo = this.GetimgInfo((btn.Parent as StackPanel).Tag);
+            }
             switch (btn.Name)
             {
                 case "btn_down":
@@ -480,9 +489,8 @@ namespace HWallpaper.Controls
         /// <returns></returns>
         private ImgInfo GetimgInfo(object tag,int offset = 0)
         {
-            if (tag != null)
+            if (tag != null && tag is Int32 index)
             {
-                int index = Convert.ToInt32(tag);
                 int nIndex = index + offset;
                 if (curImageListTotal == null || curImageListTotal.data == null)
                 {

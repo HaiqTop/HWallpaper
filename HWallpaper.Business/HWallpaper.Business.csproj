@@ -51,15 +51,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigManage.cs" />
-    <Compile Include="DownQueue2.cs" />
     <Compile Include="ImageHelper.cs" />
     <Compile Include="ImageHelper2.cs" />
     <Compile Include="DownQueue.cs" />
-    <Compile Include="ThreadPoolManager.cs" />
     <Compile Include="UserDataManage.cs" />
     <Compile Include="WebImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WorkThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HWallpaper.Common\HWallpaper.Common.csproj">
