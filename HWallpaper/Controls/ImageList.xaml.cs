@@ -28,16 +28,19 @@ namespace HWallpaper.Controls
         private Grid scrGrid = new Grid();
         private WrapPanel panel = new WrapPanel();
         Thickness margin = new Thickness(2);
+        DownQueue downQueue = null;
         public ImageList()
         {
             InitializeComponent();
             CachePath = ConfigManage.Base.CachePath;
             DownPath = ConfigManage.Base.DownPath;
             this.SizeChanged += new System.Windows.SizeChangedEventHandler(Resize);
-            ImageDown.OnComplate += new ImageDown.ComplateDelegate(ImageDown_OnComplate);
-            ImageDown.OnError += ImageDown_OnError;
+            downQueue = new DownQueue(this,true);
+            downQueue.OnComplate += DownQueue_OnComplate;
+            downQueue.OnError += DownQueue_OnError;
             InitBtn();
         }
+
 
         /// <summary>
         /// 输入屏幕大小参数（默认1920x1080）
@@ -90,7 +93,7 @@ namespace HWallpaper.Controls
                     Grid grid = new Grid();
                     grid.Children.Add(new LoadingCircle());
                     grid.Children.Add(img);
-                    ImageDown.DownloadImage(img, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
+                    downQueue.Queue(img, picInfo, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
                     grid.MouseEnter += Grid_MouseEnter;
                     grid.MouseLeave += Grid_MouseLeave;
                     panel.Children.Add(grid);
@@ -164,60 +167,63 @@ namespace HWallpaper.Controls
             {
                 loading.Visibility = Visibility.Visible;
                 zoomImage.Visibility = Visibility.Hidden;
-                ImageDown.DownloadImage(zoomImage, imgInfo.url);
+                downQueue.Queue(zoomImage, imgInfo);
                 zoomGrid.Tag = imgInfo.Index;
                 string[] tags = imgInfo.tag.Split(' ');
                 lb_picName.Text = "文件名称：" + imgInfo.GetFileName();
                 lb_picDate.Text = "上传时间：" + imgInfo.create_time;
                 lb_picTags.Text = "标签：" + string.Join(" ", imgInfo.GetTagList());
-                //BitmapImage img = new BitmapImage();
-                //img.BeginInit();
-                //img.UriSource = new Uri(imgInfo.url, UriKind.Absolute);
-                //img.EndInit();
-                //zoomImage.Stretch = Stretch.Uniform;
-                //zoomImage.Source = img;
             }
         }
-        private void ImageDown_OnComplate(Image i, string u, BitmapImage b)
+        private void DownQueue_OnComplate(Image i, BitmapImage b, ImgInfo imgInfo)
         {
-            //System.Windows.MessageBox.Show(u);
-            i.Source = b;
-            Storyboard storyboard = new Storyboard();
-            DoubleAnimation doubleAnimation = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(500.0)));
-            Storyboard.SetTarget(doubleAnimation, i);
-            Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath("Opacity", new object[0]));
-            storyboard.Children.Add(doubleAnimation);
-            storyboard.Begin();
-            if ((PageType)i.Tag == PageType.SPA)
+            try
             {
-                zoomImage.Visibility = Visibility.Visible;
-                loading.Visibility = Visibility.Hidden;
-                // 判断按钮组的Panel的父容器是否为空，为空则将其添加到大图Grid中
-                if (btnPanel.Parent == null)
+                i.Source = b;
+                Storyboard storyboard = new Storyboard();
+                DoubleAnimation doubleAnimation = new DoubleAnimation(0.0, 1.0, new Duration(TimeSpan.FromMilliseconds(500.0)));
+                Storyboard.SetTarget(doubleAnimation, i);
+                Storyboard.SetTargetProperty(doubleAnimation, new PropertyPath("Opacity", new object[0]));
+                storyboard.Children.Add(doubleAnimation);
+                storyboard.Begin();
+                if ((PageType)i.Tag == PageType.SPA)
                 {
-                    zoomGrid.Children.Add(btnPanel);
-                }
-                // 判断按钮组的Panel的父容器是不是大图浏览的Grid，如果不是则替换为大图
-                else if (btnPanel.Parent is Grid pGrid && pGrid.Name != "zoomGrid")
-                {
-                    pGrid.Children.Remove(btnPanel);
-                    zoomGrid.Children.Add(btnPanel);
-                }
-                ImgInfo imgInfo = this.GetimgInfo(zoomGrid.Tag);
-                InitBtnState(imgInfo);
-            }
-            else
-            {
-                Grid grid = i.Parent as Grid;
-                foreach (var item in grid.Children)
-                {
-                    if (item is LoadingCircle load)
+                    zoomImage.Visibility = Visibility.Visible;
+                    loading.Visibility = Visibility.Hidden;
+                    // 判断按钮组的Panel的父容器是否为空，为空则将其添加到大图Grid中
+                    if (btnPanel.Parent == null)
                     {
-                        grid.Children.Remove(load);
-                        break;
+                        zoomGrid.Children.Add(btnPanel);
+                    }
+                    // 判断按钮组的Panel的父容器是不是大图浏览的Grid，如果不是则替换为大图
+                    else if (btnPanel.Parent is Grid pGrid && pGrid.Name != "zoomGrid")
+                    {
+                        pGrid.Children.Remove(btnPanel);
+                        zoomGrid.Children.Add(btnPanel);
+                    }
+                    InitBtnState(imgInfo);
+                }
+                else
+                {
+                    Grid grid = i.Parent as Grid;
+                    foreach (var item in grid.Children)
+                    {
+                        if (item is LoadingCircle load)
+                        {
+                            grid.Children.Remove(load);
+                            break;
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+            }
+            
+        }
+        private void DownQueue_OnError(Exception e)
+        {
+            Growl.Warning(e.Message);
         }
         private void ImageDown_OnError(Image i, Exception e)
         {

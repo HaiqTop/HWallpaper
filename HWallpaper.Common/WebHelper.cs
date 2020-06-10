@@ -2,21 +2,17 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace HWallpaper.Common
 {
     public class WebHelper
     {
-        
-        /// <summary>
-        /// 根据Url地址获取图片
-        /// </summary>
-        /// <param name="url">路径</param>
-        public static System.Drawing.Image GetImage(string url)
+        public static Stream GetWebStream(string url)
         {
             WebRequest imgRequest = WebRequest.Create(url);
-            HttpWebResponse res;
+            HttpWebResponse res = null;
             try
             {
                 imgRequest.Timeout = 5000;
@@ -28,14 +24,29 @@ namespace HWallpaper.Common
                 res = (HttpWebResponse)ex.Response;
             }
             catch (Exception ex)
-            { 
+            {
                 LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
-                return null;
             }
             if (res != null && res.StatusCode.ToString() == "OK")
             {
-                System.Drawing.Image downImage = System.Drawing.Image.FromStream(imgRequest.GetResponse().GetResponseStream());
-                return downImage;
+                return res.GetResponseStream();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 根据Url地址获取图片
+        /// </summary>
+        /// <param name="url">路径</param>
+        public static System.Drawing.Image GetImage(string url)
+        {
+            using (var stream = GetWebStream(url))
+            {
+                if (stream != null)
+                {
+                    System.Drawing.Image downImage = System.Drawing.Image.FromStream(stream);
+                    return downImage;
+                }
             }
             return null;
         }
@@ -53,18 +64,27 @@ namespace HWallpaper.Common
                     {
                         throw new System.Exception("Url参数不可为空");
                     }
-                    System.Drawing.Image img = GetImage(url);
-                    if (img == null)
+                    using (var stream = GetWebStream(url))
                     {
-                        LogHelper.WriteLog("图片下载失败",EnumLogLevel.Warn);
-                        return false;
-                    } 
-                    if (!File.Exists(fullName))// 需要多次判断的原因：防止在下载的过程中，其他地方已经下载好了
-                    {
-                        img.Save(fullName);
+                        if (stream == null)
+                        {
+                            LogHelper.WriteLog("图片下载失败：" + url, EnumLogLevel.Warn);
+                            return false;
+                        }
+                        using (FileStream fs = File.Create(fullName))
+                        {
+                            //建立字节组，并设置它的大小是多少字节
+                            byte[] bytes = new byte[102400];
+                            int n = 1;
+                            while (n > 0)
+                            {
+                                //一次从流中读多少字节，并把值赋给Ｎ，当读完后，Ｎ为０,并退出循环
+                                n = stream.Read(bytes, 0, 10240);
+                                fs.Write(bytes, 0, n); //将指定字节的流信息写入文件流中
+                            }
+                            return true;
+                        }
                     }
-                    img.Dispose();
-                    return true;
                 }
             }
             catch (System.Exception ex)
