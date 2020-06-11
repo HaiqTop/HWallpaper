@@ -29,7 +29,8 @@ namespace HWallpaper.Common
         /// 根据壁纸分类ID获取分类下壁纸图片
         /// 参数：分类ID、从第几幅图开始(用于分页)、 每次加载的数量
         /// </summary>
-        public const string Url_ListByType = "http://wallpaper.apc.360.cn/index.php?c=WallPaper&a=getAppsByCategory&cid={0}&start={1}&count={2}&from=360chrome";
+        public const string Url_ListByType = "http://wallpaper.apc.360.cn/index.php?c=WallPaper&a=getAppsByCategory&cid={0}&start={1}&count={2}";//&from=360chrome
+        public const string Url_ListByType1 = "http://wallpaper.apc.360.cn/index.php?c=WallPaperAndroid&a=getAppsByCategory&cid={0}&start={1}&count={2}";
         /// <summary>
         /// 获取最近更新的壁纸
         /// 参数：偏移量（从0开始）、加载张数
@@ -39,6 +40,6 @@ namespace HWallpaper.Common
         public static string dataPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData) + $"\\{HWallpaper}\\";
         public static string dbFile = dataPath + "Database.db";
         public static string dbEmptyFile = AppDomain.CurrentDomain.BaseDirectory + "Database.db";
-
+        //说明：https 有感叹号，有解决办法吗？将获取的 360 壁纸图片链接地址头由 http://p5.qhimg.com/bdm/ 改成 https://p0.ssl.qhmsg.com/dmfd/ 即可
     }
 }

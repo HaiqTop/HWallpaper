@@ -64,27 +64,8 @@ namespace HWallpaper.Common
                     {
                         throw new System.Exception("Url参数不可为空");
                     }
-                    using (var stream = GetWebStream(url))
-                    {
-                        if (stream == null)
-                        {
-                            LogHelper.WriteLog("图片下载失败：" + url, EnumLogLevel.Warn);
-                            return false;
-                        }
-                        using (FileStream fs = File.Create(fullName))
-                        {
-                            //建立字节组，并设置它的大小是多少字节
-                            byte[] bytes = new byte[102400];
-                            int n = 1;
-                            while (n > 0)
-                            {
-                                //一次从流中读多少字节，并把值赋给Ｎ，当读完后，Ｎ为０,并退出循环
-                                n = stream.Read(bytes, 0, 10240);
-                                fs.Write(bytes, 0, n); //将指定字节的流信息写入文件流中
-                            }
-                            return true;
-                        }
-                    }
+                    System.Drawing.Image img = GetImage(url);
+                    img.Save(fullName);
                 }
             }
             catch (System.Exception ex)

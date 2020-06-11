@@ -225,14 +225,14 @@ namespace HWallpaper
             btn_dislike.Foreground = Brushes.White;
             btn_down.Foreground = Brushes.White;
 
-            Picture picture = UserDataManage.GetPicture(imgInfo.Id);
-            if (picture != null)
+            Love love = UserDataManage.GetLove(imgInfo.Id);
+            if (love != null)
             {
-                if (picture.Love == 1)
+                if (love.Type == 1)
                 {
                     btn_love.Foreground = Brushes.Red;
                 }
-                else if (picture.Love == -1)
+                else if (love.Type == -1)
                 {
                     btn_dislike.Foreground = Brushes.Red;
                 }

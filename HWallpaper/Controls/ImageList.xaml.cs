@@ -16,7 +16,7 @@ namespace HWallpaper.Controls
     /// </summary>
     public partial class ImageList : UserControl
     {
-        private int picType = 0;
+        private string picType = "0";
         private int picIndex = 0;
         private ImageListTotal curImageListTotal = null;
         private Size imgSize = new Size(320,180);
@@ -54,7 +54,7 @@ namespace HWallpaper.Controls
                 this.ScreenSize.Height = size.Height;
             }
         }
-        public int LoadImage(int picType = 0, int index = 0)
+        public int LoadImage(string picType = "0", int index = 0)
         {
             this.picType = picType;
             this.picIndex = index;
@@ -80,7 +80,7 @@ namespace HWallpaper.Controls
         {
             if (curImageListTotal == null || this.picIndex < curImageListTotal.total)
             {
-                var total = WebImage.GetImageList(this.picType, this.picIndex, 24);
+                ImageListTotal total = ImageHelper.GetImageListTotal(this.picType, this.picIndex, 24) ;
                 var list = total.data;
                 foreach (var picInfo in list)
                 {
@@ -169,7 +169,6 @@ namespace HWallpaper.Controls
                 zoomImage.Visibility = Visibility.Hidden;
                 downQueue.Queue(zoomImage, imgInfo);
                 zoomGrid.Tag = imgInfo.Index;
-                string[] tags = imgInfo.tag.Split(' ');
                 lb_picName.Text = "文件名称：" + imgInfo.GetFileName();
                 lb_picDate.Text = "上传时间：" + imgInfo.create_time;
                 lb_picTags.Text = "标签：" + string.Join(" ", imgInfo.GetTagList());
@@ -391,21 +390,32 @@ namespace HWallpaper.Controls
 
             btnPanel.Visibility = Visibility.Visible;
 
-            Picture picture = UserDataManage.GetPicture(imgInfo.Id);
-            if (picture != null)
+            Love love = UserDataManage.GetLove(imgInfo.Id);
+            if (love != null)
             {
-                if (picture.Love == 1)
+                if (love.Type == 1)
                 {
                     btn_love.Foreground = Brushes.Red;
                 }
-                else if (picture.Love == -1)
+                else if (love.Type == -1)
                 {
                     btn_dislike.Foreground = Brushes.Red;
                 }
             }
-            if (System.IO.File.Exists(System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName())))
+            Download down = UserDataManage.GetDown(imgInfo.Id);
+            string fullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
+            if (System.IO.File.Exists(fullName))
             {
                 btn_down.Foreground = Brushes.Red;
+                if (down == null)
+                {
+                    down = new Download() { PictureId = imgInfo.Id, Time = DateTime.Now, FullName = fullName, Valid = 1 };
+                }
+                else if (down.Valid == 0)
+                {
+                    down.Valid = 1;
+                }
+                UserDataManage.SaveDown(down, imgInfo);
             }
         }
 
@@ -496,7 +506,7 @@ namespace HWallpaper.Controls
                 {
                     NextImages();
                 }
-                if (nIndex < 0 || nIndex >= curImageListTotal.total)
+                if (nIndex < 0 || nIndex > curImageListTotal.total)
                 {
                     throw new Exception("没有了，请看看其他类型的吧~_~");
                 }

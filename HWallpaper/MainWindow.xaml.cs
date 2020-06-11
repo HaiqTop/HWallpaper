@@ -280,13 +280,19 @@ namespace HWallpaper
             ImgInfo imgInfo = imgHelper.GetNextImage();
             string imgFullName = System.IO.Path.Combine(ConfigManage.Base.CachePath, imgInfo.GetFileName());
             if (!File.Exists(imgFullName))
-            { 
-                WebHelper.DownImage(imgInfo.url,imgFullName);
+            {
+                // 判断下载目录中是否存在
+                imgFullName = System.IO.Path.Combine(ConfigManage.Base.DownPath, imgInfo.GetFileName());
+                if (!File.Exists(imgFullName))
+                    WebHelper.DownImage(imgInfo.url,imgFullName);
             }
-            Common.WinApi.SetWallpaper(imgFullName);
-            UserDataManage.AddRecord(RecordType.AutoWallpaper,imgInfo);
-            ConfigManage.Wallpaper.ReplaceLastTime = DateTime.Now;
-            ConfigManage.Save();
+            if (File.Exists(imgFullName))
+            {
+                Common.WinApi.SetWallpaper(imgFullName);
+                UserDataManage.AddRecord(RecordType.AutoWallpaper, imgInfo);
+                ConfigManage.Wallpaper.ReplaceLastTime = DateTime.Now;
+                ConfigManage.Save();
+            }
             timerW.Start();
         }
         /// <summary>

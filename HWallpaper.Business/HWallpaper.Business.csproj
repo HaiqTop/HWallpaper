@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="ConfigManage.cs" />
     <Compile Include="ImageHelper.cs" />
-    <Compile Include="ImageHelper2.cs" />
     <Compile Include="DownQueue.cs" />
     <Compile Include="UserDataManage.cs" />
     <Compile Include="WebImage.cs" />

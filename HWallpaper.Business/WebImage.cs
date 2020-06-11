@@ -46,6 +46,11 @@ namespace HWallpaper.Business
                 model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(ConfigManage.Base.TypeJson);
                 Common.LogHelper.WriteLog(ex.Message, Common.EnumLogLevel.Error);
             }
+            if (model != null && model.data != null)
+            {
+                model.data.Insert(0, new TypeList() { id = "love", name = "我的收藏" });
+                model.data.Insert(0, new TypeList() { id = "down", name = "我的下载" });
+            }
             return model;
         }
 
@@ -63,7 +68,7 @@ namespace HWallpaper.Business
                     {
                         price += count - (price * types.Length);
                     }
-                    ImageListTotal temp = GetImageList(Convert.ToInt32(types[i]), (start / types.Length), price);
+                    ImageListTotal temp = GetImageList(types[i], (start / types.Length), price);
                     //total.consume += temp.consume;
                     total.total += temp.total;
                     total.data.AddRange(temp.data);
@@ -82,11 +87,11 @@ namespace HWallpaper.Business
         /// <param name="start">默认0</param>
         /// <param name="count">默认30</param>
         /// <returns></returns>
-        public static ImageListTotal GetImageList(int type = 0, int start = 0, int count = 30)
+        public static ImageListTotal GetImageList(string type = "0", int start = 0, int count = 30)
         {
             string jsonStr = string.Empty;
             // 获取最新的
-            if (type == 0)
+            if (type == "0")
             {
                 jsonStr = WebHelper.HttpGet(string.Format(Const.Url_ListTopNew, start, count));
             }

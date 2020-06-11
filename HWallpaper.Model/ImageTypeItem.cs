@@ -8,7 +8,7 @@ namespace HWallpaper.Model
         /// <summary>
         /// 壁纸类型Code
         /// </summary>
-        public int Type { get; set; }
+        public string Type { get; set; }
         /// <summary>
         /// 当前类型壁纸总数
         /// </summary>
@@ -32,21 +32,21 @@ namespace HWallpaper.Model
         }
         public List<ImgInfo> Images { get; set; }
 
-        public ImageTypeItem(int Type, int Index, int total)
+        public ImageTypeItem(string Type, int Index, int total)
         {
             this.Type = Type;
             this.StartIndex = Index;
             this.Total = total;
             this.Images = new List<ImgInfo>();
         }
-        public ImageTypeItem(int Type, int Index, int total, List<ImgInfo> Images)
+        public ImageTypeItem(string Type, int Index, int total, List<ImgInfo> Images)
         {
             this.Type = Type;
             this.StartIndex = Index;
             this.Total = total;
             this.Images = Images;
         }
-        public ImageTypeItem(int Type, int Index, ImageListTotal total)
+        public ImageTypeItem(string Type, int Index, ImageListTotal total)
         {
             this.Type = Type;
             this.StartIndex = Index;

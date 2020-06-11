@@ -39,6 +39,7 @@ namespace HWallpaper
             cbox_basic_AutoOn.IsChecked = ConfigManage.Base.AutoOn;
             cbox_basic_Cache.IsChecked = ConfigManage.Base.Cache;
             cbox_basic_AutoClearCache.IsChecked = ConfigManage.Base.AutoClearCache;
+            cbox_basic_ExcludeDislike.IsChecked = ConfigManage.Base.ExcludeDislike;
             tbox_basic_DownPath.Text = ConfigManage.Base.DownPath;
             tbox_basic_CachePath.Text = ConfigManage.Base.CachePath;
             #endregion 基本
@@ -137,7 +138,7 @@ namespace HWallpaper
             // 添加缺失的进度信息
             for (int i = 0; i < typeList.Count; i++)
             {
-                int key = Convert.ToInt32(typeList[i]);
+                string key = typeList[i];
                 if (!ConfigManage.Wallpaper.TypeIndexs.ContainsKey(key))
                 {
                     ConfigManage.Wallpaper.TypeIndexs.Add(key,0);
@@ -172,7 +173,7 @@ namespace HWallpaper
             // 添加缺失的进度信息
             for (int i = 0; i < typeList.Count; i++)
             {
-                int key = Convert.ToInt32(typeList[i]);
+                string key = typeList[i];
                 if (!ConfigManage.Screen.TypeIndexs.ContainsKey(key))
                 {
                     ConfigManage.Screen.TypeIndexs.Add(key, 0);

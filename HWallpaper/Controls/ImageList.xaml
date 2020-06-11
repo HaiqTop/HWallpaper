@@ -58,17 +58,17 @@
 
         <!--<hc:Rate Value="0" AllowHalf="False" AllowClear="True" ShowText="False" Margin="0 0 0 20" HorizontalAlignment="Center"  VerticalAlignment="Bottom"  Foreground="{DynamicResource DangerBrush}" Icon="{StaticResource LoveGeometry}" Name="score" ValueChanged="score_ValueChanged" Visibility="Hidden"/>-->
 
-        <TextBlock Name="lb_picName" Text="Label" HorizontalAlignment="Left" Margin="40,14,0,0" VerticalAlignment="Top" Width="200">
+        <TextBlock Name="lb_picName" Text="Label" HorizontalAlignment="Left" Margin="40,47,0,0" VerticalAlignment="Top" Width="200">
             <TextBlock.Effect>
                 <DropShadowEffect ShadowDepth="-4" BlurRadius="5" Color="LightGray"/>
             </TextBlock.Effect>
         </TextBlock>
-        <TextBlock Name="lb_picTags" Text="Label" HorizontalAlignment="Left" Margin="40,40,0,0" VerticalAlignment="Top" Width="200">
+        <TextBlock Name="lb_picTags" Text="Label" HorizontalAlignment="Left" Margin="40,73,0,0" VerticalAlignment="Top" Width="200">
             <TextBlock.Effect>
                 <DropShadowEffect ShadowDepth="-4" BlurRadius="10" Color="LightGray"/>
             </TextBlock.Effect>
         </TextBlock>
-        <TextBlock Name="lb_picDate" Text="Label" HorizontalAlignment="Left" Margin="40,66,0,0" VerticalAlignment="Top" Width="200">
+        <TextBlock Name="lb_picDate" Text="Label" HorizontalAlignment="Left" Margin="40,99,0,0" VerticalAlignment="Top" Width="200" Height="17">
             <TextBlock.Effect>
                 <DropShadowEffect ShadowDepth="-4" BlurRadius="5" Color="LightGray"/>
             </TextBlock.Effect>
@@ -77,5 +77,5 @@
     <!--<ScrollViewer x:Name="scr" Margin="0" VerticalScrollBarVisibility="Auto" ScrollChanged="ListView_ScrollChanged" >
         <WrapPanel Margin="2" Orientation="Horizontal" x:Name="panel" Width="{Binding Width, ElementName=scr, Mode=OneWay}"/>
     </ScrollViewer>-->
-    
+
 </UserControl>

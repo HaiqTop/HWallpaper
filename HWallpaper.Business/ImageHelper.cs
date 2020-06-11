@@ -16,11 +16,11 @@ namespace HWallpaper.Business
         /// 单次请求的壁纸数量
         /// </summary>
         private int Count = 10;
-        public Dictionary<int, int> TypeIndexs;
+        public Dictionary<string, int> TypeIndexs;
         private List<ImageListTotal> typeList = new List<ImageListTotal>();
-        private Dictionary<int, ImageTypeItem> typeImageList = new Dictionary<int, ImageTypeItem>();
+        private Dictionary<string, ImageTypeItem> typeImageList = new Dictionary<string, ImageTypeItem>();
 
-        public ImageHelper(Dictionary<int, int> typeIndexs,string cachePath = "")
+        public ImageHelper(Dictionary<string, int> typeIndexs,string cachePath = "")
         {
             this.TypeIndexs = typeIndexs;
             if (!string.IsNullOrEmpty(cachePath))
@@ -40,14 +40,14 @@ namespace HWallpaper.Business
                 // 获取总数
                 if (!typeImageList.ContainsKey(typeIndex.Key))
                 {
-                    imgList = WebImage.GetImageList(typeIndex.Key, 0, 1);
+                    imgList = GetImageListTotal(typeIndex.Key, 0, 1);
                     typeItem = new ImageTypeItem(typeIndex.Key, typeIndex.Value, imgList.total);
                     typeImageList.Add(typeIndex.Key, typeItem);
                 }
                 // 判断当前
                 if (typeIndex.Value < typeImageList[typeIndex.Key].Total)
                 {
-                    imgList = WebImage.GetImageList(typeIndex.Key, typeIndex.Value, this.Count);
+                    imgList = GetImageListTotal(typeIndex.Key, typeIndex.Value, this.Count);
                     typeImageList[typeIndex.Key].Images.AddRange(imgList.data);
                     CacheIage(imgList.data);
                 }
@@ -74,7 +74,7 @@ namespace HWallpaper.Business
                 orderNum = 0;
             }
             // 获取类型
-            int type = this.TypeIndexs.ElementAt(orderNum++).Key;
+            string type = this.TypeIndexs.ElementAt(orderNum++).Key;
             //int type = this.TypeIndexs.ElementAt(random.Next(0, this.TypeIndexs.Count - 1)).Key;
 
             this.TypeIndexs[type]++;
@@ -88,8 +88,11 @@ namespace HWallpaper.Business
             // 判断是否超过当前获取到的记录
             if (typeIndex < this.typeImageList[type].StartIndex)
             {
-                ImageListTotal imgList = WebImage.GetImageList(type, typeIndex, this.Count);
-                CacheIage(imgList.data);
+                ImageListTotal imgList = GetImageListTotal(type, typeIndex, this.Count);
+                if(type != "down")
+                {
+                    CacheIage(imgList.data);
+                }
                 typeImageList[type].StartIndex = typeIndex;
                 typeImageList[type].Images = imgList.data;
 
@@ -97,11 +100,43 @@ namespace HWallpaper.Business
             // 判断是否超过当前获取到的记录
             if (typeIndex > this.typeImageList[type].EndIndex)
             {
-                ImageListTotal imgList = WebImage.GetImageList(type, typeIndex, this.Count);
-                CacheIage(imgList.data);
+                ImageListTotal imgList = GetImageListTotal(type, typeIndex, this.Count);
+                if (type != "down")
+                {
+                    CacheIage(imgList.data);
+                }
                 typeImageList[type].Images.AddRange(imgList.data);
             }
             return typeImageList[type].Images[typeIndex - this.typeImageList[type].StartIndex];
+        }
+        /// <summary>
+        /// 根据类型获取分页的图片数据（包括：壁纸分类、收藏、下载）
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static ImageListTotal GetImageListTotal(string type, int start = 0, int count = 24)
+        {
+            ImageListTotal total = null;
+            if (type == "love")
+            {
+                total = UserDataManage.GetLoveList(LoveType.Love, start, count);
+            }
+            else if (type == "down")
+            {
+                total = UserDataManage.GetDownList(start, count);
+            }
+            else
+            {
+                total = WebImage.GetImageList(type, start, count);
+                /*// 暂时不考虑，没有想到比较好的解决方法
+                if (ConfigManage.Base.ExcludeDislike)
+                {
+
+                }*/
+            }
+            return total;
         }
     }
 }

@@ -5,28 +5,24 @@ using System.Text;
 
 namespace HWallpaper.Model
 {
-    public class Picture
+    public class Download
     {
         /// <summary>
         /// 壁纸ID
         /// </summary>
         [SqlSugar.SugarColumn(IsPrimaryKey = true)]//指定主键，当然数据库中也要设置主键和自增列才会有效
-        public int Id { get; set; }
+        public int PictureId { get; set; }
         /// <summary>
-        /// 壁纸分类ID
+        /// 操作时间
         /// </summary>
-        public int Type { get; set; }
+        public DateTime Time { get; set; }
         /// <summary>
-        /// 图片名称（类型id + 图片id + 文件后缀名）
+        /// 存储的文件名（包括路径）
         /// </summary>
-        public string Name { get; set; }
+        public string FullName { get; set; }
         /// <summary>
-        /// 壁纸标签
+        /// 1：有效，0：无效
         /// </summary>
-        public string Tag { get; set; }
-        /// <summary>
-        /// Url地址
-        /// </summary>
-        public string Url { get; set; }
+        public int Valid { get; set; }
     }
 }

@@ -20,8 +20,9 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"  Name="cbox_basic_AutoOn" Height="30" Content="开机启动" IsChecked="True" Margin="10,5,424,5" Click="cbox_basic_AutoOn_Click"/>
-                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_basic_Cache" Height="30" Content="缓存" IsChecked="True" Margin="120,5,338,5"/>
-                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_basic_AutoClearCache" Height="30" Content="自动清理30天以前的缓存图片" IsChecked="True" Width="202" Margin="221,5,83,5"/>
+                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_basic_Cache" Height="30" Content="缓存" IsChecked="True" Margin="110,5,338,5"/>
+                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_basic_AutoClearCache" Height="30" Content="自动清理30天以前的缓存图片" IsChecked="True" Width="202" Margin="200,5,83,5"/>
+                    <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Name="cbox_basic_ExcludeDislike" Height="30" Content="排除不喜欢" IsChecked="False" Width="111" Margin="410,5,0,5"/>
                     <TextBox  Grid.Row="1" Grid.Column="0" Name="tbox_basic_DownPath" Height="30" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitleAlignment="Left" Margin="10,5,10,5" hc:InfoElement.Title="下载路径" Style="{StaticResource TextBoxExtend}" IsReadOnly="True"/>
                     <TextBox  Grid.Row="2" Grid.Column="0" Name="tbox_basic_CachePath" Height="30" hc:InfoElement.TitleWidth="70" hc:InfoElement.TitleAlignment="Left" Margin="10,5,10,5" hc:InfoElement.Title="缓存路径" Style="{StaticResource TextBoxExtend}" IsReadOnly="True"/>
                 </Grid>

@@ -28,6 +28,10 @@ namespace HWallpaper.Model
         /// 是否自动清理过期缓存
         /// </summary>
         public bool AutoClearCache { get; set; }
+        /// <summary>
+        /// 是否排除不喜欢的图片
+        /// </summary>
+        public bool ExcludeDislike { get; set; }
         public string CachePath { get; set; }
         public string DownPath { get; set; }
 
@@ -101,21 +105,21 @@ namespace HWallpaper.Model
         /// </summary>
         public DateTime ReplaceLastTime { get; set; }
 
-        private Dictionary<int, int> typeIndexs;
+        private Dictionary<string, int> typeIndexs;
         /// <summary>
         /// 选择的类型替换的进度位置
         /// </summary>
-        public Dictionary<int, int> TypeIndexs
+        public Dictionary<string, int> TypeIndexs
         {
             get
             {
                 if (typeIndexs == null)
                 {
-                    typeIndexs = new Dictionary<int, int>();
+                    typeIndexs = new Dictionary<string, int>();
                     string[] types = this.SelectedTypes.Split(',');
                     foreach (var type in types)
                     {
-                        typeIndexs.Add(Convert.ToInt32(type), 0);
+                        typeIndexs.Add(type, 0);
                     }
                 }
                 return typeIndexs;
@@ -145,21 +149,21 @@ namespace HWallpaper.Model
         /// </summary>
         public string SelectedTypes { get { return selectedTypes; } set { selectedTypes = value; } }
 
-        private Dictionary<int, int> typeIndexs;
+        private Dictionary<string, int> typeIndexs;
         /// <summary>
         /// 选择的类型替换的进度位置
         /// </summary>
-        public Dictionary<int, int> TypeIndexs 
+        public Dictionary<string, int> TypeIndexs 
         { 
             get 
             {
                 if (typeIndexs == null)
                 {
-                    typeIndexs = new Dictionary<int, int>();
+                    typeIndexs = new Dictionary<string, int>();
                     string[] types = this.SelectedTypes.Split(',');
                     foreach (var type in types)
                     {
-                        typeIndexs.Add(Convert.ToInt32(type), 0);
+                        typeIndexs.Add(type, 0);
                     }
                 }
                 return typeIndexs; 

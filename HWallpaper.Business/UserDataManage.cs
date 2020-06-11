@@ -34,14 +34,8 @@ namespace HWallpaper.Business
             {
                 Picture picModel = db.Queryable<Picture>().Where(o => o.Id == info.Id).First();
                 if (picModel == null)
-                { 
-                    picModel = new Picture();
-                    picModel.Id = info.Id;
-                    picModel.Type = info.class_id;
-                    picModel.Name = info.GetFileName();
-                    picModel.Url = info.url;
-                    picModel.Score = 0;
-                    picModel.Love = 0;
+                {
+                    picModel = ToPicture(info);
                     db.Insertable(picModel).ExecuteCommand();
                 }
 
@@ -64,26 +58,18 @@ namespace HWallpaper.Business
             try
             {
                 Picture picModel = db.Queryable<Picture>().Where(o => o.Id == info.Id).First();
-                if (picModel == null || picModel.Love == 0) //目前仅考虑第一次收藏
+                Love love = db.Queryable<Love>().Where(o => o.PictureId == info.Id).First();
+                if (picModel == null || love == null) //目前仅考虑第一次收藏
                 {
                     SetTagLove(loveType, info);
                 }
                 if (picModel == null)
                 {
-                    picModel = new Picture();
-                    picModel.Id = info.Id;
-                    picModel.Type = info.class_id;
-                    picModel.Name = info.GetFileName();
-                    picModel.Url = info.url;
-                    picModel.Score = 0;
-                    picModel.Love = (int)loveType;
+                    picModel = ToPicture(info);
                     db.Insertable(picModel).ExecuteCommand();
                 }
-                else
-                {
-                    picModel.Love = (int)loveType;
-                    db.Updateable(picModel).UpdateColumns(o => new { o.Love }).ExecuteCommand();
-                }
+                love = new Love() { PictureId = info.Id,Time = DateTime.Now,Type = (int)loveType };
+                db.Saveable(love).ExecuteCommand();
                 return true;
             }
             catch (Exception ex)
@@ -92,32 +78,17 @@ namespace HWallpaper.Business
                 return false;
             }
         }
-
-        public static bool SetScore(int score, ImgInfo info)
+        public static bool SaveDown(Download down, ImgInfo info)
         {
             try
             {
                 Picture picModel = db.Queryable<Picture>().Where(o => o.Id == info.Id).First();
-                if (picModel == null || picModel.Score == 0) //目前仅考虑第一次收藏
-                {
-                    SetTagScore(score, info);
-                }
                 if (picModel == null)
                 {
-                    picModel = new Picture();
-                    picModel.Id = info.Id;
-                    picModel.Type = info.class_id;
-                    picModel.Name = info.GetFileName();
-                    picModel.Url = info.url;
-                    picModel.Score = score;
-                    picModel.Love = 0;
+                    picModel = ToPicture(info);
                     db.Insertable(picModel).ExecuteCommand();
                 }
-                else
-                {
-                    picModel.Score = score;
-                    db.Updateable(picModel).UpdateColumns(o => new { o.Score }).ExecuteCommand();
-                }
+                db.Saveable(down).ExecuteCommand();
                 return true;
             }
             catch (Exception ex)
@@ -139,7 +110,90 @@ namespace HWallpaper.Business
                 return null;
             }
         }
+        public static Love GetLove(int id)
+        {
+            try
+            {
+                return db.Queryable<Love>().Where(o => o.PictureId == id).First();
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
+                return null;
+            }
+        }
+        public static Download GetDown(int id)
+        {
+            try
+            {
+                return db.Queryable<Download>().Where(o => o.PictureId == id).First();
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
+                return null;
+            }
+        }
+        /// <summary>
+        /// 分页获取收藏（喜欢）的壁纸
+        /// </summary>
+        /// <param name="loveType"></param>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static ImageListTotal GetLoveList(LoveType loveType, int start, int count,bool orderDesc = false)
+        {
+            ImageListTotal total = new ImageListTotal();
+            int totalCount = 0;
+            var page = db.Queryable<Picture, Love>((p, l) => new object[] { JoinType.Inner, p.Id == l.PictureId })
+                .Where((p, l) => l.Type == (int)loveType)
+                .OrderByIF(!orderDesc, (p, l) => l.Time, OrderByType.Asc)
+                .OrderByIF(orderDesc, (p, l) => l.Time, OrderByType.Desc)
+                .Select((p, l) => new ImgInfo()
+                {
+                    class_id = p.Type,
+                    id = p.Id.ToString(),
+                    url = p.Url,
+                    tag = p.Tag
+                });
+            total.data = page.ToPageList(start, count, ref totalCount);
+            total.total = totalCount;
+            return total;
+        }
+        /// <summary>
+        /// 分页获取下载的壁纸
+        /// </summary>
+        /// <param name="loveType"></param>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static ImageListTotal GetDownList(int start, int count)
+        {
+            ImageListTotal total = new ImageListTotal();
+            int totalCount = 0;
+            total.data = db.Queryable<Picture, Download>((p, d) => new object[] { JoinType.Inner, p.Id == d.PictureId })
+                .OrderBy((p, d) => d.Time)
+                .Select((p, d) => new ImgInfo()
+                {
+                    class_id = p.Type,
+                    id = p.Id.ToString(),
+                    url = p.Url,
+                    tag = p.Tag
+                }).ToPageList(start, count, ref totalCount);
+            total.total = totalCount;
+            return total;
+        }
         #endregion 
+        private static Picture ToPicture(ImgInfo info)
+        {
+            Picture picModel = new Picture();
+            picModel.Id = info.Id;
+            picModel.Type = info.class_id;
+            picModel.Name = info.GetFileName();
+            picModel.Url = info.url;
+            picModel.Tag = info.tag;
+            return picModel;
+        }
         /// <summary>
         /// 目前仅考虑第一次评分或者第一次收藏
         /// </summary>
@@ -228,5 +282,6 @@ namespace HWallpaper.Business
                 return false;
             }
         }
+
     }
 }
