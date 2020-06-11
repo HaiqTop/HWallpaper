@@ -339,7 +339,8 @@ namespace HWallpaper.Model
                 string[] temp = item.Split('_');
                 if (temp.Length == 4)
                 {
-                    tagList.Add(temp[2]);
+                    if(!string.IsNullOrWhiteSpace(temp[2]))
+                        tagList.Add(temp[2]);
                 }
             }
             return tagList;

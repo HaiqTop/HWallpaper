@@ -407,15 +407,7 @@ namespace HWallpaper.Controls
             if (System.IO.File.Exists(fullName))
             {
                 btn_down.Foreground = Brushes.Red;
-                if (down == null)
-                {
-                    down = new Download() { PictureId = imgInfo.Id, Time = DateTime.Now, FullName = fullName, Valid = 1 };
-                }
-                else if (down.Valid == 0)
-                {
-                    down.Valid = 1;
-                }
-                UserDataManage.SaveDown(down, imgInfo);
+                UserDataManage.SetDown(fullName, imgInfo);
             }
         }
 
@@ -446,8 +438,14 @@ namespace HWallpaper.Controls
                                 img.Dispose();
                             }
                             btn.Foreground = Brushes.Red;
+                            UserDataManage.SetDown(imgFullName, imgInfo);
                             Growl.Success("下载成功。");
-                            UserDataManage.SetLove(LoveType.Love, imgInfo);
+                            if (btn_love.Foreground == Brushes.White)
+                            {
+                                UserDataManage.SetLove(LoveType.Love, imgInfo);
+                                btn_love.Foreground = Brushes.Red;
+                                btn_dislike.Foreground = Brushes.White;
+                            }
                         }
                     }
                     break;

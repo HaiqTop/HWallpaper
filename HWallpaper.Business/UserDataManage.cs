@@ -78,6 +78,42 @@ namespace HWallpaper.Business
                 return false;
             }
         }
+        /// <summary>
+        /// 设置壁纸为已下载
+        /// </summary>
+        /// <param name="fullName"></param>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        public static bool SetDown(string fullName, ImgInfo info)
+        {
+            try
+            {
+                Download down = db.Queryable<Download>().Where(o => o.PictureId == info.Id).First();
+                if (down == null)
+                {
+                    Picture picModel = db.Queryable<Picture>().Where(o => o.Id == info.Id).First();
+                    if (picModel == null)
+                    {
+                        picModel = ToPicture(info);
+                        db.Insertable(picModel).ExecuteCommand();
+                    }
+                    down = new Download() { PictureId = info.Id, Time = DateTime.Now, FullName = fullName, Valid = 1 };
+                    db.Insertable(down).ExecuteCommand();
+                }
+                else
+                {
+                    down.Valid = 1;
+                    down.FullName = fullName;
+                    db.Updateable(down).UpdateColumns(it => new { it.Valid, it.FullName }).ExecuteCommand();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
+                return false;
+            }
+        }
         public static bool SaveDown(Download down, ImgInfo info)
         {
             try

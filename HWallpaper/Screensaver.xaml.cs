@@ -237,9 +237,20 @@ namespace HWallpaper
                     btn_dislike.Foreground = Brushes.Red;
                 }
             }
-            if (System.IO.File.Exists(System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName())))
+            Download down = UserDataManage.GetDown(imgInfo.Id);
+            string fullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
+            if (System.IO.File.Exists(fullName))
             {
                 btn_down.Foreground = Brushes.Red;
+                if (down == null)
+                {
+                    down = new Download() { PictureId = imgInfo.Id, Time = DateTime.Now, FullName = fullName, Valid = 1 };
+                }
+                else if (down.Valid == 0)
+                {
+                    down.Valid = 1;
+                }
+                UserDataManage.SaveDown(down, imgInfo);
             }
         }
         private void Btn_Click(object sender, RoutedEventArgs e)
@@ -261,12 +272,13 @@ namespace HWallpaper
                                 img.Dispose();
                             }
                             btn.Foreground = Brushes.Red;
+                            UserDataManage.SetDown(imgFullName, imgInfo);
                             Growl.Success("下载成功。");
 
-                            if (btn.Foreground == Brushes.White)
+                            if (btn_love.Foreground == Brushes.White)
                             {
                                 UserDataManage.SetLove(LoveType.Love, imgInfo);
-                                btn.Foreground = Brushes.Red;
+                                btn_love.Foreground = Brushes.Red;
                                 btn_dislike.Foreground = Brushes.White;
                             }
                         }
@@ -307,6 +319,7 @@ namespace HWallpaper
                             UserDataManage.SetLove(LoveType.Dislike, imgInfo);
                             btn.Foreground = Brushes.Red;
                             btn_love.Foreground = Brushes.White;
+                            this.EffectPicture(null,null);
                         }
                     }
                     break;
