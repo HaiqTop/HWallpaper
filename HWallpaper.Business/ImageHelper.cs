@@ -17,7 +17,6 @@ namespace HWallpaper.Business
         /// </summary>
         private int Count = 10;
         public Dictionary<string, int> TypeIndexs;
-        private List<ImageListTotal> typeList = new List<ImageListTotal>();
         private Dictionary<string, ImageTypeItem> typeImageList = new Dictionary<string, ImageTypeItem>();
 
         public ImageHelper(Dictionary<string, int> typeIndexs,string cachePath = "")
@@ -41,15 +40,18 @@ namespace HWallpaper.Business
                 if (!typeImageList.ContainsKey(typeIndex.Key))
                 {
                     imgList = GetImageListTotal(typeIndex.Key, 0, 1);
-                    typeItem = new ImageTypeItem(typeIndex.Key, typeIndex.Value, imgList.total);
+                    typeItem = new ImageTypeItem(typeIndex.Key, typeIndex.Value + 1, imgList.total);
                     typeImageList.Add(typeIndex.Key, typeItem);
                 }
                 // 判断当前
-                if (typeIndex.Value < typeImageList[typeIndex.Key].Total)
+                if (typeIndex.Value + 1 < typeImageList[typeIndex.Key].Total)
                 {
-                    imgList = GetImageListTotal(typeIndex.Key, typeIndex.Value, this.Count);
+                    imgList = GetImageListTotal(typeIndex.Key, typeIndex.Value + 1, this.Count);
                     typeImageList[typeIndex.Key].Images.AddRange(imgList.data);
-                    CacheIage(imgList.data);
+                    if (typeIndex.Key != "down")
+                    {
+                        CacheIage(imgList.data);
+                    }
                 }
             }
         }
@@ -69,13 +71,17 @@ namespace HWallpaper.Business
         /// <returns></returns>
         public ImgInfo GetNextImage()
         {
-            if (orderNum >= this.TypeIndexs.Count)
+            string type = string.Empty;
+            do
             {
-                orderNum = 0;
-            }
-            // 获取类型
-            string type = this.TypeIndexs.ElementAt(orderNum++).Key;
-            //int type = this.TypeIndexs.ElementAt(random.Next(0, this.TypeIndexs.Count - 1)).Key;
+                if (orderNum >= this.TypeIndexs.Count)
+                {
+                    orderNum = 0;
+                }
+                // 获取类型
+                type = this.TypeIndexs.ElementAt(orderNum++).Key;
+                //int type = this.TypeIndexs.ElementAt(random.Next(0, this.TypeIndexs.Count - 1)).Key;
+            } while (this.TypeIndexs.Count > 1 && this.typeImageList[type].Total == 0);
 
             this.TypeIndexs[type]++;
             int typeIndex = this.TypeIndexs[type];
@@ -85,8 +91,11 @@ namespace HWallpaper.Business
                 this.TypeIndexs[type] = 0;
                 typeIndex = 0;
             }
-            // 判断是否超过当前获取到的记录
-            if (typeIndex < this.typeImageList[type].StartIndex)
+            
+            // 判断是否在获取的记录之前
+            if (typeIndex < this.typeImageList[type].StartIndex
+                // 如果Image列表为空，则尝试重新获取
+                || typeImageList[type].Images == null || typeImageList[type].Images.Count == 0)
             {
                 ImageListTotal imgList = GetImageListTotal(type, typeIndex, this.Count);
                 if(type != "down")
@@ -97,7 +106,11 @@ namespace HWallpaper.Business
                 typeImageList[type].Images = imgList.data;
 
             }
-            // 判断是否超过当前获取到的记录
+            if (this.typeImageList[type].Total == 0)
+            {
+                throw new Exception("当前分类下没有壁纸，请选择其他类型。");
+            }
+            // 判断是否在获取的记录之后
             if (typeIndex > this.typeImageList[type].EndIndex)
             {
                 ImageListTotal imgList = GetImageListTotal(type, typeIndex, this.Count);
@@ -107,8 +120,20 @@ namespace HWallpaper.Business
                 }
                 typeImageList[type].Images.AddRange(imgList.data);
             }
-            return typeImageList[type].Images[typeIndex - this.typeImageList[type].StartIndex];
+            int curIndex = typeIndex - this.typeImageList[type].StartIndex;
+            if (curIndex >= typeImageList[type].Images.Count)
+            {
+                throw new Exception($"下一张图片信息获取异常：获取到的Images集合为{typeImageList[type].Images.Count},下一张图片索引为{curIndex}");
+            }
+            return typeImageList[type].Images[curIndex];
         }
+
+        #region 静态方法及变量
+        private static List<ImgInfo> recommendList = new List<ImgInfo>();
+        /// <summary>
+        /// 当前推荐的总数（重置为0后，会重新获取推荐的列表）
+        /// </summary>
+        public static int recommendTotal = 0;
         /// <summary>
         /// 根据类型获取分页的图片数据（包括：壁纸分类、收藏、下载）
         /// </summary>
@@ -119,13 +144,47 @@ namespace HWallpaper.Business
         public static ImageListTotal GetImageListTotal(string type, int start = 0, int count = 24)
         {
             ImageListTotal total = null;
-            if (type == "love")
+            if (type == "love")// 收藏的
             {
                 total = UserDataManage.GetLoveList(LoveType.Love, start, count);
             }
-            else if (type == "down")
+            else if (type == "down")//下载的
             {
                 total = UserDataManage.GetDownList(start, count);
+            }
+            else if (type == "recommend")//根据收藏推荐的
+            {
+                if (recommendTotal == 0)
+                {
+                    recommendList.Clear();
+                    List<TagRecord> tops = UserDataManage.GetTopTagList(3);
+                    if (tops.Count > 0)
+                    {
+                        // 计算倍率，防止收藏数量太多造成获取的数量太多
+                        decimal rate = count / tops[0].RecordCount;
+                        foreach (TagRecord top in tops)
+                        {
+                            int tempCount = (int)(top.RecordCount * rate);
+                            ImageListTotal tempTotal = WebImage.GetImageListByKW(top.TagName, 0, tempCount);
+                            recommendTotal += tempTotal.total;
+                            recommendList.AddRange(tempTotal.data);
+                        }
+                        // 去重和排序
+                        List<string> ids = recommendList.GroupBy(h => h.id).Select(h => h.Key).Distinct().ToList();
+                        recommendList = ids.GroupJoin(
+                            recommendList, 
+                            h => h, h => h.id, 
+                            (k, v) => v.FirstOrDefault())
+                            .OrderByDescending(h => h.create_time).ToList(); 
+                    }
+                }
+                if (start < recommendList.Count)
+                {
+                    total = new ImageListTotal();
+                    total.total = recommendList.Count;
+                    total.data = new List<ImgInfo>();
+                    total.data = recommendList.Skip(start).Take(count).ToList();
+                }
             }
             else
             {
@@ -138,5 +197,6 @@ namespace HWallpaper.Business
             }
             return total;
         }
+        #endregion
     }
 }

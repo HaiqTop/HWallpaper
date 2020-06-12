@@ -48,6 +48,7 @@ namespace HWallpaper.Business
             }
             if (model != null && model.data != null)
             {
+                model.data.Insert(0, new TypeList() { id = "recommend", name = "兴趣推荐" });
                 model.data.Insert(0, new TypeList() { id = "love", name = "我的收藏" });
                 model.data.Insert(0, new TypeList() { id = "down", name = "我的下载" });
             }
@@ -102,7 +103,25 @@ namespace HWallpaper.Business
             ImageListTotal listTotal = JsonHelper.DeserializeJsonToObject<ImageListTotal>(jsonStr);
             return listTotal;
         }
-
+        /// <summary>
+        /// 根据关键字搜索
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static ImageListTotal GetImageListByKW(string keyword, int start = 0, int count = 30)
+        {
+            string jsonStr = string.Empty;
+            // 获取最新的
+            if(string.IsNullOrEmpty(keyword))
+            {
+                keyword = "可爱";
+            }
+            jsonStr = WebHelper.HttpGet(string.Format(Const.Url_ListBySearch, keyword, start, count));
+            ImageListTotal listTotal = JsonHelper.DeserializeJsonToObject<ImageListTotal>(jsonStr);
+            return listTotal;
+        }
         /// <summary>
         /// 保存图片到本地
         /// </summary>

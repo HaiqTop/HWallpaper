@@ -141,7 +141,7 @@ namespace HWallpaper
                 string key = typeList[i];
                 if (!ConfigManage.Wallpaper.TypeIndexs.ContainsKey(key))
                 {
-                    ConfigManage.Wallpaper.TypeIndexs.Add(key,0);
+                    ConfigManage.Wallpaper.TypeIndexs.Add(key,-1);
                 }
             }
             typeList.Clear();
@@ -176,7 +176,7 @@ namespace HWallpaper
                 string key = typeList[i];
                 if (!ConfigManage.Screen.TypeIndexs.ContainsKey(key))
                 {
-                    ConfigManage.Screen.TypeIndexs.Add(key, 0);
+                    ConfigManage.Screen.TypeIndexs.Add(key, -1);
                 }
             }
             typeList.Clear();

@@ -6,7 +6,7 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         xmlns:local="clr-namespace:HWallpaper"
            mc:Ignorable="d"
-        Title="设置" Height="500" Width="600" Icon="Image/Settings.ico" Background="White" Closing="window_Closing">
+        Title="设置" Height="620" Width="686" Icon="Image/Settings.ico" Background="White" Closing="window_Closing">
     <ScrollViewer>
         <StackPanel hc:ScrollViewer.IsInertiaEnabled="True" Margin="0,0,5,0">
             <GroupBox Header="基本设置" Padding="10" Margin="5" hc:TitleElement.TitleAlignment="Left">

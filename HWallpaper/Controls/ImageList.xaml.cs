@@ -80,7 +80,19 @@ namespace HWallpaper.Controls
         {
             if (curImageListTotal == null || this.picIndex < curImageListTotal.total)
             {
-                ImageListTotal total = ImageHelper.GetImageListTotal(this.picType, this.picIndex, 24) ;
+                ImageListTotal total = ImageHelper.GetImageListTotal(this.picType, this.picIndex, 24);
+                if (total.total == 0)
+                {
+                    if (this.picType == "love")// 收藏的
+                    {
+                        Growl.Info("您还没有收藏过壁纸");
+                    }
+                    else if (this.picType == "down")//下载的
+                    {
+                        Growl.Info("您还没有下载过壁纸");
+                    }
+                    return;
+                }
                 var list = total.data;
                 foreach (var picInfo in list)
                 {
@@ -93,7 +105,7 @@ namespace HWallpaper.Controls
                     Grid grid = new Grid();
                     grid.Children.Add(new LoadingCircle());
                     grid.Children.Add(img);
-                    downQueue.Queue(img, picInfo, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
+                    //downQueue.Queue(img, picInfo, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
                     grid.MouseEnter += Grid_MouseEnter;
                     grid.MouseLeave += Grid_MouseLeave;
                     panel.Children.Add(grid);
@@ -323,7 +335,7 @@ namespace HWallpaper.Controls
 
         private void ListView_ScrollChanged(object sender, RoutedEventArgs e)
         {
-            if (scr.ViewportHeight + scr.VerticalOffset >= scr.ExtentHeight)
+            if (scr.ViewportHeight + scr.VerticalOffset >= scr.ExtentHeight && scr.ExtentHeight > scr.ViewportHeight)
             {
                 NextImages();
             }

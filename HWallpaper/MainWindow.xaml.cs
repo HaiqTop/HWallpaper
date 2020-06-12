@@ -275,25 +275,33 @@ namespace HWallpaper
         /// </summary>
         private void NextWallpaper()
         {
-            timerW.Stop();
-            LogHelper.WriteLog("更换壁纸", EnumLogLevel.Info);
-            ImgInfo imgInfo = imgHelper.GetNextImage();
-            string imgFullName = System.IO.Path.Combine(ConfigManage.Base.CachePath, imgInfo.GetFileName());
-            if (!File.Exists(imgFullName))
+            try
             {
-                // 判断下载目录中是否存在
-                imgFullName = System.IO.Path.Combine(ConfigManage.Base.DownPath, imgInfo.GetFileName());
+                timerW.Stop();
+                LogHelper.WriteLog("更换壁纸", EnumLogLevel.Info);
+                ImgInfo imgInfo = imgHelper.GetNextImage();
+                string imgFullName = System.IO.Path.Combine(ConfigManage.Base.CachePath, imgInfo.GetFileName());
                 if (!File.Exists(imgFullName))
-                    WebHelper.DownImage(imgInfo.url,imgFullName);
+                {
+                    // 判断下载目录中是否存在
+                    imgFullName = System.IO.Path.Combine(ConfigManage.Base.DownPath, imgInfo.GetFileName());
+                    if (!File.Exists(imgFullName))
+                        WebHelper.DownImage(imgInfo.url, imgFullName);
+                }
+                if (File.Exists(imgFullName))
+                {
+                    Common.WinApi.SetWallpaper(imgFullName);
+                    UserDataManage.AddRecord(RecordType.AutoWallpaper, imgInfo);
+                    ConfigManage.Wallpaper.ReplaceLastTime = DateTime.Now;
+                    ConfigManage.Save();
+                }
+                timerW.Start();
             }
-            if (File.Exists(imgFullName))
+            catch (Exception ex)
             {
-                Common.WinApi.SetWallpaper(imgFullName);
-                UserDataManage.AddRecord(RecordType.AutoWallpaper, imgInfo);
-                ConfigManage.Wallpaper.ReplaceLastTime = DateTime.Now;
-                ConfigManage.Save();
+                MessageBox.Show(ex.Message);
             }
-            timerW.Start();
+            
         }
         /// <summary>
         /// 当前登录的用户变化（登录、注销和解锁屏）

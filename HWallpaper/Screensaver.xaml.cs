@@ -127,9 +127,9 @@ namespace HWallpaper
         }
         private void EffectPicture(object source, ElapsedEventArgs e)
         {
-            ImgInfo info = imgHelper.GetNextImage();
             try
             {
+                ImgInfo info = imgHelper.GetNextImage();
                 picBox.Dispatcher.BeginInvoke(new Action<Image, ImgInfo>((image, imgInfo) =>
                 {
                     timerP.Stop();
@@ -140,6 +140,10 @@ namespace HWallpaper
             catch (Exception ex)
             {
                 Common.LogHelper.WriteLog(ex.Message, Common.EnumLogLevel.Error);
+                picBox.Dispatcher.BeginInvoke(new Action<Exception>((exc) =>
+                {
+                    Growl.Error("壁纸切换异常：\n\t" + exc.Message);
+                }), new Object[] { ex });
             }
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

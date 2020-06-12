@@ -180,8 +180,7 @@ namespace HWallpaper.Business
         public static ImageListTotal GetLoveList(LoveType loveType, int start, int count,bool orderDesc = false)
         {
             ImageListTotal total = new ImageListTotal();
-            int totalCount = 0;
-            var page = db.Queryable<Picture, Love>((p, l) => new object[] { JoinType.Inner, p.Id == l.PictureId })
+            var query = db.Queryable<Picture, Love>((p, l) => new object[] { JoinType.Inner, p.Id == l.PictureId })
                 .Where((p, l) => l.Type == (int)loveType)
                 .OrderByIF(!orderDesc, (p, l) => l.Time, OrderByType.Asc)
                 .OrderByIF(orderDesc, (p, l) => l.Time, OrderByType.Desc)
@@ -192,8 +191,8 @@ namespace HWallpaper.Business
                     url = p.Url,
                     tag = p.Tag
                 });
-            total.data = page.ToPageList(start, count, ref totalCount);
-            total.total = totalCount;
+            total.total = query.Count();
+            total.data = query.Skip(start).Take(count).ToList();
             return total;
         }
         /// <summary>
@@ -206,8 +205,7 @@ namespace HWallpaper.Business
         public static ImageListTotal GetDownList(int start, int count)
         {
             ImageListTotal total = new ImageListTotal();
-            int totalCount = 0;
-            total.data = db.Queryable<Picture, Download>((p, d) => new object[] { JoinType.Inner, p.Id == d.PictureId })
+            var query = db.Queryable<Picture, Download>((p, d) => new object[] { JoinType.Inner, p.Id == d.PictureId })
                 .OrderBy((p, d) => d.Time)
                 .Select((p, d) => new ImgInfo()
                 {
@@ -215,9 +213,23 @@ namespace HWallpaper.Business
                     id = p.Id.ToString(),
                     url = p.Url,
                     tag = p.Tag
-                }).ToPageList(start, count, ref totalCount);
-            total.total = totalCount;
+                });
+            total.total = query.Count();
+            total.data = query.Skip(start).Take(count).ToList();
             return total;
+        }
+        /// <summary>
+        /// 获取收藏排名靠前的tag标签列表
+        /// </summary>
+        /// <param name="top">列表数量</param>
+        /// <returns></returns>
+        public static List<TagRecord> GetTopTagList(int top = 1)
+        {
+            if (top <= 0)
+            {
+                throw new Exception("【top】参数异常，要求大于等于0");
+            }
+            return db.Queryable<TagRecord>().OrderBy(it => it.RecordCount, OrderByType.Desc).Take(top).ToList();
         }
         #endregion 
         private static Picture ToPicture(ImgInfo info)
