@@ -105,7 +105,7 @@ namespace HWallpaper.Controls
                     Grid grid = new Grid();
                     grid.Children.Add(new LoadingCircle());
                     grid.Children.Add(img);
-                    //downQueue.Queue(img, picInfo, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
+                    downQueue.Queue(img, picInfo, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
                     grid.MouseEnter += Grid_MouseEnter;
                     grid.MouseLeave += Grid_MouseLeave;
                     panel.Children.Add(grid);
@@ -120,6 +120,10 @@ namespace HWallpaper.Controls
                 {
                     curImageListTotal.data.AddRange(list);
                 }
+            }
+            else if (curImageListTotal != null && this.picIndex >= curImageListTotal.total)
+            { 
+                Growl.Info($"已经滑到底了，总共{curImageListTotal.total}张壁纸");
             }
         }
 
