@@ -161,7 +161,7 @@ namespace HWallpaper.Business
                     if (tops.Count > 0)
                     {
                         // 计算倍率，防止收藏数量太多造成获取的数量太多
-                        decimal rate = count / tops[0].RecordCount;
+                        decimal rate = count * 2 / tops[0].RecordCount;
                         foreach (TagRecord top in tops)
                         {
                             int tempCount = (int)(top.RecordCount * rate);
@@ -197,6 +197,7 @@ namespace HWallpaper.Business
             }
             return total;
         }
+       
         #endregion
     }
 }

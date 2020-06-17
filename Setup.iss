@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "H±ÚÖ½"
-#define MyAppVersion "1.0.0.0"
+#define MyAppVersion "1.0.0.2"
 #define MyAppPublisher "My Company, Inc."
-#define MyAppURL "haiq.top"
+#define MyAppURL "hwallpaper.haiq.top"
 #define MyAppExeName "HWallpaper.exe"
 
 [Setup]
@@ -36,18 +36,18 @@ Name: "chinese"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]     
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\HWallpaper.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\HWallpaper.exe.config"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\HandyControl.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\HWallpaper.Business.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\HWallpaper.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\HWallpaper.Model.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\Microsoft.Windows.Shell.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\en\HandyControl.resources.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\fa\HandyControl.resources.dll"; DestDir: "{app}"; Flags: ignoreversion 
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Debug\fr\HandyControl.resources.dll"; DestDir: "{app}"; Flags: ignoreversion 
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HWallpaper.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HandyControl.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HWallpaper.Business.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HWallpaper.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HWallpaper.Model.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\Microsoft.Windows.Shell.dll"; DestDir: "{app}"; Flags: ignoreversion   
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\SqlSugar.dll"; DestDir: "{app}"; Flags: ignoreversion  
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\System.Data.SQLite.dll"; DestDir: "{app}"; Flags: ignoreversion 
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\Database.db"; DestDir: "{app}"; Flags: ignoreversion   
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\x64\SQLite.Interop.dll"; DestDir: "{app}\x64"; Flags: igNoreversion recursesubdirs createallsubdirs 
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\x86\SQLite.Interop.dll"; DestDir: "{app}\x86"; Flags: igNoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

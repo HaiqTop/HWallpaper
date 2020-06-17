@@ -63,7 +63,7 @@
                 <DropShadowEffect ShadowDepth="-4" BlurRadius="5" Color="LightGray"/>
             </TextBlock.Effect>
         </TextBlock>
-        <TextBlock Name="lb_picTags" Text="Label" HorizontalAlignment="Left" Margin="40,73,0,0" VerticalAlignment="Top" Width="200">
+        <TextBlock Name="lb_picTags" Text="Label" HorizontalAlignment="Left" Margin="40,73,0,0" VerticalAlignment="Top" Width="300">
             <TextBlock.Effect>
                 <DropShadowEffect ShadowDepth="-4" BlurRadius="10" Color="LightGray"/>
             </TextBlock.Effect>

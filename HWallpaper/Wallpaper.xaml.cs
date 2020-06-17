@@ -14,6 +14,7 @@ using HWallpaper.Model;
 using HWallpaper.Common;
 using HWallpaper.Business;
 using HWallpaper.Controls;
+using HandyControl;
 
 namespace HWallpaper
 {
@@ -69,7 +70,7 @@ namespace HWallpaper
                         item.Visibility = Visibility.Collapsed;
                         tabControl.Items.Add(item);
                     }
-                    window_SizeChanged(null,null) ;
+                    window_SizeChanged(null, null);
                 }
 
             }
@@ -90,7 +91,7 @@ namespace HWallpaper
                 imageList.Margin = new Thickness(0);
                 item.Margin = new Thickness(0);
                 item.Content = imageList;
-                imageList.LoadImage(type , 0);
+                imageList.LoadImage(type, 0);
             }
         }
 
@@ -105,7 +106,7 @@ namespace HWallpaper
                     item.Visibility = Visibility.Visible;
                 }
                 else
-                { 
+                {
                     item.Visibility = Visibility.Collapsed;
                 }
             }
@@ -116,6 +117,10 @@ namespace HWallpaper
             MenuItem menuItem = sender as MenuItem;
             switch (menuItem.Header)
             {
+                case "搜索":
+                    tabControl.Visibility = Visibility.Hidden;
+                    searchGrid.Visibility = Visibility.Visible;
+                    break;
                 case "屏保":
                     Screensaver screen = new Screensaver();
                     screen.Show();
@@ -133,6 +138,20 @@ namespace HWallpaper
             main.InitTimers_Screen();
             main.InitTimers_Wallpaper();
             main.InitTimers_Screen();
+        }
+
+        private void SearchBar_SearchStarted(object sender, HandyControl.Data.FunctionEventArgs<string> e)
+        {
+            if (!string.IsNullOrEmpty(e.Info))
+            {
+                searchList.SearchImage(e.Info);
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            tabControl.Visibility = Visibility.Visible;
+            searchGrid.Visibility = Visibility.Hidden;
         }
     }
 }

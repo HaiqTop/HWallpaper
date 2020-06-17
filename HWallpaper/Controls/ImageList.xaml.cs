@@ -17,6 +17,7 @@ namespace HWallpaper.Controls
     public partial class ImageList : UserControl
     {
         private string picType = "0";
+        private string keyWord = string.Empty;
         private int picIndex = 0;
         private ImageListTotal curImageListTotal = null;
         private Size imgSize = new Size(320,180);
@@ -54,10 +55,40 @@ namespace HWallpaper.Controls
                 this.ScreenSize.Height = size.Height;
             }
         }
+        /// <summary>
+        /// 根据壁纸类型加载壁纸
+        /// </summary>
+        /// <param name="picType"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public int LoadImage(string picType = "0", int index = 0)
         {
             this.picType = picType;
             this.picIndex = index;
+            curImageListTotal = null;
+            scr.ScrollToTop();
+            panel.Children.Clear();
+            NextImages();
+            zoomImage.Source = null;
+            // 如果当前是单页显示模式，则需要加载新的壁纸类型的第一张壁纸
+            if (this.Content is Grid pGrid && pGrid.Name == "zoomGrid")
+            {
+                if (curImageListTotal != null && curImageListTotal.data.Count > 0)
+                {
+                    this.ShowBigPic(curImageListTotal.data[0]);
+                }
+            }
+            return curImageListTotal == null ? 0 : curImageListTotal.total;
+        }
+        /// <summary>
+        /// 根据关键字搜索壁纸，并加载壁纸列表
+        /// </summary>
+        /// <param name="keyWord"></param>
+        /// <returns></returns>
+        public int SearchImage(string keyWord)
+        {
+            this.keyWord = keyWord;
+            this.picIndex = 0;
             curImageListTotal = null;
             scr.ScrollToTop();
             panel.Children.Clear();
@@ -80,7 +111,15 @@ namespace HWallpaper.Controls
         {
             if (curImageListTotal == null || this.picIndex < curImageListTotal.total)
             {
-                ImageListTotal total = ImageHelper.GetImageListTotal(this.picType, this.picIndex, 24);
+                ImageListTotal total = null;
+                if (string.IsNullOrEmpty(keyWord))
+                {
+                    total = ImageHelper.GetImageListTotal(this.picType, this.picIndex, 24);
+                }
+                else
+                {
+                    total = WebImage.GetImageListByKW(keyWord, this.picIndex, 24);
+                }
                 if (total.total == 0)
                 {
                     if (this.picType == "love")// 收藏的
@@ -90,6 +129,10 @@ namespace HWallpaper.Controls
                     else if (this.picType == "down")//下载的
                     {
                         Growl.Info("您还没有下载过壁纸");
+                    }
+                    else if (!string.IsNullOrEmpty(keyWord))//搜索
+                    {
+                        Growl.Info("没有搜索到壁纸");
                     }
                     return;
                 }

@@ -138,6 +138,7 @@
     <Resource Include="Image\Settings.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Image\search.ico" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
