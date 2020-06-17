@@ -183,6 +183,36 @@ namespace HWallpaper.Business
             }
         }
         /// <summary>
+        /// 分页获取历史壁纸的壁纸
+        /// </summary>
+        /// <param name="wallType">记录类型</param>
+        /// <param name="start"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static ImageListTotal GetLWallList(RecordType wallType,int start, int count,bool destinct = false, bool orderDesc = false)
+        {
+            ImageListTotal total = new ImageListTotal();
+            var query = db.Queryable<Picture, Record>((p, r) => new object[] { JoinType.Inner, p.Id == r.PictureId })
+                .Where((p, r) => r.Type == (int)wallType)
+                .OrderByIF(!orderDesc, (p, r) => r.Time, OrderByType.Asc)
+                .OrderByIF(orderDesc, (p, r) => r.Time, OrderByType.Desc)
+                .Select((p, r) => new ImgInfo()
+                {
+                    class_id = p.Type,
+                    id = p.Id.ToString(),
+                    url = p.Url,
+                    tag = p.Tag
+                });
+            if (destinct) 
+            {
+                query = query.Distinct();
+            }
+            total.total = query.Count();
+            total.data = query.Skip(start).Take(count).ToList();
+            return total;
+        }
+
+        /// <summary>
         /// 分页获取收藏（喜欢）的壁纸
         /// </summary>
         /// <param name="loveType"></param>

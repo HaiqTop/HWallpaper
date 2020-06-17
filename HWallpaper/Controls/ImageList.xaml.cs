@@ -185,6 +185,8 @@ namespace HWallpaper.Controls
                 {
                     switch (this.picType)
                     {
+                        case "wall":
+                            msg = "您还没有设置过壁纸"; break;// 设置壁纸
                         case "love":
                             msg = "您还没有收藏过壁纸"; break;// 收藏的
                         case "down":
@@ -581,6 +583,7 @@ namespace HWallpaper.Controls
                     {
                         if (btn.Foreground == Brushes.White)
                         {
+                            btn.IsEnabled = false;
                             string imgFullName = System.IO.Path.Combine(this.DownPath, imgInfo.GetFileName());
                             if (!System.IO.File.Exists(imgFullName))
                             {
@@ -589,8 +592,9 @@ namespace HWallpaper.Controls
                                 img.Dispose();
                             }
                             btn.Foreground = Brushes.Red;
-                            UserDataManage.SetDown(imgFullName, imgInfo);
+                            btn.IsEnabled = true;
                             Growl.Success("下载成功。");
+                            UserDataManage.SetDown(imgFullName, imgInfo);
                             if (btn_love.Foreground == Brushes.White)
                             {
                                 UserDataManage.SetLove(LoveType.Love, imgInfo);
@@ -604,6 +608,7 @@ namespace HWallpaper.Controls
                     {
                         if (btn.Foreground == Brushes.White)
                         {
+                            btn.IsEnabled = false;
                             string imgFullName = System.IO.Path.Combine(this.CachePath, imgInfo.GetFileName());
                             if (!System.IO.File.Exists(imgFullName))
                             {
@@ -611,10 +616,18 @@ namespace HWallpaper.Controls
                                 img.Save(imgFullName);
                                 img.Dispose();
                             }
-                            WinApi.SetWallpaper(imgFullName);
-                            btn.Foreground = Brushes.Red;
-                            Growl.Success("壁纸设置成功。");
-                            UserDataManage.AddRecord(RecordType.ManualWallpaper, imgInfo);
+                            if (System.IO.File.Exists(imgFullName))
+                            {
+                                WinApi.SetWallpaper(imgFullName);
+                                btn.Foreground = Brushes.Red;
+                                Growl.Success("壁纸设置成功。");
+                                btn.IsEnabled = true;
+                                UserDataManage.AddRecord(RecordType.ManualWallpaper, imgInfo);
+                            }
+                            else
+                            { 
+                                Growl.Error("未找到壁纸文件，壁纸设置失败。");
+                            }
                         }
                     }
                     break;

@@ -144,56 +144,58 @@ namespace HWallpaper.Business
         public static ImageListTotal GetImageListTotal(string type, int start = 0, int count = 24)
         {
             ImageListTotal total = null;
-            if (type == "love")// 收藏的
+            switch (type)
             {
-                total = UserDataManage.GetLoveList(LoveType.Love, start, count);
-            }
-            else if (type == "down")//下载的
-            {
-                total = UserDataManage.GetDownList(start, count);
-            }
-            else if (type == "recommend")//根据收藏推荐的
-            {
-                if (recommendTotal == 0)
-                {
-                    recommendList.Clear();
-                    List<TagRecord> tops = UserDataManage.GetTopTagList(3);
-                    if (tops.Count > 0)
+                case "wall":// 壁纸历史记录
+                    total = UserDataManage.GetLWallList(RecordType.ManualWallpaper, start, count, true, true);
+                    break;
+                case "love":// 收藏的
+                    total = UserDataManage.GetLoveList(LoveType.Love, start, count);
+                    break;
+                case "down"://下载的
+                    total = UserDataManage.GetDownList(start, count);
+                    break;
+                case "recommend"://根据收藏推荐的
+                    if (recommendTotal == 0)
                     {
-                        // 计算倍率，防止收藏数量太多造成获取的数量太多
-                        decimal rate = count * 2 / tops[0].RecordCount;
-                        foreach (TagRecord top in tops)
+                        recommendList.Clear();
+                        List<TagRecord> tops = UserDataManage.GetTopTagList(3);
+                        if (tops.Count > 0)
                         {
-                            int tempCount = (int)(top.RecordCount * rate);
-                            ImageListTotal tempTotal = WebImage.GetImageListByKW(top.TagName, 0, tempCount);
-                            recommendTotal += tempTotal.total;
-                            recommendList.AddRange(tempTotal.data);
+                            // 计算倍率，防止收藏数量太多造成获取的数量太多
+                            decimal rate = count * 2 / tops[0].RecordCount;
+                            foreach (TagRecord top in tops)
+                            {
+                                int tempCount = (int)(top.RecordCount * rate);
+                                ImageListTotal tempTotal = WebImage.GetImageListByKW(top.TagName, 0, tempCount);
+                                recommendTotal += tempTotal.total;
+                                recommendList.AddRange(tempTotal.data);
+                            }
+                            // 去重和排序
+                            List<string> ids = recommendList.GroupBy(h => h.id).Select(h => h.Key).Distinct().ToList();
+                            recommendList = ids.GroupJoin(
+                                recommendList,
+                                h => h, h => h.id,
+                                (k, v) => v.FirstOrDefault())
+                                .OrderByDescending(h => h.create_time).ToList();
                         }
-                        // 去重和排序
-                        List<string> ids = recommendList.GroupBy(h => h.id).Select(h => h.Key).Distinct().ToList();
-                        recommendList = ids.GroupJoin(
-                            recommendList, 
-                            h => h, h => h.id, 
-                            (k, v) => v.FirstOrDefault())
-                            .OrderByDescending(h => h.create_time).ToList(); 
                     }
-                }
-                if (start < recommendList.Count)
-                {
-                    total = new ImageListTotal();
-                    total.total = recommendList.Count;
-                    total.data = new List<ImgInfo>();
-                    total.data = recommendList.Skip(start).Take(count).ToList();
-                }
-            }
-            else
-            {
-                total = WebImage.GetImageList(type, start, count);
-                /*// 暂时不考虑，没有想到比较好的解决方法
-                if (ConfigManage.Base.ExcludeDislike)
-                {
+                    if (start < recommendList.Count)
+                    {
+                        total = new ImageListTotal();
+                        total.total = recommendList.Count;
+                        total.data = new List<ImgInfo>();
+                        total.data = recommendList.Skip(start).Take(count).ToList();
+                    }
+                    break;
+                default:
+                    total = WebImage.GetImageList(type, start, count);
+                    /*// 暂时不考虑，没有想到比较好的解决方法
+                    if (ConfigManage.Base.ExcludeDislike)
+                    {
 
-                }*/
+                    }*/
+                    break;
             }
             return total;
         }

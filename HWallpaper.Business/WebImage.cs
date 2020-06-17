@@ -28,6 +28,7 @@ namespace HWallpaper.Business
                 model.data.Insert(0, new TypeList() { id = "recommend", name = "兴趣推荐" });
                 model.data.Insert(0, new TypeList() { id = "love", name = "我的收藏" });
                 model.data.Insert(0, new TypeList() { id = "down", name = "我的下载" });
+                model.data.Insert(0, new TypeList() { id = "wall", name = "历史壁纸" });
             }
             return model;
         }
