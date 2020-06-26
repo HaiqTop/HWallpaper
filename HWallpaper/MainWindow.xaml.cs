@@ -266,6 +266,10 @@ namespace HWallpaper
         {
             if (!File.Exists(Const.dbFile))
             {
+                if (!Directory.Exists(Const.dataPath))
+                {
+                    Directory.CreateDirectory(Const.dataPath);
+                }
                 File.Copy(Const.dbEmptyFile, Const.dbFile);
             }
         }

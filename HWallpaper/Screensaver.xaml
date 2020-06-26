@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:HWallpaper"
         mc:Ignorable="d"
         Name="windown"
-        Topmost="False"
+        Topmost="True"
         WindowStyle="None" Background="Transparent" AllowsTransparency="True"
         Title="屏保" Height="540" Width="960" ResizeMode="NoResize"
         Closing="Window_Closing" KeyDown="Window_KeyDown" MouseDown="Window_MouseDown" Loaded="windown_Loaded">
