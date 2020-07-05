@@ -130,6 +130,7 @@ namespace HWallpaper
             try
             {
                 ImgInfo info = imgHelper.GetNextImage();
+                if(UserDataManage.IsDislike(info.Id)) info = imgHelper.GetNextImage();
                 picBox.Dispatcher.BeginInvoke(new Action<Image, ImgInfo>((image, imgInfo) =>
                 {
                     timerP.Stop();
@@ -177,22 +178,12 @@ namespace HWallpaper
             switch (e.Key)
             {
                 case Key.Up:
+                    Btn_Click(btn_love, null); 
+                    break;
                 case Key.Down:
-                    try
-                    {
-                        string path = ConfigManage.Base.DownPath;
-                        if (!System.IO.Directory.Exists(path))
-                            System.IO.Directory.CreateDirectory(path);
-                        string imgFullName = System.IO.Path.Combine(path, picBox.Tag.ToString());
-                        WebImage.SaveImage((BitmapSource)picBox.Source, imgFullName);
-                        //UserDataManage.SetLove(LoveType.Love, imgInfo);
-                        Growl.Success("已保存到本地文件夹");
-                    }
-                    catch (Exception ex)
-                    {
-                        Growl.Error("保存失败：" + ex.Message);
-                        Common.LogHelper.WriteLog("保存失败：" + ex.Message, Common.EnumLogLevel.Error);
-                    }
+                    Btn_Click(btn_down,null);
+                    break;
+                case Key.Right:
                     break;
                 case Key.Escape:
                     this.Close();

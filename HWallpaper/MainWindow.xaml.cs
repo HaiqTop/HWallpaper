@@ -284,6 +284,7 @@ namespace HWallpaper
                 timerW.Stop();
                 LogHelper.WriteLog("更换壁纸", EnumLogLevel.Info);
                 ImgInfo imgInfo = imgHelper.GetNextImage();
+                if (UserDataManage.IsDislike(imgInfo.Id)) imgInfo = imgHelper.GetNextImage();
                 string imgFullName = System.IO.Path.Combine(ConfigManage.Base.CachePath, imgInfo.GetFileName());
                 if (!File.Exists(imgFullName))
                 {

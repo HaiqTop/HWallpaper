@@ -133,6 +133,18 @@ namespace HWallpaper.Business
                 return false;
             }
         }
+        public static bool IsDislike(int id)
+        {
+            try
+            {
+                return db.Queryable<Love>().Where(o => o.PictureId == id && o.Type == -1).Count() > 0;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteLog(ex.Message, EnumLogLevel.Error);
+                return false;
+            }
+        }
 
         public static Picture GetPicture(int id)
         {
