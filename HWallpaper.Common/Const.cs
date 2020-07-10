@@ -8,10 +8,11 @@ namespace HWallpaper.Common
     public class Const
     {
         /// <summary>
-        /// <summary>
         /// 图片文件夹名称
         /// </summary>
         public static string HWallpaper = nameof(HWallpaper);
+
+        /// <summary>
         /// exe文件所在的目录+"\"
         /// </summary>
         public static string CurrentDirectory
