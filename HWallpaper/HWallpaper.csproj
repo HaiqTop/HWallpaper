@@ -46,10 +46,6 @@
     <StartupObject>HWallpaper.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoUpdate, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\AutoUpdate\AutoUpdate\bin\Debug\AutoUpdate.exe</HintPath>
-    </Reference>
     <Reference Include="HandyControl, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\HandyControl\HandyControl.dll</HintPath>
@@ -154,6 +150,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AutoUpdate\AutoUpdate\AutoUpdate.csproj">
+      <Project>{ac807722-27b4-41cc-a2a6-61d727c96123}</Project>
+      <Name>AutoUpdate</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HWallpaper.Business\HWallpaper.Business.csproj">
       <Project>{201F1EEC-49B5-401F-BAC9-35FD3E55D33A}</Project>
       <Name>HWallpaper.Business</Name>

@@ -105,8 +105,8 @@ namespace HWallpaper
                     screensaver.ShowDialog();
                     break;
                 case "调试":
-                    string url = "http://localhost:53054/Update/CheckUpdate";
-                    AutoUpdate.Helper.UpdateHelper.CheckUpdateAsyn(true, url);
+                    //string url = "http://localhost:53054/Update/CheckUpdate";
+                    AutoUpdate.Helper.UpdateHelper.CheckUpdateAsyn();
                     break;
             }
         }
@@ -213,7 +213,10 @@ namespace HWallpaper
             {
                 timerS.Stop();
                 timerS.Interval = timeSpan > 10000 ? (double)timeSpan : 15000d;
-                timerS.Start();
+                if (timerS.Interval > Int32.MaxValue)
+                {
+                    timerS.Interval = Int32.MaxValue;
+                }
                 return;
             }
             ShowScreen();
