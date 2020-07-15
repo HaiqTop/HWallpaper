@@ -86,6 +86,8 @@ namespace HWallpaper
             }
             LoadStoryboard();
             EffectPicture(null, null);
+            this.Activate();
+            this.Focus();
         }
         /// <summary>
         /// 初始化显示屏保后图片切换的定时器

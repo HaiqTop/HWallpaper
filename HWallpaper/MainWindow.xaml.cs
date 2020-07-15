@@ -33,11 +33,20 @@ namespace HWallpaper
         // 监控是否有全屏应用的代码
         private IntPtr desktopHandle;
         private IntPtr shellHandle;
-        public MainWindow()
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="showWallpaper">是否显示壁纸界面</param>
+        public MainWindow(bool showWallpaper)
         {
             InitializeComponent();
             InitDB();
             CleanCache();
+            if (showWallpaper)
+            {
+                Wallpaper wall = new Wallpaper(this);
+                wall.Show();
+            }
         }
         private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
@@ -94,6 +103,10 @@ namespace HWallpaper
                     timerS.Stop();
                     screensaver = new Screensaver();
                     screensaver.ShowDialog();
+                    break;
+                case "调试":
+                    string url = "http://localhost:53054/Update/CheckUpdate";
+                    AutoUpdate.Helper.UpdateHelper.CheckUpdateAsyn(true, url);
                     break;
             }
         }

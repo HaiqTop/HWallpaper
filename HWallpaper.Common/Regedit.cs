@@ -12,7 +12,7 @@ namespace HWallpaper.Common
         {
             if (isAuto == true)
             {
-                string path = Const.CurrentDirectory + "HWallpaper.exe";
+                string path = Const.CurrentDirectory + "HWallpaper.exe autorun";
                 RegistryKey R_local = Registry.CurrentUser;//RegistryKey R_local = Registry.CurrentUser;
                 RegistryKey R_run = R_local.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run");
                 R_run.SetValue("HWallpaper", path);
