@@ -125,6 +125,7 @@ namespace HWallpaper
 
         private void NotifyIconContextContent_MouseDoubleClick(object sender, System.Windows.RoutedEventArgs e)
         {
+            return;// 双击会触发两次单击，暂时禁用这个功能
             if (wallpaper == null || wallpaper.IsClosed)
             { 
                 wallpaper = new Wallpaper(this);

@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "H±ÚÖ½"
-#define MyAppVersion "1.0.0.2"
+#define MyAppVersion "1.0.0.5"
 #define MyAppPublisher "My Company, Inc."
 #define MyAppURL "hwallpaper.haiq.top"
 #define MyAppExeName "HWallpaper.exe"
@@ -36,7 +36,7 @@ Name: "chinese"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]     
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HWallpaper.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HWallpaper.exe"; DestDir: "{app}"; Flags: ignoreversion 
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HandyControl.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HWallpaper.Business.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\HWallpaper.Common.dll"; DestDir: "{app}"; Flags: ignoreversion
@@ -48,7 +48,9 @@ Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\System.Data.SQLite.dll"; DestD
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\Database.db"; DestDir: "{app}"; Flags: ignoreversion   
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\x64\SQLite.Interop.dll"; DestDir: "{app}\x64"; Flags: igNoreversion recursesubdirs createallsubdirs 
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\x86\SQLite.Interop.dll"; DestDir: "{app}\x86"; Flags: igNoreversion recursesubdirs createallsubdirs
-
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\AutoUpdate.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
+ 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon

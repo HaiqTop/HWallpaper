@@ -36,7 +36,7 @@
                         <Image Source="Image/Settings.ico"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Click="MenuItem_Click" Header="调试"/>
+                <MenuItem Click="MenuItem_Click" Header="调试" Visibility="Collapsed"/>
                 <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用">
                     <MenuItem.Icon>
                         <Image Source="Image/exit1.png"/>

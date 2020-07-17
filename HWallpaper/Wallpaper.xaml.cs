@@ -29,6 +29,7 @@ namespace HWallpaper
             this.main = main;
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
             AutoUpdate.Helper.UpdateHelper.CheckUpdateAsyn();
         }
         public bool IsClosed { get; private set; }
