@@ -49,7 +49,7 @@ Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\Database.db"; DestDir: "{app}"
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\x64\SQLite.Interop.dll"; DestDir: "{app}\x64"; Flags: igNoreversion recursesubdirs createallsubdirs 
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\x86\SQLite.Interop.dll"; DestDir: "{app}\x86"; Flags: igNoreversion recursesubdirs createallsubdirs
 Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\AutoUpdate.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Git\HWallpaper\HWallpaper\bin\Release\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Git\HWallpaper\packages\ICSharpCode.SharpZipLib.dll"; DestDir: "{app}"; Flags: ignoreversion
  
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

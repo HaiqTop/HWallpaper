@@ -3,6 +3,7 @@ using HWallpaper.Business;
 using HWallpaper.Common;
 using HWallpaper.Model;
 using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -30,6 +31,12 @@ namespace HWallpaper.Controls
         private WrapPanel panel = new WrapPanel();
         Thickness margin = new Thickness(2);
         DownQueue downQueue = null;
+
+        //首次加载页面异步实现需要用的
+        private Thread thread = null;
+        private event ComplateDelegate OnComplate;
+        private delegate void ComplateDelegate(ImageListTotal total, string msg);
+
         public ImageList()
         {
             InitializeComponent();
@@ -61,14 +68,62 @@ namespace HWallpaper.Controls
         /// <param name="picType"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        public int LoadImage(string picType = "0", int index = 0)
+        public void LoadImage(string picType = "0", int index = 0)
         {
-            this.picType = picType;
-            this.picIndex = index;
-            curImageListTotal = null;
-            scr.ScrollToTop();
-            panel.Children.Clear();
-            NextImages();
+            if (thread == null)
+            {
+                this.picType = picType;
+                this.picIndex = index;
+                curImageListTotal = null;
+                scr.ScrollToTop();
+                panel.Children.Clear();
+                this.OnComplate += ImageList_OnComplate;
+                thread = new Thread(new ThreadStart(NextImages));
+                thread.Name = "LoadImageList_" + picType;
+                thread.Start();
+            }
+            //NextImages();
+            
+            //return curImageListTotal == null ? 0 : curImageListTotal.total;
+        }
+
+        private void ImageList_OnComplate(ImageListTotal total, string msg)
+        {
+            if (total != null && total.data.Count > 0)
+            {
+                var list = total.data;
+                foreach (var picInfo in list)
+                {
+                    Image img = new Image();
+                    img.Tag = PageType.MPA;
+                    img.Height = imgSize.Height;
+                    img.Width = imgSize.Width;
+                    img.Margin = margin;
+                    img.MouseDown += Image_MouseDown;
+                    Grid grid = new Grid();
+                    grid.Children.Add(new LoadingCircle());
+                    grid.Children.Add(img);
+                    downQueue.Queue(img, picInfo, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
+                    grid.MouseEnter += Grid_MouseEnter;
+                    grid.MouseLeave += Grid_MouseLeave;
+                    panel.Children.Add(grid);
+                    grid.Tag = this.picIndex;
+                    picInfo.Index = this.picIndex++;
+                }
+                if (curImageListTotal == null)
+                {
+                    curImageListTotal = total;
+                }
+                else
+                {
+                    curImageListTotal.data.AddRange(list);
+                }
+            }
+            else if(!string.IsNullOrEmpty(msg))
+            {
+                Growl.Info(msg);
+            }
+
             zoomImage.Source = null;
             // 如果当前是单页显示模式，则需要加载新的壁纸类型的第一张壁纸
             if (this.Content is Grid pGrid && pGrid.Name == "zoomGrid")
@@ -78,8 +133,8 @@ namespace HWallpaper.Controls
                     this.ShowBigPic(curImageListTotal.data[0]);
                 }
             }
-            return curImageListTotal == null ? 0 : curImageListTotal.total;
         }
+
         /// <summary>
         /// 根据关键字搜索壁纸，并加载壁纸列表
         /// </summary>
@@ -92,6 +147,8 @@ namespace HWallpaper.Controls
             curImageListTotal = null;
             scr.ScrollToTop();
             panel.Children.Clear();
+            if(this.OnComplate == null)
+                this.OnComplate += ImageList_OnComplate;
             NextImages();
             zoomImage.Source = null;
             // 如果当前是单页显示模式，则需要加载新的壁纸类型的第一张壁纸
@@ -120,49 +177,21 @@ namespace HWallpaper.Controls
                 {
                     total = WebImage.GetImageListByKW(keyWord, this.picIndex, 24);
                 }
+                string msg = string.Empty;
                 if (total.total == 0)
                 {
-                    if (this.picType == "love")// 收藏的
+                    switch (this.picType)
                     {
-                        Growl.Info("您还没有收藏过壁纸");
+                        case "love":
+                            msg = "您还没有收藏过壁纸"; break;// 收藏的
+                        case "down":
+                            msg = "您还没有下载过壁纸"; break;//下载的
+                        default:
+                            if (!string.IsNullOrEmpty(keyWord))//搜索
+                                msg = $"未搜索到与【{keyWord}】相关的壁纸"; break;
                     }
-                    else if (this.picType == "down")//下载的
-                    {
-                        Growl.Info("您还没有下载过壁纸");
-                    }
-                    else if (!string.IsNullOrEmpty(keyWord))//搜索
-                    {
-                        Growl.Info("没有搜索到壁纸");
-                    }
-                    return;
                 }
-                var list = total.data;
-                foreach (var picInfo in list)
-                {
-                    Image img = new Image();
-                    img.Tag = PageType.MPA;
-                    img.Height = imgSize.Height;
-                    img.Width = imgSize.Width;
-                    img.Margin = margin;
-                    img.MouseDown += Image_MouseDown;
-                    Grid grid = new Grid();
-                    grid.Children.Add(new LoadingCircle());
-                    grid.Children.Add(img);
-                    downQueue.Queue(img, picInfo, picInfo.GetUrlBySize((int)img.Width, (int)img.Height));
-                    grid.MouseEnter += Grid_MouseEnter;
-                    grid.MouseLeave += Grid_MouseLeave;
-                    panel.Children.Add(grid);
-                    grid.Tag = this.picIndex;
-                    picInfo.Index = this.picIndex++;
-                }
-                if (curImageListTotal == null)
-                {
-                    curImageListTotal = total;
-                }
-                else
-                {
-                    curImageListTotal.data.AddRange(list);
-                }
+                this.Dispatcher.BeginInvoke(this.OnComplate, new Object[] { total, msg });
             }
             else if (curImageListTotal != null && this.picIndex >= curImageListTotal.total)
             { 
