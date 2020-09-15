@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using System.IO;
+using System.Threading;
 
 namespace HWallpaper.Business
 {
@@ -13,39 +14,15 @@ namespace HWallpaper.Business
         /// <summary>
         /// 获取图片类别列表
         /// </summary>
+        /// <param name="local">是否直接从本地获取类别，否-则先从网络上获取分类数据</param>
         /// <returns></returns>
         public static TypeTotal GetTypeList(bool local = false)
         {
-            string jsonStr = string.Empty;
-            TypeTotal model = null;
-            try
+            if (!local)
             {
-                if (local)
-                {
-                    model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(ConfigManage.Base.TypeJson);
-                }
-                else
-                {
-                    jsonStr = WebHelper.HttpGet(Const.Url_Type);
-                    model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(jsonStr);
-                    // 如果正确获取到信息，则将字符串存储到本地（防止下次因为服务器接口问题导致无法正确获取数据）
-                    if (model != null && model.data != null && model.data.Count > 0)
-                    {
-                        ConfigManage.Base.TypeJson = jsonStr;
-                    }
-                    else
-                    {
-                        throw new Exception("获取的图片类型Json数据为空");
-                    }
-                }
-
+                GetTypeByWeb();
             }
-            catch (Exception ex)
-            {
-                // 假如获取信息失败
-                model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(ConfigManage.Base.TypeJson);
-                Common.LogHelper.WriteLog(ex.Message, Common.EnumLogLevel.Error);
-            }
+            TypeTotal model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(ConfigManage.Base.TypeJson);
             if (model != null && model.data != null)
             {
                 model.data.Insert(0, new TypeList() { id = "recommend", name = "兴趣推荐" });
@@ -138,6 +115,35 @@ namespace HWallpaper.Business
                     PBE.Save(stream);
                 }
             }
+        }
+
+        /// <summary>
+        /// 通过Web接口获取最新的壁纸类型，并保存到配置
+        /// </summary>
+        private static void GetTypeByWeb()
+        {
+            string jsonStr = WebHelper.HttpGet(Const.Url_Type);
+            TypeTotal model = Common.JsonHelper.DeserializeJsonToObject<TypeTotal>(jsonStr);
+            // 如果正确获取到信息，则将字符串存储到本地（防止下次因为服务器接口问题导致无法正确获取数据）
+            if (model != null && model.data != null && model.data.Count > 0)
+            {
+                ConfigManage.Base.TypeJson = jsonStr;
+                ConfigManage.Save();
+            }
+            else
+            {
+                LogHelper.WriteLog("获取的图片类型Json数据为空：" + jsonStr, Common.EnumLogLevel.Error);
+            }
+        }
+        /// <summary>
+        /// 异步通过接口获取最新的壁纸分类并保存到本地配置中
+        /// </summary>
+        public static void AsynLoadType()
+        {
+            Thread t = new Thread(new ThreadStart(GetTypeByWeb));
+            t.Name = "下载壁纸分类Json";
+            t.IsBackground = true;
+            t.Start();
         }
     }
 }

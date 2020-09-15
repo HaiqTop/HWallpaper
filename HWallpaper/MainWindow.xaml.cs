@@ -39,6 +39,7 @@ namespace HWallpaper
         /// <param name="showWallpaper">是否显示壁纸界面</param>
         public MainWindow(bool showWallpaper)
         {
+            WebImage.AsynLoadType();
             InitializeComponent();
             InitDB();
             CleanCache();

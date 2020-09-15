@@ -57,7 +57,7 @@ namespace HWallpaper
                 item.Tag = 0;
                 tabControl.Items.Add(item);
 
-                TypeTotal total = WebImage.GetTypeList();
+                TypeTotal total = WebImage.GetTypeList(true);
                 if (total != null && total.data != null && total.data.Count > 0)
                 {
                     int tabIndex = 100;
