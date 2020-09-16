@@ -23,7 +23,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=D:\Git\HWallpaper
-OutputBaseFilename=HWallpaper
+OutputBaseFilename={#MyAppName} Setup
 SetupIconFile=D:\Git\HWallpaper\HWallpaper\Image\logo.ico
 Compression=lzma
 SolidCompression=yes
