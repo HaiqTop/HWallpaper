@@ -74,7 +74,6 @@ namespace HWallpaper
                     }
                     window_SizeChanged(null, null);
                 }
-
             }
             catch (Exception ex)
             {
