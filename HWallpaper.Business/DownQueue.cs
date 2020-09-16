@@ -11,6 +11,9 @@ using HWallpaper.Common;
 
 namespace HWallpaper.Business
 {
+    /// <summary>
+    /// 壁纸下载队列（开启一个线程池，目前是最大4个线程）
+    /// </summary>
     public class DownQueue
     {
         enum TaskState

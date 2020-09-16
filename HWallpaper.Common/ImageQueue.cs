@@ -9,8 +9,14 @@ using HWallpaper.Model;
 
 namespace HWallpaper.Common
 {
+    /// <summary>
+    /// 壁纸下载队列（开启一个单线程）
+    /// </summary>
     public class ImageQueue
     {
+        /// <summary>
+        /// 队列下载需要的参数封装
+        /// </summary>
         class ImageQueueInfo
         {
             public Image image { get; set; }
@@ -18,13 +24,28 @@ namespace HWallpaper.Common
             public string Url { get; set; }
             public string Name { get; set; }
         }
+        /// <summary>
+        ///  下载完成委托
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="imgInfo"></param>
         public delegate void ComplateDelegate(BitmapImage b, ImgInfo imgInfo);
+        /// <summary>
+        /// 下载异常委托
+        /// </summary>
+        /// <param name="e"></param>
         public delegate void ErrorDelegate(Exception e);
         public event ComplateDelegate OnComplate;
         public event ErrorDelegate OnError;
         private AutoResetEvent autoEvent;
+        /// <summary>
+        /// 队列
+        /// </summary>
         private Queue<ImageQueueInfo> Stacks;
 
+        /// <summary>
+        /// 缓存路径
+        /// </summary>
         public string CachePath;
         public ImageQueue()
         {
@@ -35,6 +56,10 @@ namespace HWallpaper.Common
             t.IsBackground = true;
             t.Start();
         }
+
+        /// <summary>
+        /// 下载方法
+        /// </summary>
         private void DownloadImage()
         {
             while (true)
@@ -136,6 +161,12 @@ namespace HWallpaper.Common
                 autoEvent.WaitOne();
             }
         }
+
+        /// <summary>
+        /// 添加下载任务到队列
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="name"></param>
         public void Queue(string url,string name)
         {
             if (String.IsNullOrEmpty(url)) return;
@@ -145,6 +176,13 @@ namespace HWallpaper.Common
                 this.autoEvent.Set();
             }
         }
+
+        /// <summary>
+        /// 添加下载任务到队列
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="image"></param>
+        /// <param name="name"></param>
         public void Queue(string url, Image image,string name)
         {
             if (String.IsNullOrEmpty(url)) return;
@@ -154,6 +192,12 @@ namespace HWallpaper.Common
                 this.autoEvent.Set();
             }
         }
+
+        /// <summary>
+        /// 添加下载任务到队列
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="imgInfo"></param>
         public void Queue(Image image, ImgInfo imgInfo)
         {
             if (imgInfo == null) return;

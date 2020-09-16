@@ -49,7 +49,6 @@ namespace HWallpaper.Controls
             InitBtn();
         }
 
-
         /// <summary>
         /// 输入屏幕大小参数（默认1920x1080）
         /// </summary>
@@ -62,10 +61,11 @@ namespace HWallpaper.Controls
                 this.ScreenSize.Height = size.Height;
             }
         }
+
         /// <summary>
         /// 根据壁纸类型加载壁纸
         /// </summary>
-        /// <param name="picType"></param>
+        /// <param name="picType">壁纸类型（love：最爱|down：下载的|0：最新|>0：其他分类）</param>
         /// <param name="index"></param>
         /// <returns></returns>
         public void LoadImage(string picType = "0", int index = 0)
@@ -82,11 +82,13 @@ namespace HWallpaper.Controls
                 thread.Name = "LoadImageList_" + picType;
                 thread.Start();
             }
-            //NextImages();
-            
-            //return curImageListTotal == null ? 0 : curImageListTotal.total;
         }
 
+        /// <summary>
+        /// 壁纸列表数据加载完成事件
+        /// </summary>
+        /// <param name="total">壁纸列表</param>
+        /// <param name="msg">返回的消息</param>
         private void ImageList_OnComplate(ImageListTotal total, string msg)
         {
             if (total != null && total.data.Count > 0)
@@ -161,6 +163,7 @@ namespace HWallpaper.Controls
             }
             return curImageListTotal == null ? 0 : curImageListTotal.total;
         }
+
         /// <summary>
         /// 下一组图片
         /// </summary>
@@ -199,6 +202,9 @@ namespace HWallpaper.Controls
             }
         }
 
+        /// <summary>
+        /// 初始化壁纸类型标签按钮
+        /// </summary>
         private void InitBtn()
         {
             btn_down.ToolTip = "下载到本地";
@@ -224,6 +230,11 @@ namespace HWallpaper.Controls
             this.Content = scrGrid;
         }
 
+        /// <summary>
+        /// 鼠标滑轮滚动事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ZoomGrid_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             try
@@ -246,6 +257,7 @@ namespace HWallpaper.Controls
                 Growl.Info(ex.Message);
             }
         }
+
         /// <summary>
         /// 显示大图
         /// </summary>
@@ -262,6 +274,13 @@ namespace HWallpaper.Controls
                 lb_picTags.Text = "标签：" + string.Join(" ", imgInfo.GetTagList());
             }
         }
+
+        /// <summary>
+        /// 队列中每个壁纸下载完成的事件
+        /// </summary>
+        /// <param name="i">关联的图片控件</param>
+        /// <param name="b">下载好的壁纸</param>
+        /// <param name="imgInfo">壁纸信息</param>
         private void DownQueue_OnComplate(Image i, BitmapImage b, ImgInfo imgInfo)
         {
             try
@@ -400,7 +419,14 @@ namespace HWallpaper.Controls
                 }
             }
         }
-        private double scrVerticalOffset = -1;
+
+        private double scrVerticalOffset = -1;//解决大图模式下点击图片切换回小图列表模式的时候，不能记住之前列表位置的问题
+
+        /// <summary>
+        /// 点击图片事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Image_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
@@ -430,7 +456,12 @@ namespace HWallpaper.Controls
 
             }
         }
-
+        
+        /// <summary>
+        /// 小图列表模式下滚动事件（实现滚动懒加载）
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListView_ScrollChanged(object sender, RoutedEventArgs e)
         {
             if (scr.ViewportHeight + scr.VerticalOffset >= scr.ExtentHeight && scr.ExtentHeight > scr.ViewportHeight)
@@ -444,6 +475,11 @@ namespace HWallpaper.Controls
             }
         }
 
+        /// <summary>
+        /// 鼠标滑出事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Grid_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
             Grid grid = sender as Grid;
@@ -455,18 +491,14 @@ namespace HWallpaper.Controls
                 {
                     pGrid.Children.Remove(btnPanel);
                 }
-                //for (int i = 0; i < grid.Children.Count; i++)
-                //{
-                //    if (grid.Children[i].GetType() == typeof(Button))
-                //    {
-                //        Button btn = grid.Children[i] as Button;
-                //        grid.Children.Remove(btn);
-                //        //break;
-                //    }
-                //}
             }
         }
 
+        /// <summary>
+        /// 鼠标滑入事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Grid_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             Grid grid = sender as Grid;
@@ -486,6 +518,10 @@ namespace HWallpaper.Controls
             }
         }
 
+        /// <summary>
+        /// 初始化壁纸上显示的按钮状态
+        /// </summary>
+        /// <param name="imgInfo"></param>
         private void InitBtnState(ImgInfo imgInfo)
         {
             if (imgInfo == null)
@@ -521,6 +557,11 @@ namespace HWallpaper.Controls
             }
         }
 
+        /// <summary>
+        /// 壁纸上动态显示的按钮点击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_Click(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
@@ -599,6 +640,7 @@ namespace HWallpaper.Controls
                     break;
             }
         }
+
         /// <summary>
         /// 
         /// </summary>

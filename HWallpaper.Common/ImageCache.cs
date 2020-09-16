@@ -8,6 +8,9 @@ using System.Windows.Media.Imaging;
 
 namespace HWallpaper.Common
 {
+    /// <summary>
+    /// 壁纸缓存队列（开启一个单线程）
+    /// </summary>
     public class ImageCache
     {
         class ImageQueueInfo

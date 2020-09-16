@@ -32,7 +32,13 @@ namespace HWallpaper.Business
             return model;
         }
 
-
+        /// <summary>
+        /// 获取图片数据
+        /// </summary>
+        /// <param name="types">壁纸类型数组</param>
+        /// <param name="start">壁纸开始index</param>
+        /// <param name="count">获取的壁纸数量</param>
+        /// <returns></returns>
         public static ImageListTotal GetImageList(string[] types, int start = 0, int count = 30)
         {
             if (types != null && types.Length > 0)
@@ -57,7 +63,6 @@ namespace HWallpaper.Business
             return null;
         }
 
-
         /// <summary>
         /// 获取图片列表
         /// </summary>
@@ -80,6 +85,7 @@ namespace HWallpaper.Business
             ImageListTotal listTotal = JsonHelper.DeserializeJsonToObject<ImageListTotal>(jsonStr);
             return listTotal;
         }
+
         /// <summary>
         /// 根据关键字搜索
         /// </summary>
@@ -99,6 +105,7 @@ namespace HWallpaper.Business
             ImageListTotal listTotal = JsonHelper.DeserializeJsonToObject<ImageListTotal>(jsonStr);
             return listTotal;
         }
+
         /// <summary>
         /// 保存图片到本地
         /// </summary>
@@ -135,6 +142,7 @@ namespace HWallpaper.Business
                 LogHelper.WriteLog("获取的图片类型Json数据为空：" + jsonStr, Common.EnumLogLevel.Error);
             }
         }
+
         /// <summary>
         /// 异步通过接口获取最新的壁纸分类并保存到本地配置中
         /// </summary>
