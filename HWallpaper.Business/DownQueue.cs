@@ -29,7 +29,7 @@ namespace HWallpaper.Business
             public BitmapImage BitmapImage { get; set; }
         }
         public delegate void ComplateDelegate(Image i,BitmapImage b, ImgInfo imgInfo);
-        public delegate void ErrorDelegate(Exception e);
+        public delegate void ErrorDelegate(Image i, Exception e);
         public event ComplateDelegate OnComplate;
         public event ErrorDelegate OnError;
         private System.Windows.FrameworkElement pElement;
@@ -83,10 +83,7 @@ namespace HWallpaper.Business
 
                                 if (ele != null)
                                 {
-                                    ele.Dispatcher.BeginInvoke(new Action<Image, BitmapImage, ImgInfo>((image, bmp, imgInfo) =>
-                                    {
-                                        this.OnComplate(image, bmp, imgInfo);
-                                    }), new Object[] { t.Image, t.BitmapImage, t.ImgInfo });
+                                    ele.Dispatcher.BeginInvoke(this.OnComplate, new Object[] { t.Image, t.BitmapImage, t.ImgInfo });
                                 }
                             }
                             break;
@@ -98,10 +95,7 @@ namespace HWallpaper.Business
 
                                 if (ele != null)
                                 {
-                                    ele.Dispatcher.BeginInvoke(new Action<Image, ImgInfo, Exception>((i, info, ex) =>
-                                    {
-                                        this.OnError(ex);
-                                    }), new Object[] { t.Image, t.ImgInfo, t.Error });
+                                    ele.Dispatcher.BeginInvoke(this.OnError, new Object[] { t.Image, t.Error });
                                 }
                             }
                             break;

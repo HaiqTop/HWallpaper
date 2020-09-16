@@ -292,43 +292,65 @@ namespace HWallpaper.Controls
                 }
                 else
                 {
-                    Grid grid = i.Parent as Grid;
-                    foreach (var item in grid.Children)
+                    if (i.Parent is Grid grid)
                     {
-                        if (item is LoadingCircle load)
-                        {
-                            grid.Children.Remove(load);
-                            break;
-                        }
+                        RemoveLoading(grid);
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                string logText = $"壁纸ID:{imgInfo.id}\n"
+                    + $"壁纸Url:{imgInfo.url}\n"
+                    + "壁纸加载失败：" + ex.Message;
+                LogHelper.WriteLog(logText, EnumLogLevel.Error);
+                if (i.Parent is Grid grid)
+                {
+                    RemoveLoading(grid);
+                    TextBlock txb = new TextBlock();
+                    txb.Text = "壁纸加载失败：" + ex.Message;
+                    grid.Children.Add(txb);
+                }
             }
-            
         }
-        private void DownQueue_OnError(Exception e)
+
+        /// <summary>
+        /// 队列中每个壁纸下载出现错误的事件
+        /// </summary>
+        /// <param name="e"></param>
+        private void DownQueue_OnError(Image i, Exception e)
         {
-            Growl.Warning(e.Message);
+            LogHelper.WriteLog("壁纸加载失败：" + e.Message , EnumLogLevel.Error);
+            if (i.Parent is Grid grid)
+            {
+                RemoveLoading(grid);
+                TextBlock txb = new TextBlock();
+                txb.Text = "壁纸加载失败：" + e.Message;
+                grid.Children.Add(txb);
+            }
         }
-        private void ImageDown_OnError(Image i, Exception e)
+
+        /// <summary>
+        /// 移除Grid内的加载中控件
+        /// </summary>
+        /// <param name="grid"></param>
+        private void RemoveLoading(Grid grid)
         {
-            Label label = new Label();
-            label.Content = "加载失败";
-            Grid grid = i.Parent as Grid;
             foreach (var item in grid.Children)
             {
-                if (item is WaitingProgress)
+                if (item is LoadingCircle load)
                 {
-                    LoadingCircle load = item as LoadingCircle;
                     grid.Children.Remove(load);
                     break;
                 }
             }
-            grid.Children.Add(label);
-            LogHelper.WriteLog(e.Message,EnumLogLevel.Error);
         }
+
+        /// <summary>
+        /// 窗口大小改变事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Resize(object sender, System.EventArgs e)
         {
             panel.Width = scr.ActualWidth;
