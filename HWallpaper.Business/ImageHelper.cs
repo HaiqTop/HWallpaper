@@ -158,12 +158,14 @@ namespace HWallpaper.Business
                 case "recommend"://根据收藏推荐的
                     if (recommendTotal == 0)
                     {
+                        int topTag = 2;         // 获取标签记录最高的前几个（数值越大，获取的Tag越多）
+                        int rateBase = 3;       // 倍率基数（数值越大，每个Tag获取的数据越多）
                         recommendList.Clear();
-                        List<TagRecord> tops = UserDataManage.GetTopTagList(3);
+                        List<TagRecord> tops = UserDataManage.GetTopTagList(topTag);
                         if (tops.Count > 0)
                         {
                             // 计算倍率，防止收藏数量太多造成获取的数量太多
-                            decimal rate = count * 2 / tops[0].RecordCount;
+                            decimal rate = (decimal)count * rateBase / tops[0].RecordCount;
                             foreach (TagRecord top in tops)
                             {
                                 int tempCount = (int)(top.RecordCount * rate);
