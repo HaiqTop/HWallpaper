@@ -150,10 +150,10 @@ namespace HWallpaper.Business
                     total = UserDataManage.GetLWallList(RecordType.ManualWallpaper, start, count, true, true);
                     break;
                 case "love":// 收藏的
-                    total = UserDataManage.GetLoveList(LoveType.Love, start, count);
+                    total = UserDataManage.GetLoveList(LoveType.Love, start, count, true);
                     break;
                 case "down"://下载的
-                    total = UserDataManage.GetDownList(start, count);
+                    total = UserDataManage.GetDownList(start, count, true);
                     break;
                 case "recommend"://根据收藏推荐的
                     if (recommendTotal == 0)

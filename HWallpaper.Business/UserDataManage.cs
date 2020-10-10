@@ -244,11 +244,12 @@ namespace HWallpaper.Business
         /// <param name="start"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public static ImageListTotal GetDownList(int start, int count)
+        public static ImageListTotal GetDownList(int start, int count, bool orderDesc = false)
         {
             ImageListTotal total = new ImageListTotal();
             var query = db.Queryable<Picture, Download>((p, d) => new object[] { JoinType.Inner, p.Id == d.PictureId })
-                .OrderBy((p, d) => d.Time)
+                .OrderByIF(!orderDesc, (p, d) => d.Time, OrderByType.Asc)
+                .OrderByIF(orderDesc, (p, d) => d.Time, OrderByType.Desc)
                 .Select((p, d) => new ImgInfo()
                 {
                     class_id = p.Type,
