@@ -151,6 +151,12 @@ namespace HWallpaper
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            // 如果是大图浏览模式则先退出该模式
+            if (searchList.IsBigImgModel())
+            {
+                searchList.ExitBigImgModel();
+                return;
+            }
             tabControl.Visibility = Visibility.Visible;
             searchGrid.Visibility = Visibility.Hidden;
         }

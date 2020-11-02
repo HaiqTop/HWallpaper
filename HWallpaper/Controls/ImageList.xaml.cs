@@ -681,6 +681,28 @@ namespace HWallpaper.Controls
             }
             return null;
         }
+
+        /// <summary>
+        /// 判断当前是不是大图显示模式
+        /// </summary>
+        /// <returns>大图返回true</returns>
+        public bool IsBigImgModel()
+        {
+            return this.Content is Grid pGrid && pGrid.Name == "zoomGrid";
+        }
+
+        /// <summary>
+        /// 退出大图显示模式
+        /// </summary>
+        public void ExitBigImgModel()
+        {
+            zoomGrid.Tag = null;
+            zoomImage.Source = new BitmapImage(new Uri("/Controls;component/Images/screen.png", UriKind.Relative));
+            this.Content = scrGrid;
+            Resize(null, null);
+            scrVerticalOffset = scr.VerticalOffset;
+        }
+
         /// <summary>
         /// 图片页面浏览模式（单页/多页）
         /// </summary>
