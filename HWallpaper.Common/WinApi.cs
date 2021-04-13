@@ -7,6 +7,7 @@ using Microsoft.Win32;  //写入注册表时要用到
 using System.Windows;
 using System.Drawing;
 using System.Messaging;
+using System.Windows.Interop;
 
 namespace HWallpaper.Common
 {
@@ -146,6 +147,42 @@ namespace HWallpaper.Common
             SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, ref isRunning, 0);
             return isRunning;
         }
+        #endregion
+
+        #region 获取鼠标位置
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+
+            public POINT(int x, int y)
+            {
+                this.X = x;
+                this.Y = y;
+            }
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool GetCursorPos(out POINT pt);
+        #endregion
+
+        #region 设置窗口悬浮在桌面
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern int SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string className, string windowTitle);
+        const int GWL_HWNDPARENT = -8;
+        [DllImport("user32.dll")]
+        static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
+        public static void SetParent(Window window)
+        {
+            IntPtr hWnd = new WindowInteropHelper(window).Handle;
+            IntPtr hWndProgMan = FindWindow("Progman", "Program Manager");
+            SetParent(hWnd, hWndProgMan);
+        }
+
         #endregion
 
         #region  判断文件是否被占用

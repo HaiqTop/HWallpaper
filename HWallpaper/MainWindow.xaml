@@ -5,44 +5,84 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"
-        Title="MainWindow" 
-        WindowStartupLocation="CenterScreen"
-        Style="{StaticResource WindowWin10}"
-        ShowTitle="True"
+        Title="MainWindow"
+        ShowTitle="False"
+        ShowNonClientArea="False"
         ShowInTaskbar="False"
-        WindowState="Minimized" 
-        Height="250" 
-        Width="400" Loaded="Window_Loaded" Closing="Window_Closing">
-    <hc:NotifyIcon x:Name="NotifyIconContextContent" 
-                   Text="单击切换壁纸"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="#00FFFFFF" AllowsTransparency="True"
+        BorderBrush="#00FFFFFF"
+        Top="-60"
+        Height="70" 
+        Width="70" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Window.RenderTransform>
+        <TranslateTransform x:Name="translate"></TranslateTransform>
+    </Window.RenderTransform>
+    <StackPanel Background="White">
+        <StackPanel.Effect>
+            <DropShadowEffect ShadowDepth="1" BlurRadius="8" Direction="270" Opacity="0.85" Color="White"/>
+        </StackPanel.Effect>
+        <Border Background="#00ae9d" CornerRadius="3" Effect="{StaticResource EffectShadow4}" Cursor="Hand" Height="70" ToolTip="点击切换桌面壁纸"
+                MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseLeftButtonUp="Border_MouseLeftButtonUp" 
+                MouseMove="Border_MouseMove" MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave">
+            <Path Width="50" Height="50" Data="{StaticResource refreshGeometry}" Fill="White"/>
+            <Border.ContextMenu>
+                <ContextMenu Width="140">
+                    <MenuItem Click="MenuItem_Click" Header="打开壁纸">
+                        <MenuItem.Icon>
+                            <Image Source="Image/logo.ico"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Click="MenuItem_Click" Header="立即屏保" Visibility="Visible">
+                        <MenuItem.Icon>
+                            <Image Source="Image/logo.ico"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Click="MenuItem_Click" Header="软件设置">
+                        <MenuItem.Icon>
+                            <Image Source="Image/Settings.ico"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Click="MenuItem_Click" Header="调试" Visibility="Collapsed"/>
+                    <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用">
+                        <MenuItem.Icon>
+                            <Image Source="Image/exit1.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </Border.ContextMenu>
+        </Border>
+        <hc:NotifyIcon x:Name="NotifyIconContextContent" 
+                   Text="H壁纸"
                    Visibility="Visible"
-                   Click="NotifyIconContextContent_Click"
                    MouseDoubleClick="NotifyIconContextContent_MouseDoubleClick"
                    Icon="Image/logo.ico">
-        <hc:NotifyIcon.ContextMenu>
-            <ContextMenu Width="140">
-                <MenuItem Click="MenuItem_Click" Header="打开壁纸">
-                    <MenuItem.Icon>
-                        <Image Source="Image/logo.ico"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Click="MenuItem_Click" Header="立即屏保" Visibility="Visible">
-                    <MenuItem.Icon>
-                        <Image Source="Image/logo.ico"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Click="MenuItem_Click" Header="软件设置">
-                    <MenuItem.Icon>
-                        <Image Source="Image/Settings.ico"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Click="MenuItem_Click" Header="调试" Visibility="Collapsed"/>
-                <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用">
-                    <MenuItem.Icon>
-                        <Image Source="Image/exit1.png"/>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </ContextMenu>
-        </hc:NotifyIcon.ContextMenu>
-    </hc:NotifyIcon>
+            <hc:NotifyIcon.ContextMenu>
+                <ContextMenu Width="140">
+                    <MenuItem Click="MenuItem_Click" Header="打开壁纸">
+                        <MenuItem.Icon>
+                            <Image Source="Image/logo.ico"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Click="MenuItem_Click" Header="立即屏保" Visibility="Visible">
+                        <MenuItem.Icon>
+                            <Image Source="Image/logo.ico"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Click="MenuItem_Click" Header="软件设置">
+                        <MenuItem.Icon>
+                            <Image Source="Image/Settings.ico"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Click="MenuItem_Click" Header="调试" Visibility="Collapsed"/>
+                    <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用">
+                        <MenuItem.Icon>
+                            <Image Source="Image/exit1.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </hc:NotifyIcon.ContextMenu>
+        </hc:NotifyIcon>
+    </StackPanel>
 </hc:Window>

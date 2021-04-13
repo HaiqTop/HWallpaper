@@ -6,7 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using MessageBox = System.Windows.MessageBox;
 
 namespace HWallpaper
 {
@@ -48,10 +51,11 @@ namespace HWallpaper
                 Wallpaper wall = new Wallpaper(this);
                 wall.Show();
             }
+            this.Left = (SystemParameters.WorkArea.Size.Width / 4) * 3;
         }
         private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            this.Visibility = Visibility.Hidden;
+            //this.Visibility = Visibility.Hidden;
             // 注册监听当前登录的用户变化（登录、注销和解锁屏）事件
             Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             InitImageHelper();
@@ -61,6 +65,7 @@ namespace HWallpaper
             f_WndProc.MonitorEvent += F_WndProc_MonitorEvent;
             desktopHandle = WinApi.GetDesktopWindow();
             shellHandle = WinApi.GetShellWindow();
+            WinApi.SetParent(this);
         }
         private void F_WndProc_MonitorEvent(MonitorEventType type)
         {
@@ -83,7 +88,7 @@ namespace HWallpaper
 
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            MenuItem menuItem = sender as MenuItem;
+            System.Windows.Controls.MenuItem menuItem = sender as System.Windows.Controls.MenuItem;
             switch (menuItem.Header)
             {
                 case "打开壁纸":
@@ -126,7 +131,6 @@ namespace HWallpaper
 
         private void NotifyIconContextContent_MouseDoubleClick(object sender, System.Windows.RoutedEventArgs e)
         {
-            return;// 双击会触发两次单击，暂时禁用这个功能
             if (wallpaper == null || wallpaper.IsClosed)
             { 
                 wallpaper = new Wallpaper(this);
@@ -430,6 +434,69 @@ namespace HWallpaper
                 }
             }
             return result;
+        }
+
+        private void Border_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            FormMoved = false;
+        }
+
+        private void Border_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (!FormMoved)
+            {
+                NextWallpaper();
+            }
+            else
+            { 
+                FormMoved = false;
+            }
+        }
+        bool FormMoved = false;
+        private void Border_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
+        }
+
+        private void Border_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (this.Top < 0)
+            {
+                var point = e.GetPosition(this);
+                if (point.X > 0 && point.Y > 0 && point.X < this.Height && point.Y < Width)
+                {
+                    Storyboard story = new Storyboard();
+                    DoubleAnimation dAnimation = new DoubleAnimation();
+                    dAnimation.From = -60;
+                    dAnimation.To = 0;
+                    dAnimation.RepeatBehavior = new RepeatBehavior(2);
+                    dAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
+                    Storyboard.SetTarget(dAnimation, translate);
+                    Storyboard.SetTargetProperty(dAnimation, new PropertyPath(Window.TopProperty));
+                    story.Children.Add(dAnimation);
+                    story.Begin();
+                }
+            }
+        }
+
+        private void Border_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (this.Top == 0)
+            {
+                Storyboard story = new Storyboard();
+                DoubleAnimation dAnimation = new DoubleAnimation();
+                dAnimation.From = 0;
+                dAnimation.To = -60;
+                dAnimation.RepeatBehavior = new RepeatBehavior(2);
+                dAnimation.Duration = new Duration(TimeSpan.FromSeconds(3));
+                Storyboard.SetTarget(dAnimation, translate);
+                Storyboard.SetTargetProperty(dAnimation, new PropertyPath("Top"));
+                story.Children.Add(dAnimation);
+                story.Begin();
+            }
         }
     }
 }
