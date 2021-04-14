@@ -15,6 +15,14 @@ namespace HWallpaper
 {
     public partial class MainWindow
     {
+        /// <summary>
+        /// 窗体显示的Top值
+        /// </summary>
+        private double showTop = -2;
+        /// <summary>
+        /// 窗体折叠隐藏的Top值
+        /// </summary>
+        private double hideTop = -60;
         private ImageHelper imgHelper ;
         Screensaver screensaver;
         Wallpaper wallpaper;
@@ -463,40 +471,25 @@ namespace HWallpaper
 
         private void Border_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (this.Top < 0)
+            if (this.Top == hideTop)
             {
                 var point = e.GetPosition(this);
-                if (point.X > 0 && point.Y > 0 && point.X < this.Height && point.Y < Width)
+                if (point.X > 0 && point.Y > 0 && point.X < this.Height && point.Y < this.Width)
                 {
-                    Storyboard story = new Storyboard();
-                    DoubleAnimation dAnimation = new DoubleAnimation();
-                    dAnimation.From = -60;
-                    dAnimation.To = 0;
-                    dAnimation.RepeatBehavior = new RepeatBehavior(2);
-                    dAnimation.Duration = new Duration(TimeSpan.FromSeconds(0.1));
-                    Storyboard.SetTarget(dAnimation, translate);
-                    Storyboard.SetTargetProperty(dAnimation, new PropertyPath(Window.TopProperty));
-                    story.Children.Add(dAnimation);
-                    story.Begin();
+                    DoubleAnimation dou = new DoubleAnimation(hideTop, showTop, TimeSpan.FromSeconds(0.2));
+                    this.BeginAnimation(Window.TopProperty, dou);
                 }
             }
         }
 
         private void Border_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (this.Top == 0)
+            if (this.Top == showTop) // 当图标贴着屏幕上方
             {
-                Storyboard story = new Storyboard();
-                DoubleAnimation dAnimation = new DoubleAnimation();
-                dAnimation.From = 0;
-                dAnimation.To = -60;
-                dAnimation.RepeatBehavior = new RepeatBehavior(2);
-                dAnimation.Duration = new Duration(TimeSpan.FromSeconds(3));
-                Storyboard.SetTarget(dAnimation, translate);
-                Storyboard.SetTargetProperty(dAnimation, new PropertyPath("Top"));
-                story.Children.Add(dAnimation);
-                story.Begin();
+                DoubleAnimation dou = new DoubleAnimation(showTop, hideTop, TimeSpan.FromSeconds(0.2));
+                this.BeginAnimation(Window.TopProperty, dou);
             }
         }
+
     }
 }

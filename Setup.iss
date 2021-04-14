@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "H±ÚÖ½"
-#define MyAppVersion "1.0.0.6"
+#define MyAppVersion "1.0.0.7"
 #define MyAppPublisher "My Company, Inc."
 #define MyAppURL "hwallpaper.haiq.top"
 #define MyAppExeName "HWallpaper.exe"
