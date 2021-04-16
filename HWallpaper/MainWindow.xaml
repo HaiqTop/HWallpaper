@@ -21,30 +21,34 @@
     </Window.Effect>
     <Grid>
         <Border Background="#00ae9d" CornerRadius="5" Cursor="Hand" Height="60" Width="60" ToolTip="点击切换桌面壁纸"
-                MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseLeftButtonUp="Border_MouseLeftButtonUp" 
+                MouseLeftButtonDown="Border_MouseLeftButtonDown" MouseLeftButtonUp="Border_MouseLeftButtonUp" MouseRightButtonUp="Border_MouseRightButtonUp"
                 MouseMove="Border_MouseMove" MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave" ForceCursor="True">
-            <Path Width="50" Height="50" Data="{StaticResource refreshGeometry}" Fill="White"/>
+            <Path Width="50" Height="50" Data="{StaticResource RefreshGeometry}" Fill="White" Name="ionc">
+                <Path.RenderTransform>
+                    <RotateTransform x:Name="SpinnerRotate" Angle="0" CenterX="25" CenterY="25" />
+                </Path.RenderTransform>
+            </Path>
             <Border.ContextMenu>
-                <ContextMenu Width="140">
+                <ContextMenu Width="140" Closed="ContextMenu_Closed">
                     <MenuItem Click="MenuItem_Click" Header="打开壁纸">
                         <MenuItem.Icon>
-                            <Image Source="Image/logo.ico"/>
+							<Path Data="{StaticResource ImageGeometry}" Fill="#666666"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Click="MenuItem_Click" Header="立即屏保" Visibility="Visible">
                         <MenuItem.Icon>
-                            <Image Source="Image/logo.ico"/>
+							<Path Data="{StaticResource WallGeometry}" Fill="#666666"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Click="MenuItem_Click" Header="软件设置">
                         <MenuItem.Icon>
-                            <Image Source="Image/Settings.ico"/>
+							<Path Data="{StaticResource SettingGeometry}" Fill="#666666"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Click="MenuItem_Click" Header="调试" Visibility="Collapsed"/>
                     <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用">
                         <MenuItem.Icon>
-                            <Image Source="Image/exit1.png"/>
+							<Path Data="{StaticResource ExitGeometry}" Fill="#666666"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
@@ -59,28 +63,32 @@
                 <ContextMenu Width="140">
                     <MenuItem Click="MenuItem_Click" Header="打开壁纸">
                         <MenuItem.Icon>
-                            <Image Source="Image/logo.ico"/>
+							<Path Data="{StaticResource ImageGeometry}" Fill="#666666"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Click="MenuItem_Click" Header="立即屏保" Visibility="Visible">
                         <MenuItem.Icon>
-                            <Image Source="Image/logo.ico"/>
+							<Path Data="{StaticResource WallGeometry}" Fill="#666666"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Click="MenuItem_Click" Header="软件设置">
                         <MenuItem.Icon>
-                            <Image Source="Image/Settings.ico"/>
+							<Path Data="{StaticResource SettingGeometry}" Fill="#666666"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Click="MenuItem_Click" Header="调试" Visibility="Collapsed"/>
                     <MenuItem Command="hc:ControlCommands.ShutdownApp" Header="退出应用">
                         <MenuItem.Icon>
-                            <Image Source="Image/exit1.png"/>
+							<Path Data="{StaticResource ExitGeometry}" Fill="#666666"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
             </hc:NotifyIcon.ContextMenu>
         </hc:NotifyIcon>
     </Grid>
-    <Window.Resources></Window.Resources>
+    <Window.Resources>
+        <Storyboard x:Key="waiting" Name="waiting">
+            <DoubleAnimation Storyboard.TargetName="SpinnerRotate" Storyboard.TargetProperty="(RotateTransform.Angle)" From="0" To="180" Duration="0:0:0.3"/>
+        </Storyboard>
+    </Window.Resources>
 </hc:Window>

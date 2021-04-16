@@ -322,10 +322,12 @@ namespace HWallpaper
                     break;
             }
         }
+
         private void ImageQueue_OnError(Exception e)
         {
             Growl.Error(e.Message);
         }
+
         /// <summary>
         /// 
         /// </summary>

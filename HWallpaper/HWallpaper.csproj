@@ -75,6 +75,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ImageList.xaml.cs">
       <DependentUpon>ImageList.xaml</DependentUpon>
     </Compile>
@@ -90,6 +93,10 @@
     <Compile Include="Wallpaper.xaml.cs">
       <DependentUpon>Wallpaper.xaml</DependentUpon>
     </Compile>
+    <Page Include="About.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ImageList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -170,8 +177,6 @@
   <ItemGroup>
     <Resource Include="Image\6_2003183.jpg" />
     <Resource Include="Image\download.png" />
-    <Resource Include="Image\exit.jpg" />
-    <Resource Include="Image\exit1.png" />
     <Resource Include="Image\loading.gif" />
     <Resource Include="Image\loading.png" />
     <Resource Include="Image\loading1.gif" />

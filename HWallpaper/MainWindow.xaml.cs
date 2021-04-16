@@ -23,6 +23,7 @@ namespace HWallpaper
         /// 窗体折叠隐藏的Top值
         /// </summary>
         private double hideTop = -60;
+        private Storyboard story = null;
         private ImageHelper imgHelper ;
         Screensaver screensaver;
         Wallpaper wallpaper;
@@ -63,6 +64,7 @@ namespace HWallpaper
         }
         private void Window_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            this.story = (base.Resources["waiting"] as Storyboard);
             //this.Visibility = Visibility.Hidden;
             // 注册监听当前登录的用户变化（登录、注销和解锁屏）事件
             Microsoft.Win32.SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
@@ -336,7 +338,6 @@ namespace HWallpaper
             {
                 MessageBox.Show(ex.Message);
             }
-            
         }
         /// <summary>
         /// 当前登录的用户变化（登录、注销和解锁屏）
@@ -461,6 +462,17 @@ namespace HWallpaper
             }
         }
         bool FormMoved = false;
+
+        /// <summary>
+        /// 是否是右键点击，用于解决右键调用菜单后图标隐藏的问题
+        /// </summary>
+        bool rightButtonClick = false;
+
+        private void Border_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            rightButtonClick = true;
+        }
+
         private void Border_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
@@ -476,20 +488,38 @@ namespace HWallpaper
                 var point = e.GetPosition(this);
                 if (point.X > 0 && point.Y > 0 && point.X < this.Height && point.Y < this.Width)
                 {
-                    DoubleAnimation dou = new DoubleAnimation(hideTop, showTop, TimeSpan.FromSeconds(0.2));
-                    this.BeginAnimation(Window.TopProperty, dou);
+                    this.ShowIcon();
                 }
             }
         }
 
         private void Border_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (this.Top == showTop) // 当图标贴着屏幕上方
+            if (this.Top == showTop && !rightButtonClick) // 当图标贴着屏幕上方
             {
-                DoubleAnimation dou = new DoubleAnimation(showTop, hideTop, TimeSpan.FromSeconds(0.2));
-                this.BeginAnimation(Window.TopProperty, dou);
+                this.HideIcon();
+            }
+            else
+            {
+                rightButtonClick = false;
             }
         }
 
+        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            this.HideIcon();
+        }
+
+        private void ShowIcon()
+        {
+            DoubleAnimation dou = new DoubleAnimation(hideTop, showTop, TimeSpan.FromSeconds(0.2));
+            this.BeginAnimation(Window.TopProperty, dou);
+        }
+
+        private void HideIcon()
+        {
+            DoubleAnimation dou = new DoubleAnimation(showTop, hideTop, TimeSpan.FromSeconds(0.2));
+            this.BeginAnimation(Window.TopProperty, dou);
+        }
     }
 }

@@ -131,6 +131,10 @@ namespace HWallpaper
                     setting.ChangeConfigEvent += Setting_ChangeConfigEvent;
                     setting.ShowDialog();
                     break;
+                case "关于":
+                    About about = new About();
+                    about.ShowDialog();
+                    break;
             }
         }
 
