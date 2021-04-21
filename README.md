@@ -1,19 +1,19 @@
 # HWallpaper
 
-#### 介绍
+### 介绍
 利用360壁纸接口做的适合自己用的壁纸软件，拥有手动、自动切换壁纸，手动、自动打开屏保等功能，支持关键字搜索。
 
-#### 软件架构
+### 软件架构
 使用WPF开发，部分页面使用了MVVM框架编写（主要是不熟悉，做了一个页面的尝试）。
 集成了AutoUpdate项目，支持自动升级（目前服务器没有ipv4地址，仅在拥有ipv6的电脑上支持升级）。
 
 
-#### 安装教程
+### 安装教程
 
 1.  编译之后可以直接打开exe程序
 2.  或者直接下载我打包好的【H壁纸 Setup.exe】文件安装，根据提示即可安装
 
-#### 使用说明
+### 使用说明
 
 1.  打开程序后，默认会打开壁纸窗口；
 2.  关闭窗口，程序还会在后台运行，在任务栏中右键点击程序图标，有四个菜单，点击“退出程序”即可彻底关闭程序；
@@ -21,14 +21,18 @@
 4.  右键点击任务栏中的程序图标，打开菜单，点击“打开壁纸”，即可打开主程序窗口；
 5.  在主程序窗口右上角有一个“功能”菜单，有搜索、屏保、设置三个功能，点击搜索进入搜索模式，点击屏保，则电脑立即进入屏保模式，点击设置可以打开设置窗口，在设置窗口中可以设置自己的自动切换壁纸分类、屏保壁纸分类、自动切换壁纸的时间、自动屏保的时间等。
 
-#### 软件截图
-
-![软件首页](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/001.png)
-![搜索](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/002.png)
-![设置](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/003.png)
-![屏保](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/004.png)
-
-#### 未来需求
+### 未来需求
 1.  兴趣推荐壁纸数量比较少，貌似是30张，数量太多加载速度会比较慢；
 2.  缓存、下载队列代码逻辑有点儿乱，有时间好好梳理下；
 3.  小图浏览模式的小图没有缓存，加载速度完全依赖网速，可以考虑增加小图缓存。
+
+### 软件截图
+
+#### 软件首页
+![软件首页](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/001.png)
+#### 搜索
+![搜索](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/002.png)
+#### 设置
+![设置](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/003.png)
+#### 屏保
+![屏保](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/004.png)
