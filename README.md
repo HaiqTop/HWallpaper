@@ -29,10 +29,10 @@
 ### 软件截图
 
 #### 软件首页
-![软件首页](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/001.png)
+![软件首页](https://raw.githubusercontent.com/HaiqTop/HWallpaper/master/docs/img/001.png)
 #### 搜索
-![搜索](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/002.png)
+![搜索](https://raw.githubusercontent.com/HaiqTop/HWallpaper/raw/master/docs/img/002.png)
 #### 设置
-![设置](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/003.png)
+![设置](https://raw.githubusercontent.com/HaiqTop/HWallpaper/raw/master/docs/img/003.png)
 #### 屏保
-![屏保](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/004.png)
+![屏保](https://raw.githubusercontent.com/HaiqTop/HWallpaper/raw/master/docs/img/004.png)
