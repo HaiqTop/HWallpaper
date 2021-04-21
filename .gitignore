@@ -28,3 +28,5 @@ ehthumbs_vista.db
 .vs/
 # Uncomment if you have tasks that create the
 
+
+!builds/*
