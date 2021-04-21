@@ -21,8 +21,14 @@
 4.  右键点击任务栏中的程序图标，打开菜单，点击“打开壁纸”，即可打开主程序窗口；
 5.  在主程序窗口右上角有一个“功能”菜单，有搜索、屏保、设置三个功能，点击搜索进入搜索模式，点击屏保，则电脑立即进入屏保模式，点击设置可以打开设置窗口，在设置窗口中可以设置自己的自动切换壁纸分类、屏保壁纸分类、自动切换壁纸的时间、自动屏保的时间等。
 
-#### 待办任务
+#### 软件截图
 
+![软件首页](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/001.png)
+![搜索](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/002.png)
+![设置](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/003.png)
+![屏保](https://gitee.com/hhfei/HWallpaper/raw/master/docs/img/004.png)
+
+#### 未来需求
 1.  兴趣推荐壁纸数量比较少，貌似是30张，数量太多加载速度会比较慢；
 2.  缓存、下载队列代码逻辑有点儿乱，有时间好好梳理下；
 3.  小图浏览模式的小图没有缓存，加载速度完全依赖网速，可以考虑增加小图缓存。
